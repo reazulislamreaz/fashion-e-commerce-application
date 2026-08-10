@@ -268,7 +268,19 @@ export class AuthService {
       throw new AuthenticationError(INVALID_CREDENTIALS_MESSAGE);
     }
 
-    if (user.status === UserStatus.PENDING_VERIFICATION || !user.isEmailVerified) {
+    // Dashboard roles (SUPER_ADMIN, ADMIN, MANAGER) bypass email verification.
+    // They are seeded directly into the database with ACTIVE status and are trusted.
+    const dashboardRoles: RoleCode[] = [
+      RoleCode.SUPER_ADMIN,
+      RoleCode.ADMIN,
+      RoleCode.MANAGER,
+    ];
+    const isDashboardRole = dashboardRoles.includes(user.role.code as RoleCode);
+
+    if (
+      !isDashboardRole &&
+      (user.status === UserStatus.PENDING_VERIFICATION || !user.isEmailVerified)
+    ) {
       await this.auditService.log({
         userId: user.id,
         email: user.email,
