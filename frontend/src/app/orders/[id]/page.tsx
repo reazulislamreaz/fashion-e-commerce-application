@@ -2,17 +2,13 @@
 
 import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { ProtectedRoute } from '@/components/auth/protected-route';
 import { useAuth } from '@/context/auth-context';
 import { getOrderByIdApi } from '@/lib/api/services';
 import { Order } from '@/types';
 import { IconArrowRight, IconBag, IconChevronRight } from '@/components/ui/icons';
 
-export default function OrderDetailPage({
-  params: paramsPromise,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const params = use(paramsPromise);
+function OrderDetailContent({ id }: { id: string }) {
   const { accessToken } = useAuth();
 
   const [order, setOrder] = useState<Order | null>(null);
@@ -25,7 +21,7 @@ export default function OrderDetailPage({
       const token = accessToken;
       setLoading(true);
       try {
-        const data = await getOrderByIdApi(params.id, token);
+        const data = await getOrderByIdApi(id, token);
         setOrder(data);
       } catch {
         setError(true);
@@ -35,7 +31,7 @@ export default function OrderDetailPage({
     }
 
     loadOrder();
-  }, [params.id, accessToken]);
+  }, [id, accessToken]);
 
   if (loading) {
     return (
@@ -197,5 +193,19 @@ export default function OrderDetailPage({
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OrderDetailPage({
+  params: paramsPromise,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const params = use(paramsPromise);
+
+  return (
+    <ProtectedRoute>
+      <OrderDetailContent id={params.id} />
+    </ProtectedRoute>
   );
 }

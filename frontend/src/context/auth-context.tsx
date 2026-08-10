@@ -2,12 +2,19 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
   type ReactNode,
 } from 'react';
-import { getMeApi, loginApi, logoutApi, registerApi } from '@/lib/api/services';
+import {
+  getMeApi,
+  loginApi,
+  logoutApi,
+  refreshApi,
+  registerApi,
+} from '@/lib/api/services';
 import { User } from '@/types';
 
 type AuthContextType = {
@@ -24,6 +31,7 @@ type AuthContextType = {
     password: string;
   }) => Promise<void>;
   logout: () => Promise<void>;
+  refreshSession: () => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,6 +44,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const clearAuthState = useCallback(() => {
+    setUser(null);
+    setAccessToken(null);
+    setRefreshToken(null);
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+  }, []);
+
+  const refreshSession = useCallback(async (): Promise<boolean> => {
+    if (typeof window === 'undefined') return false;
+
+    const storedRefresh = localStorage.getItem(REFRESH_TOKEN_KEY);
+    if (!storedRefresh) {
+      clearAuthState();
+      return false;
+    }
+
+    try {
+      const authRes = await refreshApi(storedRefresh);
+      setUser(authRes.user);
+      setAccessToken(authRes.accessToken);
+      setRefreshToken(authRes.refreshToken);
+      localStorage.setItem(ACCESS_TOKEN_KEY, authRes.accessToken);
+      localStorage.setItem(REFRESH_TOKEN_KEY, authRes.refreshToken);
+      return true;
+    } catch {
+      clearAuthState();
+      return false;
+    }
+  }, [clearAuthState]);
 
   useEffect(() => {
     async function initAuth() {
@@ -51,15 +90,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setAccessToken(storedAccess);
           setRefreshToken(storedRefresh);
         } catch {
-          localStorage.removeItem(ACCESS_TOKEN_KEY);
-          localStorage.removeItem(REFRESH_TOKEN_KEY);
+          // Access token might be expired, attempt refresh
+          if (storedRefresh) {
+            await refreshSession();
+          } else {
+            clearAuthState();
+          }
         }
+      } else if (storedRefresh) {
+        await refreshSession();
       }
       setIsLoading(false);
     }
 
     initAuth();
-  }, []);
+  }, [clearAuthState, refreshSession]);
 
   const login = async (email: string, password: string) => {
     const res = await loginApi({ email, password });
@@ -91,14 +136,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         await logoutApi(accessToken, refreshToken);
       } catch {
-        // Ignore logout network errors during local teardown
+        // Ignore network errors during local teardown
       }
     }
-    setUser(null);
-    setAccessToken(null);
-    setRefreshToken(null);
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    clearAuthState();
   };
 
   return (
@@ -112,6 +153,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        refreshSession,
       }}
     >
       {children}

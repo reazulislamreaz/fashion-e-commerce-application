@@ -434,11 +434,11 @@ Completed backend phases:
 7. **Phase 6** — Order management backend (order placement, price validation, snapshotting, status state machine)
 8. **Phase 7** — Backend quality assurance, security hardening & E2E regression testing (58/58 passing tests)
 9. **Phase 8** — Next.js Customer E-Commerce Storefront (Hero carousel, catalog metrics, product gallery, cart, checkout, auth, orders)
+10. **Phase 9** — Customer Authentication & Profile Portal UI (Token refresh rotation, Google & Facebook OAuth buttons, password toggles, ProtectedRoute guard, `/profile` customer portal)
 
 Planned future phases:
 
-1. OAuth (Google / Facebook) integration
-2. Management Dashboard UI (Next.js)
+1. Management Dashboard UI (Next.js)
 
 ## Assumptions
 

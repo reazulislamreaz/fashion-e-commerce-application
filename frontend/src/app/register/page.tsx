@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/components/ui/toast';
+import { SocialAuthButtons } from '@/components/auth/social-auth-buttons';
 import { ApiClientError } from '@/lib/api/types';
 
 function RegisterContent() {
@@ -19,12 +20,27 @@ function RegisterContent() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(true);
+
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+
+    if (password !== confirmPassword) {
+      setErrorMessage('Passwords do not match. Please re-enter your password.');
+      return;
+    }
+
+    if (!agreeTerms) {
+      setErrorMessage('Please accept the Easy Fashion terms to create an account.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -40,7 +56,7 @@ function RegisterContent() {
       if (err instanceof ApiClientError) {
         setErrorMessage(err.message);
       } else {
-        setErrorMessage('Registration failed. Email may already be registered.');
+        setErrorMessage('Registration failed. The email address may already be registered.');
       }
     } finally {
       setLoading(false);
@@ -58,7 +74,7 @@ function RegisterContent() {
             Create Customer Account
           </h1>
           <p className="mt-1 text-xs text-stone-500">
-            Sign up to track orders, save your preferences, and shop luxury fashion.
+            Join Easy Fashion to place orders, track shipments, and view account history.
           </p>
         </div>
 
@@ -114,15 +130,50 @@ function RegisterContent() {
             <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
               Password *
             </label>
+            <div className="relative flex items-center">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Minimum 6 characters"
+                className="w-full rounded-xl border border-stone-300 p-3 pr-10 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 text-xs font-semibold text-stone-400 hover:text-stone-700"
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
+              Confirm Password *
+            </label>
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               required
               minLength={6}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Minimum 6 characters"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Re-enter your password"
               className="rounded-xl border border-stone-300 p-3 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
             />
+          </div>
+
+          <div className="flex items-center gap-2 text-xs text-stone-600 mt-1 cursor-pointer">
+            <input
+              type="checkbox"
+              required
+              checked={agreeTerms}
+              onChange={(e) => setAgreeTerms(e.target.checked)}
+              className="size-4 rounded border-stone-300 text-stone-950 focus:ring-[#C9A227]"
+            />
+            <span>I agree to the terms and privacy policy.</span>
           </div>
 
           <button
@@ -130,14 +181,16 @@ function RegisterContent() {
             disabled={loading}
             className="mt-2 w-full rounded-xl bg-stone-950 py-3.5 text-xs font-bold text-white shadow-md hover:bg-[#C9A227] hover:text-stone-950 transition-colors disabled:opacity-50"
           >
-            {loading ? 'Creating Account...' : 'Register Account'}
+            {loading ? 'Registering Account...' : 'Create Account'}
           </button>
         </form>
+
+        <SocialAuthButtons actionLabel="Register" />
 
         <div className="mt-6 text-center text-xs text-stone-500">
           Already registered?{' '}
           <Link
-            href={`/login${redirect ? `?redirect=${redirect}` : ''}`}
+            href={`/login${redirect ? `?redirect=${encodeURIComponent(redirect)}` : ''}`}
             className="font-bold text-[#C9A227] hover:underline"
           >
             Sign In Here
@@ -150,7 +203,7 @@ function RegisterContent() {
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="p-12 text-center">Loading registration...</div>}>
+    <Suspense fallback={<div className="p-12 text-center text-xs text-stone-500">Loading Register...</div>}>
       <RegisterContent />
     </Suspense>
   );

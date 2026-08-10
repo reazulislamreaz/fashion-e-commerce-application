@@ -143,6 +143,12 @@ export function Navbar() {
                       <p className="text-[11px] text-stone-400 truncate">{user.email}</p>
                     </div>
                     <Link
+                      href="/profile"
+                      className="block w-full text-left px-3 py-2 text-stone-200 hover:bg-stone-800 rounded-lg transition-colors"
+                    >
+                      My Profile
+                    </Link>
+                    <Link
                       href="/orders"
                       className="block w-full text-left px-3 py-2 text-stone-200 hover:bg-stone-800 rounded-lg transition-colors"
                     >
@@ -230,13 +236,22 @@ export function Navbar() {
                   Shop All Products
                 </Link>
                 {isAuthenticated && (
-                  <Link
-                    href="/orders"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="rounded-lg px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
-                  >
-                    My Orders
-                  </Link>
+                  <>
+                    <Link
+                      href="/profile"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="rounded-lg px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
+                    >
+                      My Profile
+                    </Link>
+                    <Link
+                      href="/orders"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="rounded-lg px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
+                    >
+                      My Orders
+                    </Link>
+                  </>
                 )}
               </nav>
             </div>

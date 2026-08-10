@@ -10,9 +10,9 @@ This repository is the **Easy Fashion Limited Software Engineer Technical Assess
 
 ## Current phase
 
-**Phase 8 — Next.js Customer E-Commerce Website**
+**Phase 9 — Customer Authentication UI**
 
-Completed through Phase 8:
+Completed through Phase 9:
 
 - NestJS + Next.js foundations (Phase 0)
 - PostgreSQL + Prisma schema, migrations, and seed (Phase 1)
@@ -23,6 +23,7 @@ Completed through Phase 8:
 - Order placement, server-side price calculation, historical unit price snapshots, atomic transactions, customer isolation, management order listing/filtering, status transitions, and e2e tests (Phase 6)
 - Quality assurance, security hardening, input validation auditing, error trace masking, health check, and full regression testing (58/58 passing tests across 5 e2e test suites) (Phase 7)
 - Next.js customer e-commerce storefront with Black & Gold branding, Hero carousel, catalog overview metrics, URL-driven search/filter/sort/pagination, image gallery, size picker, persistent guest/user cart, secure checkout, auth integration, and order history snapshots (Phase 8)
+- Customer Authentication & Profile Portal UI with silent token rotation/refresh, Google & Facebook OAuth buttons, password toggles & matching confirmation, ProtectedRoute route guard, and `/profile` customer portal (Phase 9)
 
 ## Stack
 
