@@ -19,6 +19,7 @@ enum RoleCode {
 enum UserStatus {
   ACTIVE
   INACTIVE
+  PENDING_VERIFICATION
 }
 
 enum OrderStatus {
@@ -43,21 +44,24 @@ model Role {
 }
 
 model User {
-  id           String     @id @default(uuid()) @db.Uuid
-  fullName     String
+  id              String     @id @default(uuid()) @db.Uuid
+  fullName        String
   /// Stored lowercase for consistent uniqueness checks
-  email        String     @unique
-  phone        String?
+  email           String     @unique
+  phone           String?
   /// bcrypt hash; nullable to allow future OAuth-only accounts
-  passwordHash String?
-  roleId       String     @db.Uuid
-  status       UserStatus @default(ACTIVE)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  passwordHash    String?
+  roleId          String     @db.Uuid
+  status          UserStatus @default(ACTIVE)
+  isEmailVerified Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 
-  role          Role           @relation(fields: [roleId], references: [id], onDelete: Restrict)
-  orders        Order[]
-  refreshTokens RefreshToken[]
+  role               Role                 @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  orders             Order[]
+  refreshTokens      RefreshToken[]
+  verificationTokens VerificationToken[]
+  passwordResetTokens PasswordResetToken[]
 
   @@index([roleId])
   @@index([status])
@@ -79,6 +83,64 @@ model RefreshToken {
   @@index([userId])
   @@index([expiresAt])
   @@map("refresh_tokens")
+}
+
+model VerificationToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("verification_tokens")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
+}
+
+model LoginAttempt {
+  id          String    @id @default(uuid()) @db.Uuid
+  email       String    @unique
+  attempts    Int       @default(1)
+  lockedUntil DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@index([email])
+  @@map("login_attempts")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @db.Uuid
+  email     String?
+  eventType String
+  status    String
+  ipAddress String?
+  userAgent String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([email])
+  @@index([eventType])
+  @@index([createdAt])
+  @@map("audit_logs")
 }
 
 model Category {

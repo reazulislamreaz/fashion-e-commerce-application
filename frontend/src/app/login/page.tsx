@@ -41,6 +41,8 @@ function LoginContent() {
     }
   };
 
+  const isVerifyRequired = searchParams.get('verify') === 'required';
+
   return (
     <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-12 sm:px-6">
       <div className="border border-stone-200 bg-white p-8">
@@ -55,6 +57,15 @@ function LoginContent() {
             Sign in to access your orders, saved addresses, and profile details.
           </p>
         </div>
+
+        {isVerifyRequired && (
+          <div className="mt-6 border border-[#C9A227] bg-amber-50 p-4 text-xs font-semibold text-amber-900 leading-relaxed">
+            <span className="font-bold block uppercase tracking-wider text-[#C9A227] mb-0.5">
+              Account Registered Successfully!
+            </span>
+            Please check your email inbox to verify your account before signing in.
+          </div>
+        )}
 
         {errorMessage && (
           <div className="mt-6 border border-rose-200 bg-rose-50 p-3.5 text-xs font-semibold text-rose-700">
@@ -82,6 +93,12 @@ function LoginContent() {
               <label className="text-xs font-bold uppercase tracking-wider text-stone-700">
                 Password
               </label>
+              <Link
+                href="/forgot-password"
+                className="text-xs font-semibold text-[#C9A227] hover:underline"
+              >
+                Forgot password?
+              </Link>
             </div>
             <div className="relative flex items-center">
               <input

@@ -63,6 +63,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
           message = exception.message;
         }
       }
+
+      if (status === 429 || message.includes('ThrottlerException')) {
+        message = 'Too many requests. Please wait a moment before trying again.';
+        code = 'TOO_MANY_REQUESTS';
+      }
     } else if (exception instanceof Error) {
       this.logger.error(
         `Unhandled Exception: ${exception.message}`,

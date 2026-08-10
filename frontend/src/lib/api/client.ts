@@ -112,7 +112,11 @@ export async function apiRequest<T>(
     } as unknown as T;
   }
 
-  return payload.data;
+  if (payload.data !== undefined && payload.data !== null) {
+    return payload.data;
+  }
+
+  return payload as unknown as T;
 }
 
 export const apiClient = {

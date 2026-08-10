@@ -12,6 +12,7 @@ import {
   OrderStatus,
   PaginatedList,
   Product,
+  RegisterResult,
   Role,
   RoleCode,
   Size,
@@ -123,7 +124,7 @@ export async function registerApi(data: {
   phone?: string;
   password: string;
 }) {
-  return apiClient.post<AuthResult>('/auth/register', data);
+  return apiClient.post<RegisterResult>('/auth/register', data);
 }
 
 export async function getMeApi(token: string) {
@@ -142,6 +143,22 @@ export async function logoutApi(token: string, refreshToken: string) {
 
 export async function refreshApi(refreshToken: string) {
   return apiClient.post<AuthResult>('/auth/refresh', { refreshToken });
+}
+
+export async function verifyEmailApi(token: string) {
+  return apiClient.post<{ message: string }>('/auth/verify-email', { token });
+}
+
+export async function resendVerificationApi(email: string) {
+  return apiClient.post<{ message: string }>('/auth/resend-verification', { email });
+}
+
+export async function forgotPasswordApi(email: string) {
+  return apiClient.post<{ message: string }>('/auth/forgot-password', { email });
+}
+
+export async function resetPasswordApi(token: string, password: string) {
+  return apiClient.post<{ message: string }>('/auth/reset-password', { token, password });
 }
 
 // Order APIs

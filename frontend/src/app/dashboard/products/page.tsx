@@ -9,6 +9,7 @@ import {
   deleteProductApi,
   getCategories,
   getProducts,
+  getStyles,
 } from '@/lib/api/services';
 import { extractErrorMessage } from '@/lib/api/errors';
 import { useToast } from '@/components/ui/toast';

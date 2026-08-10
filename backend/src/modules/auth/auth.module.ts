@@ -9,6 +9,9 @@ import { TokenService } from './token.service';
 import { RefreshTokenService } from './refresh-token.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
+import { MailModule } from '../mail/mail.module';
+import { AuditModule } from '../audit/audit.module';
+
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -19,6 +22,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         secret: configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
       }),
     }),
+    MailModule,
+    AuditModule,
   ],
   controllers: [AuthController],
   providers: [

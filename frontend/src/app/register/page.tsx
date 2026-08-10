@@ -44,14 +44,19 @@ function RegisterContent() {
     setLoading(true);
 
     try {
-      await register({
+      const res = await register({
         fullName: fullName.trim(),
         email: email.trim(),
         phone: phone.trim() || undefined,
         password,
       });
-      showToast('Account Created!', 'Welcome to Easy Fashion.');
-      router.push(redirect);
+
+      showToast(
+        'Account Registered!',
+        res?.message || 'Please check your email to verify your account before signing in.',
+        'info',
+      );
+      router.push('/login?verify=required');
     } catch (err) {
       setErrorMessage(
         extractErrorMessage(err, 'Registration failed. Please check your details and try again.'),

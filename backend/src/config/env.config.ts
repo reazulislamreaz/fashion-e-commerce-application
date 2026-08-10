@@ -38,6 +38,12 @@ export const envValidationSchema = Joi.object({
   SUPER_ADMIN_PASSWORD: Joi.string().min(8).optional(),
   SUPER_ADMIN_FULL_NAME: Joi.string().optional().allow(''),
 
+  GMAIL_USER: Joi.string().optional().allow(''),
+  GMAIL_APP_PASSWORD: Joi.string().optional().allow(''),
+  APP_USER_EMAIL: Joi.string().optional().allow(''),
+  APP_PASSWORD: Joi.string().optional().allow(''),
+  FRONTEND_URL: Joi.string().default('http://localhost:3001'),
+
   THROTTLE_TTL: Joi.number().default(60000),
   THROTTLE_LIMIT: Joi.number().default(100),
 

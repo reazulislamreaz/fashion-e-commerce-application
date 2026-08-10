@@ -21,6 +21,9 @@ import { UsersModule } from './modules/users/users.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { UploadsModule } from './modules/uploads/uploads.module';
 
+import { MailModule } from './modules/mail/mail.module';
+import { AuditModule } from './modules/audit/audit.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -77,6 +80,8 @@ import { UploadsModule } from './modules/uploads/uploads.module';
       ],
     }),
     PrismaModule,
+    MailModule,
+    AuditModule,
     AuthModule,
     HealthModule,
     CategoriesModule,

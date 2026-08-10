@@ -2,22 +2,20 @@ import { ApiClientError } from './types';
 
 /**
  * Centralized error-message extractor for API and general errors.
- *
- * Prioritises:
- *  1. Joined validation-error strings from `body.meta.errors` (array)
- *  2. The top-level `body.message` (backend-provided human-readable message)
- *  3. The Error `message` property
- *  4. A user-friendly fallback
+ * Formats all technical, HTTP status, and validation errors into user-friendly copy.
  */
 export function extractErrorMessage(
   error: unknown,
   fallback = 'Something went wrong. Please try again.',
 ): string {
+  let rawMessage = '';
+  let status: number | undefined;
+
   if (error instanceof ApiClientError) {
-    // The backend now sends joined validation messages as the top-level
-    // message, but if for any reason validation detail strings are available
-    // in `meta.errors`, prefer those for maximum specificity.
+    status = error.status;
     const meta = error.body?.meta;
+
+    // Validation error details array
     if (meta?.errors && Array.isArray(meta.errors)) {
       const messages = (meta.errors as unknown[])
         .filter((m): m is string => typeof m === 'string')
@@ -27,23 +25,45 @@ export function extractErrorMessage(
       }
     }
 
-    // Use the top-level API message (now human-readable after backend fix)
-    if (error.body?.message) {
-      return error.body.message;
+    rawMessage = error.body?.message || error.message || '';
+  } else if (error instanceof Error) {
+    rawMessage = error.message;
+  } else if (typeof error === 'string') {
+    rawMessage = error;
+  }
+
+  // Handle Rate Limiting / 429 Too Many Requests
+  if (
+    status === 429 ||
+    rawMessage.includes('ThrottlerException') ||
+    rawMessage.toLowerCase().includes('too many requests')
+  ) {
+    return 'Too many requests. Please wait a moment before trying again.';
+  }
+
+  // Handle Network / Connection Errors
+  if (
+    rawMessage.includes('Failed to fetch') ||
+    rawMessage.includes('NetworkError') ||
+    rawMessage.includes('ECONNREFUSED')
+  ) {
+    return 'Unable to connect to the server. Please check your network connection.';
+  }
+
+  // Handle 500 / Internal Server Errors
+  if (status && status >= 500) {
+    return 'A temporary server error occurred. Please try again in a few moments.';
+  }
+
+  // Strip technical exception prefixes if present (e.g., "ThrottlerException: ")
+  if (rawMessage.includes(': ')) {
+    const parts = rawMessage.split(': ');
+    if (parts[0].endsWith('Exception') || parts[0].endsWith('Error')) {
+      rawMessage = parts.slice(1).join(': ');
     }
-
-    return error.message || fallback;
   }
 
-  if (error instanceof Error) {
-    return error.message || fallback;
-  }
-
-  if (typeof error === 'string') {
-    return error;
-  }
-
-  return fallback;
+  return rawMessage.trim() || fallback;
 }
 
 /** Capitalize the first letter of a string. */

@@ -18,7 +18,7 @@ import {
 } from '@/lib/api/services';
 import { dispatchSessionExpired } from '@/components/ui/session-expired-modal';
 import { setAuthInterceptor } from '@/lib/api/client';
-import { User } from '@/types';
+import { AuthResult, RegisterResult, User } from '@/types';
 
 type AuthContextType = {
   user: User | null;
@@ -32,7 +32,7 @@ type AuthContextType = {
     email: string;
     phone?: string;
     password: string;
-  }) => Promise<void>;
+  }) => Promise<RegisterResult>;
   logout: () => Promise<void>;
   refreshSession: () => Promise<boolean>;
 };
@@ -164,12 +164,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string;
   }) => {
     const res = await registerApi(data);
-    setUser(res.user);
-    setAccessToken(res.accessToken);
-    setRefreshToken(res.refreshToken);
-
-    localStorage.setItem(ACCESS_TOKEN_KEY, res.accessToken);
-    localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
+    return res;
   };
 
   const logout = async () => {
