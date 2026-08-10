@@ -10,14 +10,15 @@ This repository is the **Easy Fashion Limited Software Engineer Technical Assess
 
 ## Current phase
 
-**Phase 1 — Database Schema, Relationships, Constraints & Seed System**
+**Phase 2 — Authentication & JWT System**
 
-Completed through Phase 1:
+Completed through Phase 2:
 
 - NestJS + Next.js foundations (Phase 0)
 - PostgreSQL + Prisma schema, migrations, and seed (Phase 1)
+- Email/password auth, bcrypt, JWT access/refresh tokens, logout, `/me` (Phase 2)
 
-Do **not** implement authentication APIs, JWT/RBAC guards, or catalog/order CRUD yet (Phase 2+).
+Do **not** implement RBAC role guards, OAuth, or catalog/order CRUD yet (Phase 3+).
 
 ## Stack
 
@@ -36,11 +37,9 @@ docs/      # Design notes (including DATABASE.md)
 
 See root `README.md`, `backend/package.json`, and `frontend/package.json`.
 
-Database:
+Auth e2e tests:
 
 ```bash
 cd backend
-pnpm db:up
-pnpm prisma:migrate
-pnpm prisma:seed
+pnpm test:e2e
 ```

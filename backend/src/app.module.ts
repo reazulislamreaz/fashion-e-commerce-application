@@ -8,7 +8,9 @@ import { envValidationSchema } from './config/env.config';
 import { PrismaModule } from './database/prisma.module';
 import { TransformResponseInterceptor } from './common/interceptors/transform-response.interceptor';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { HealthModule } from './modules/health/health.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -45,7 +47,8 @@ import { HealthModule } from './modules/health/health.module';
                 'passwordHash',
                 'refreshToken',
                 'accessToken',
-                'JWT_SECRET',
+                'JWT_ACCESS_SECRET',
+                'JWT_REFRESH_SECRET',
                 'DATABASE_URL',
               ],
               remove: true,
@@ -65,9 +68,14 @@ import { HealthModule } from './modules/health/health.module';
       ],
     }),
     PrismaModule,
+    AuthModule,
     HealthModule,
   ],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

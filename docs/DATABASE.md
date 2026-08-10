@@ -43,6 +43,7 @@ Product
 | `ProductImage` | Multiple images per product (optional primary) |
 | `Order` | Checkout order with customer snapshot fields and total |
 | `OrderItem` | Line items with `unitPrice` / `subtotal` price snapshots |
+| `RefreshToken` | Hashed refresh tokens with expiry and revocation |
 
 ## Important design decisions
 
@@ -57,6 +58,7 @@ Product
    - Prefer deactivating catalog entities (`isActive`) over hard deletes
 6. **User.email** is unique; seed/application should store lowercase values for consistency.
 7. **`passwordHash` is nullable** to allow future OAuth-only accounts without storing placeholder passwords.
+8. **Refresh tokens** are persisted as SHA-256 hashes (`refresh_tokens`), never as raw JWT values. Tokens are rotated on refresh and revoked on logout.
 
 ## Indexes (selected)
 

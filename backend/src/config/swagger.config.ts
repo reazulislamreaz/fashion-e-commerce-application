@@ -9,21 +9,22 @@ export function setupSwagger(app: INestApplication): void {
   const config = new DocumentBuilder()
     .setTitle(appName)
     .setDescription(
-      'Easy Fashion Limited technical assessment API. Phase 0 establishes the foundation; business endpoints are added in later phases.',
+      'Easy Fashion Limited technical assessment API. Phase 2 adds email/password authentication with JWT access and refresh tokens.',
     )
-    .setVersion('0.1.0')
+    .setVersion('0.2.0')
     .addBearerAuth(
       {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
         name: 'JWT',
-        description: 'Enter JWT Access Token (available in later phases)',
+        description: 'Enter JWT Access Token',
         in: 'header',
       },
       'bearer-auth',
     )
     .addTag('Health', 'Application health and readiness')
+    .addTag('Auth', 'Registration, login, token refresh, logout, and profile')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

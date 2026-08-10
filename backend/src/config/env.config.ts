@@ -22,10 +22,12 @@ export const envValidationSchema = Joi.object({
 
   CORS_ORIGIN: Joi.string().default('http://localhost:3001'),
 
-  // Reserved for later authentication phases (validated when implemented)
-  JWT_SECRET: Joi.string().min(16).optional(),
+  JWT_ACCESS_SECRET: Joi.string().min(16).required(),
+  JWT_REFRESH_SECRET: Joi.string().min(16).required(),
   JWT_ACCESS_EXPIRES_IN: Joi.string().default('15m'),
   JWT_REFRESH_EXPIRES_IN: Joi.string().default('7d'),
+  BCRYPT_SALT_ROUNDS: Joi.number().integer().min(10).max(15).default(12),
+
   GOOGLE_CLIENT_ID: Joi.string().optional().allow(''),
   GOOGLE_CLIENT_SECRET: Joi.string().optional().allow(''),
   FACEBOOK_CLIENT_ID: Joi.string().optional().allow(''),
