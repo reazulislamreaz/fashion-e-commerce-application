@@ -10,18 +10,19 @@ This repository is the **Easy Fashion Limited Software Engineer Technical Assess
 
 ## Current phase
 
-**Phase 5 — Product Management APIs**
+**Phase 6 — Order Management Backend**
 
-Completed through Phase 5:
+Completed through Phase 6:
 
 - NestJS + Next.js foundations (Phase 0)
 - PostgreSQL + Prisma schema, migrations, and seed (Phase 1)
 - Email/password auth, bcrypt, JWT access/refresh tokens, logout, `/me` (Phase 2)
-- RBAC `@Roles` decorator + global `RolesGuard` (Phase 3 foundation, applied with catalog & product APIs)
+- RBAC `@Roles` decorator + global `RolesGuard` (Phase 3 foundation, applied with catalog, product & order APIs)
 - Category / Size / Style CRUD with validation, pagination, search, filtering, sorting (Phase 4)
 - Product CRUD with Category/Style/Size relationships, images, validation, RBAC, search, multi-filtering, sorting, pagination, transaction safety, and e2e tests (Phase 5)
+- Order placement, server-side price calculation, historical unit price snapshots, atomic transactions, customer isolation, management order listing/filtering, status transitions, and e2e tests (Phase 6)
 
-Do **not** implement Order APIs, OAuth, or dashboard UI yet (Phase 6+).
+Do **not** implement Shopping Cart UI, Payment gateways (Stripe/bKash), OAuth, or dashboard UI yet (Phase 7+).
 
 ## Stack
 

@@ -4,9 +4,9 @@ Technical assessment project for **Easy Fashion Limited**, developed incremental
 
 ## Current phase
 
-**Phase 5 — Product Management APIs**
+**Phase 6 — Order Management Backend**
 
-Phases 0–4 foundations are in place. Phase 5 adds authenticated Product Management APIs with Category, Style, and Size relationships, multiple images, validation, RBAC (`SUPER_ADMIN` and `ADMIN` for mutations; authenticated read access), pagination, search, multi-filtering (Category, Style, Size, Status), sorting, transaction safety, and e2e test suite. Order APIs and dashboard UI are intentionally not implemented yet.
+Phases 0–5 foundations are in place. Phase 6 adds customer order placement, server-side price calculation, historical unit price snapshots, atomic database transactions, customer ownership isolation, management order listing/search/filtering/pagination, and status transition state machine validation. Dashboard UI and payment processing are intentionally not implemented yet.
 
 ## Technology stack
 
@@ -270,6 +270,53 @@ All product routes require a Bearer access token. Mutations are limited to `SUPE
   ]
 }
 ```
+
+## Order management APIs (Phase 6)
+
+All order routes require a Bearer access token. Customer orders are automatically assigned to the authenticated user. Management users (`SUPER_ADMIN`, `ADMIN`, `MANAGER`) have system-wide order view and status update permissions.
+
+| Method | Endpoint | Roles | Description |
+| --- | --- | --- | --- |
+| `POST` | `/api/v1/orders` | Authenticated Customer | Place an order with server-calculated totals |
+| `GET` | `/api/v1/orders` | Authenticated | List orders (Customer gets own orders; Management gets all with search/filter/pagination) |
+| `GET` | `/api/v1/orders/:id` | Authenticated | Get order details (Customer isolated to own order) |
+| `PATCH` | `/api/v1/orders/:id/status` | Super Admin, Admin, Manager | Update order status following state machine transition rules |
+
+### Order Query Parameters
+
+| Param | Description |
+| --- | --- |
+| `page` | Page number (≥ 1, default 1) |
+| `limit` | Page size (1–100, default 20) |
+| `status` | Filter by `OrderStatus` enum (`PENDING`, `CONFIRMED`, `PROCESSING`, `SHIPPED`, `DELIVERED`, `CANCELLED`) |
+| `search` | Case-insensitive search on Order ID, customer name, phone, or customer email |
+| `userId` | Filter by customer user ID (Management only) |
+| `from` | Start ISO date range filter (inclusive) |
+| `to` | End ISO date range filter (inclusive) |
+| `sortBy` | Allowlisted field (`createdAt`, `updatedAt`, `totalAmount`, `status`; default `createdAt`) |
+| `sortOrder` | `asc` or `desc` (default `desc`) |
+
+### Example Order Placement Request
+
+```json
+{
+  "customerName": "John Doe",
+  "phoneNumber": "+8801700000000",
+  "shippingAddress": "House 12, Road 5, Block B, Mirpur, Dhaka",
+  "items": [
+    {
+      "productId": "00000000-0000-4000-8000-000000000001",
+      "quantity": 2
+    },
+    {
+      "productId": "00000000-0000-4000-8000-000000000002",
+      "quantity": 1
+    }
+  ]
+}
+```
+
+*Note: Prices (`unitPrice`, `subtotal`, `totalAmount`) are strictly calculated on the server from current active product records. Client attempts to pass custom price fields are rejected.*
 
 ## Database setup
 
