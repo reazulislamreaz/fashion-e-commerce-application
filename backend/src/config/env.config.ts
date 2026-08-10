@@ -31,6 +31,11 @@ export const envValidationSchema = Joi.object({
   FACEBOOK_CLIENT_ID: Joi.string().optional().allow(''),
   FACEBOOK_CLIENT_SECRET: Joi.string().optional().allow(''),
 
+  // Seed-only credentials (validated by prisma/seed.ts when seeding)
+  SUPER_ADMIN_EMAIL: Joi.string().email().optional(),
+  SUPER_ADMIN_PASSWORD: Joi.string().min(8).optional(),
+  SUPER_ADMIN_FULL_NAME: Joi.string().optional().allow(''),
+
   THROTTLE_TTL: Joi.number().default(60000),
   THROTTLE_LIMIT: Joi.number().default(100),
 

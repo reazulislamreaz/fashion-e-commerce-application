@@ -4,9 +4,9 @@ Technical assessment project for **Easy Fashion Limited**, developed incremental
 
 ## Current phase
 
-**Phase 0 — Project Foundation & Engineering Setup**
+**Phase 1 — Database Schema, Relationships, Constraints & Seed System**
 
-This phase establishes a production-oriented foundation only. Authentication, RBAC, catalog, orders, dashboard, and storefront business features are intentionally not implemented yet.
+Phase 0 foundation is in place. Phase 1 adds the normalized PostgreSQL schema, migrations, and seed system. Authentication APIs, RBAC guards, catalog/order APIs, and UI features are intentionally not implemented yet.
 
 ## Technology stack
 
@@ -39,11 +39,14 @@ This phase establishes a production-oriented foundation only. Authentication, RB
 │   ├── public/
 │   ├── .env.example
 │   └── package.json
+├── docs/
+│   └── DATABASE.md         # Schema design notes
 ├── AGENTS.md
 ├── CLAUDE.md
 ├── .gitignore
 └── README.md
 ```
+
 
 `frontend/` and `backend/` are fully separated packages. Install and run each from its own directory.
 
@@ -80,12 +83,14 @@ Important variables:
 - `DATABASE_URL` — PostgreSQL connection string (required)
 - `CORS_ORIGIN` — allowed frontend origin(s), comma-separated
 - `PORT` / `API_PREFIX` — API listen port and versioned prefix (`/api/v1`)
+- `SUPER_ADMIN_EMAIL` / `SUPER_ADMIN_PASSWORD` — required for database seeding
+- `SUPER_ADMIN_FULL_NAME` — optional display name for the seeded Super Admin
 
 Frontend variables are documented in `frontend/.env.example`.
 
 Never commit real `.env` files or secrets.
 
-## Database setup (foundation)
+## Database setup
 
 ```bash
 cd backend
@@ -96,11 +101,35 @@ pnpm db:up
 # Generate Prisma client
 pnpm prisma:generate
 
-# Create/apply migrations (after schema models are added in later phases)
+# Apply migrations
 pnpm prisma:migrate
+
+# Seed roles + default Super Admin
+pnpm prisma:seed
 ```
 
-Phase 0 ships an empty Prisma schema foundation (no business models yet).
+Schema design notes: [`docs/DATABASE.md`](docs/DATABASE.md)
+
+### Schema overview
+
+Core models: `Role`, `User`, `Category`, `Style`, `Size`, `Product`, `ProductSize`, `ProductImage`, `Order`, `OrderItem`.
+
+Key decisions:
+
+- Normalized many-to-many product ↔ size via `ProductSize`
+- Multiple product images via `ProductImage`
+- Order line `unitPrice` / `subtotal` snapshots for historical pricing integrity
+- Product hard-delete is restricted when order items reference the product
+- Roles are stored in a `roles` table (`SUPER_ADMIN`, `ADMIN`, `MANAGER`, `CUSTOMER`)
+
+### Seed
+
+Mandatory seed data:
+
+1. Roles: Super Admin, Admin, Manager, Customer
+2. One default Super Admin user (password hashed with bcrypt)
+
+Seed is idempotent. Configure credentials through `backend/.env` using the placeholders in `backend/.env.example`.
 
 ## Development commands
 
@@ -166,26 +195,31 @@ API docs (non-production): `http://localhost:3000/docs`
 
 ## Future implementation phases
 
-Planned increments (not implemented in Phase 0):
+Completed:
+
+1. Phase 0 — project foundation
+2. Phase 1 — database schema & seed
+
+Planned next:
 
 1. Authentication & authorization (JWT, refresh tokens, OAuth)
-2. RBAC and user management
-3. Database schema for catalog and orders
-4. Products, categories, sizes, styles APIs
-5. Orders and checkout
-6. Customer storefront
-7. Management dashboard
-8. Testing and hardening
+2. RBAC guards and user management APIs
+3. Products, categories, sizes, styles APIs
+4. Orders and checkout
+5. Customer storefront
+6. Management dashboard
+7. Testing and hardening
 
 ## Assumptions
 
 - Local development uses Docker Compose PostgreSQL credentials from `backend/.env.example`.
 - Frontend defaults to `http://localhost:3001`.
 - Backend defaults to `http://localhost:3000` with prefix `/api/v1`.
+- Super Admin credentials for seeding are provided via local environment variables only.
 
-## Known limitations (Phase 0)
+## Known limitations (Phase 1)
 
 - No authentication or business APIs yet
-- No catalog/order schema yet
+- No catalog/order business logic yet
 - No customer or dashboard feature pages yet
-- Seed script is a placeholder
+- Seed creates system roles + Super Admin only (no fake catalog data)

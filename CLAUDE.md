@@ -10,9 +10,14 @@ This repository is the **Easy Fashion Limited Software Engineer Technical Assess
 
 ## Current phase
 
-**Phase 0 — Project Foundation & Engineering Setup**
+**Phase 1 — Database Schema, Relationships, Constraints & Seed System**
 
-Foundation only: NestJS backend bootstrap, Next.js frontend bootstrap, Prisma/PostgreSQL configuration, health check, validation/error/logging/security foundations.
+Completed through Phase 1:
+
+- NestJS + Next.js foundations (Phase 0)
+- PostgreSQL + Prisma schema, migrations, and seed (Phase 1)
+
+Do **not** implement authentication APIs, JWT/RBAC guards, or catalog/order CRUD yet (Phase 2+).
 
 ## Stack
 
@@ -24,8 +29,18 @@ Foundation only: NestJS backend bootstrap, Next.js frontend bootstrap, Prisma/Po
 ```text
 backend/   # NestJS API — install & run independently
 frontend/  # Next.js app — install & run independently
+docs/      # Design notes (including DATABASE.md)
 ```
 
 ## Commands
 
-See root `README.md`, `backend/package.json`, and `frontend/package.json` for installation and development scripts.
+See root `README.md`, `backend/package.json`, and `frontend/package.json`.
+
+Database:
+
+```bash
+cd backend
+pnpm db:up
+pnpm prisma:migrate
+pnpm prisma:seed
+```
