@@ -59,10 +59,13 @@ Product
 6. **User.email** is unique; seed/application should store lowercase values for consistency.
 7. **`passwordHash` is nullable** to allow future OAuth-only accounts without storing placeholder passwords.
 8. **Refresh tokens** are persisted as SHA-256 hashes (`refresh_tokens`), never as raw JWT values. Tokens are rotated on refresh and revoked on logout.
+9. **Catalog names are case-insensitive unique**: application validation + PostgreSQL unique indexes on `LOWER(name)` for `categories`, `styles`, and `sizes` (in addition to exact `@unique` constraints). Trimming is applied at the API boundary.
+10. **Catalog FK deletes are restricted**: `Product.category` / `Product.style` / `ProductSize.size` use `onDelete: Restrict`. Hard delete returns conflict when referenced; prefer `isActive: false`.
 
 ## Indexes (selected)
 
 - Users: unique email; indexes on `roleId`, `status`
+- Categories / Styles / Sizes: unique `name`; unique `LOWER(name)`; indexes on `isActive` (sizes also index `sortOrder`)
 - Products: `categoryId`, `styleId`, `isActive`, `name`
 - ProductSize: unique `(productId, sizeId)`; indexes on both FKs
 - Orders: `userId`, `status`, `createdAt`

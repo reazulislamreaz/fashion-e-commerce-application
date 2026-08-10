@@ -9,9 +9,9 @@ export function setupSwagger(app: INestApplication): void {
   const config = new DocumentBuilder()
     .setTitle(appName)
     .setDescription(
-      'Easy Fashion Limited technical assessment API. Phase 2 adds email/password authentication with JWT access and refresh tokens.',
+      'Easy Fashion Limited technical assessment API. Includes JWT authentication, RBAC, and catalog management (categories, sizes, styles).',
     )
-    .setVersion('0.2.0')
+    .setVersion('0.4.0')
     .addBearerAuth(
       {
         type: 'http',
@@ -25,6 +25,9 @@ export function setupSwagger(app: INestApplication): void {
     )
     .addTag('Health', 'Application health and readiness')
     .addTag('Auth', 'Registration, login, token refresh, logout, and profile')
+    .addTag('Categories', 'Category catalog management')
+    .addTag('Sizes', 'Size catalog management')
+    .addTag('Styles', 'Style catalog management')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

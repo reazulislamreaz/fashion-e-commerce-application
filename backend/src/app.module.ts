@@ -9,8 +9,12 @@ import { PrismaModule } from './database/prisma.module';
 import { TransformResponseInterceptor } from './common/interceptors/transform-response.interceptor';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { RolesGuard } from './common/guards/roles.guard';
 import { HealthModule } from './modules/health/health.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { SizesModule } from './modules/sizes/sizes.module';
+import { StylesModule } from './modules/styles/styles.module';
 
 @Module({
   imports: [
@@ -70,11 +74,18 @@ import { AuthModule } from './modules/auth/auth.module';
     PrismaModule,
     AuthModule,
     HealthModule,
+    CategoriesModule,
+    SizesModule,
+    StylesModule,
   ],
   providers: [
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
     {
       provide: APP_GUARD,

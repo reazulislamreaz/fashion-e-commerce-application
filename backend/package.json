@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "0.1.0",
-  "description": "Easy Fashion Limited — NestJS API (Phase 2 Authentication)",
+  "description": "Easy Fashion Limited — NestJS API (Phase 4 Catalog Management)",
   "author": "",
   "private": true,
   "license": "UNLICENSED",

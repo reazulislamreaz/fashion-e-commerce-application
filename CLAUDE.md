@@ -10,15 +10,17 @@ This repository is the **Easy Fashion Limited Software Engineer Technical Assess
 
 ## Current phase
 
-**Phase 2 — Authentication & JWT System**
+**Phase 4 — Category, Size & Style Management APIs**
 
-Completed through Phase 2:
+Completed through Phase 4:
 
 - NestJS + Next.js foundations (Phase 0)
 - PostgreSQL + Prisma schema, migrations, and seed (Phase 1)
 - Email/password auth, bcrypt, JWT access/refresh tokens, logout, `/me` (Phase 2)
+- RBAC `@Roles` decorator + global `RolesGuard` (Phase 3 foundation, applied with catalog APIs)
+- Category / Size / Style CRUD with validation, pagination, search, filtering, sorting (Phase 4)
 
-Do **not** implement RBAC role guards, OAuth, or catalog/order CRUD yet (Phase 3+).
+Do **not** implement Product CRUD, Order APIs, OAuth, or dashboard UI yet (Phase 5+).
 
 ## Stack
 
@@ -37,7 +39,7 @@ docs/      # Design notes (including DATABASE.md)
 
 See root `README.md`, `backend/package.json`, and `frontend/package.json`.
 
-Auth e2e tests:
+E2E tests (auth + catalog):
 
 ```bash
 cd backend

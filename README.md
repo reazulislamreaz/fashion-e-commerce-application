@@ -4,9 +4,9 @@ Technical assessment project for **Easy Fashion Limited**, developed incremental
 
 ## Current phase
 
-**Phase 2 — Authentication & JWT System**
+**Phase 4 — Category, Size & Style Management APIs**
 
-Phases 0–1 are complete. Phase 2 adds email/password authentication with bcrypt password hashing, JWT access/refresh tokens, secure refresh-token persistence with rotation, logout, and authenticated profile retrieval. RBAC authorization guards, OAuth, and business CRUD APIs are intentionally not implemented yet.
+Phases 0–3 foundations are in place. Phase 4 adds authenticated catalog management for Categories, Sizes, and Styles with validation, RBAC, pagination, search, filtering, sorting, and safe deletes. Product/Order APIs and dashboard UI are intentionally not implemented yet.
 
 ## Technology stack
 
@@ -26,7 +26,7 @@ Phases 0–1 are complete. Phase 2 adds email/password authentication with bcryp
 │   │   ├── common/         # Errors, filters, interceptors, pipes, DTOs
 │   │   ├── config/         # Environment validation & Swagger
 │   │   ├── database/       # Prisma module/service
-│   │   ├── modules/        # Feature modules (health in Phase 0)
+│   │   ├── modules/        # Feature modules (auth, catalog, health)
 │   │   ├── app.module.ts
 │   │   └── main.ts
 │   ├── prisma/             # Prisma schema & seed foundation
@@ -150,6 +150,73 @@ cd backend
 pnpm test:e2e
 ```
 
+## Catalog management APIs (Phase 4)
+
+All catalog routes require a Bearer access token. Mutations are limited to `SUPER_ADMIN` and `ADMIN`. `MANAGER` and `CUSTOMER` may read but cannot create/update/delete.
+
+| Method | Endpoint | Roles (mutations) | Description |
+| --- | --- | --- | --- |
+| `POST` | `/api/v1/categories` | Super Admin, Admin | Create category |
+| `GET` | `/api/v1/categories` | Authenticated | List categories |
+| `GET` | `/api/v1/categories/:id` | Authenticated | Get category |
+| `PATCH` | `/api/v1/categories/:id` | Super Admin, Admin | Update category |
+| `DELETE` | `/api/v1/categories/:id` | Super Admin, Admin | Delete category |
+| `POST` | `/api/v1/sizes` | Super Admin, Admin | Create size |
+| `GET` | `/api/v1/sizes` | Authenticated | List sizes |
+| `GET` | `/api/v1/sizes/:id` | Authenticated | Get size |
+| `PATCH` | `/api/v1/sizes/:id` | Super Admin, Admin | Update size |
+| `DELETE` | `/api/v1/sizes/:id` | Super Admin, Admin | Delete size |
+| `POST` | `/api/v1/styles` | Super Admin, Admin | Create style |
+| `GET` | `/api/v1/styles` | Authenticated | List styles |
+| `GET` | `/api/v1/styles/:id` | Authenticated | Get style |
+| `PATCH` | `/api/v1/styles/:id` | Super Admin, Admin | Update style |
+| `DELETE` | `/api/v1/styles/:id` | Super Admin, Admin | Delete style |
+
+### List query parameters
+
+| Param | Description |
+| --- | --- |
+| `page` | Page number (≥ 1, default 1) |
+| `limit` | Page size (1–100, default 20) |
+| `search` | Case-insensitive name contains |
+| `status` | `active` / `inactive` (or `true` / `false`) |
+| `sortBy` | Allowlisted field (`name`, `createdAt`, `updatedAt`; sizes also `sortOrder`) |
+| `sortOrder` | `asc` or `desc` |
+
+### Create / update notes
+
+- Names are trimmed; duplicates are rejected case-insensitively (`409 Conflict`).
+- Categories/Styles support optional `description` and `isActive`.
+- Sizes support `sortOrder` and `isActive`.
+- Hard delete returns `409` when the record is referenced by products (FK `Restrict`). Prefer deactivating via `PATCH` `{ "isActive": false }`.
+
+### Example create category
+
+```bash
+curl -X POST http://localhost:3000/api/v1/categories \
+  -H "Authorization: Bearer <accessToken>" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Summer Collection","description":"Seasonal apparel"}'
+```
+
+### Example list response shape
+
+```json
+{
+  "success": true,
+  "message": "Categories retrieved successfully",
+  "data": [],
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 0,
+      "totalPages": 0
+    }
+  }
+}
+```
+
 ## Database setup
 
 ```bash
@@ -260,16 +327,17 @@ Completed:
 1. Phase 0 — project foundation
 2. Phase 1 — database schema & seed
 3. Phase 2 — authentication & JWT system
+4. Phase 3 — RBAC foundation (roles guard used by catalog mutations)
+5. Phase 4 — Category, Size & Style management APIs
 
 Planned next:
 
-1. RBAC authorization guards and user management APIs
-2. OAuth (Google/Facebook)
-3. Products, categories, sizes, styles APIs
-4. Orders and checkout
-5. Customer storefront
-6. Management dashboard
-7. Broader testing and hardening
+1. Product management APIs
+2. Order management APIs
+3. OAuth (Google/Facebook)
+4. Customer storefront
+5. Management dashboard
+6. Broader testing and hardening
 
 ## Assumptions
 
@@ -278,11 +346,13 @@ Planned next:
 - Backend defaults to `http://localhost:3000` with prefix `/api/v1`.
 - Super Admin credentials for seeding are provided via local environment variables only.
 - Access tokens are short-lived JWTs; logout revokes refresh tokens (access tokens remain valid until expiry).
+- Catalog name uniqueness is case-insensitive (app checks + `LOWER(name)` unique indexes).
 
-## Known limitations (Phase 2)
+## Known limitations (Phase 4)
 
-- No RBAC/authorization guards yet
+- No Product CRUD yet
+- No Order APIs yet
 - No OAuth yet
-- No catalog/order business APIs yet
 - No customer or dashboard feature pages yet
 - Seed creates system roles + Super Admin only (no fake catalog data)
+- Catalog list endpoints require authentication (not public storefront yet)
