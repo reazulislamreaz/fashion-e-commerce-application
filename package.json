@@ -1,0 +1,23 @@
+{
+  "name": "easy-fashion-ecommerce",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Easy Fashion Limited — Software Engineer Technical Assessment (root convenience scripts only)",
+  "scripts": {
+    "backend:dev": "pnpm --dir backend start:dev",
+    "backend:build": "pnpm --dir backend build",
+    "backend:lint": "pnpm --dir backend lint",
+    "backend:typecheck": "pnpm --dir backend typecheck",
+    "frontend:dev": "pnpm --dir frontend dev",
+    "frontend:build": "pnpm --dir frontend build",
+    "frontend:lint": "pnpm --dir frontend lint",
+    "frontend:typecheck": "pnpm --dir frontend typecheck",
+    "db:up": "pnpm --dir backend db:up",
+    "db:down": "pnpm --dir backend db:down",
+    "prisma:generate": "pnpm --dir backend prisma:generate"
+  },
+  "engines": {
+    "node": ">=20.19.6",
+    "pnpm": ">=9.0.0"
+  }
+}

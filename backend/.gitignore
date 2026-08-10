@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+coverage/
+*.tsbuildinfo
+
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+pino-*.log
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Prisma local sqlite (if ever used)
+prisma/*.db
+prisma/*.db-journal

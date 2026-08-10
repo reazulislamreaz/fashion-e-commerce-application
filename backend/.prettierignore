@@ -1,0 +1,5 @@
+dist
+node_modules
+coverage
+frontend
+pnpm-lock.yaml

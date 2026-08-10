@@ -1,0 +1,11 @@
+// Easy Fashion Limited — Phase 0 database foundation
+// Business models (Users, Roles, Products, Categories, Orders, etc.)
+// will be introduced in the dedicated database phase.
+
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}

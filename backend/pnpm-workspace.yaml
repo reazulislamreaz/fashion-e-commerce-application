@@ -1,0 +1,8 @@
+# Single-package pnpm settings (not a multi-package workspace).
+# Allows required native/postinstall build scripts.
+allowBuilds:
+  '@nestjs/core': true
+  '@prisma/client': true
+  '@prisma/engines': true
+  '@scarf/scarf': true
+  prisma: true
