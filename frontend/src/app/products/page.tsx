@@ -14,6 +14,7 @@ import { FilterSidebar } from '@/components/products/filter-sidebar';
 import { FilterDrawer } from '@/components/products/filter-drawer';
 import { ProductCardSkeleton } from '@/components/ui/skeleton';
 import { IconFilter, IconSearch, IconX } from '@/components/ui/icons';
+import { Pagination } from '@/components/ui/pagination';
 
 function ProductCatalogContent() {
   const router = useRouter();
@@ -282,31 +283,11 @@ function ProductCatalogContent() {
                 ))}
               </div>
 
-              {/* Pagination */}
-              {productsData.pagination && productsData.pagination.totalPages > 1 && (
-                <div className="mt-6 flex items-center justify-between border-t border-stone-200 pt-6">
-                  <button className="cursor-pointer"
-                    disabled={!productsData.pagination.hasPreviousPage}
-                    onClick={() => updateQueryParams({ page: String(pageParam - 1) })}
-                    className="border border-stone-300 bg-white px-4 py-2 text-xs font-semibold text-stone-700 disabled:opacity-40 hover:bg-stone-50"
-                  >
-                    Previous Page
-                  </button>
-
-                  <span className="text-xs font-medium text-stone-600">
-                    Page <strong className="text-stone-900">{productsData.pagination.page}</strong> of{' '}
-                    <strong className="text-stone-900">{productsData.pagination.totalPages}</strong>
-                  </span>
-
-                  <button className="cursor-pointer"
-                    disabled={!productsData.pagination.hasNextPage}
-                    onClick={() => updateQueryParams({ page: String(pageParam + 1) })}
-                    className="border border-stone-300 bg-white px-4 py-2 text-xs font-semibold text-stone-700 disabled:opacity-40 hover:bg-stone-50"
-                  >
-                    Next Page
-                  </button>
-                </div>
-              )}
+              <Pagination
+                meta={productsData.pagination}
+                onPageChange={(p) => updateQueryParams({ page: String(p) })}
+                variant="standalone"
+              />
             </>
           )}
         </div>

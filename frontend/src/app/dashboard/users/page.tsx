@@ -12,12 +12,11 @@ import {
 } from '@/lib/api/services';
 import { PaginationMeta, Role, RoleCode, User, UserStatus } from '@/types';
 import {
-  IconChevronLeft,
-  IconChevronRight,
   IconPencil,
   IconPlus,
   IconSearch,
 } from '@/components/ui/icons';
+import { Pagination } from '@/components/ui/pagination';
 
 const ROLE_OPTIONS: RoleCode[] = ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'CUSTOMER'];
 
@@ -251,30 +250,7 @@ export default function DashboardUsersPage() {
             </div>
           )}
 
-          {/* Pagination Controls */}
-          {meta && meta.totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-stone-100 px-4 py-3 text-xs text-stone-500">
-              <span>
-                Page {meta.page} of {meta.totalPages} ({meta.totalItems} users)
-              </span>
-              <div className="flex items-center gap-2">
-                <button className="cursor-pointer"
-                  disabled={!meta.hasPreviousPage}
-                  onClick={() => setPage((p) => p - 1)}
-                  className="border border-stone-200 p-1.5 disabled:opacity-40"
-                >
-                  <IconChevronLeft className="size-4" />
-                </button>
-                <button className="cursor-pointer"
-                  disabled={!meta.hasNextPage}
-                  onClick={() => setPage((p) => p + 1)}
-                  className="border border-stone-200 p-1.5 disabled:opacity-40"
-                >
-                  <IconChevronRight className="size-4" />
-                </button>
-              </div>
-            </div>
-          )}
+          <Pagination meta={meta} onPageChange={setPage} noun="users" />
         </div>
       </div>
     </DashboardShell>

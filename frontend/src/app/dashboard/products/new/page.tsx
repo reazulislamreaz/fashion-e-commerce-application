@@ -11,6 +11,7 @@ import {
   getCategories,
   getSizes,
   getStyles,
+  uploadImageApi,
 } from '@/lib/api/services';
 import { Category, Size, Style } from '@/types';
 import { IconArrowRight, IconPlus, IconTrash } from '@/components/ui/icons';
@@ -32,16 +33,10 @@ export default function DashboardNewProductPage() {
   const [selectedSizeIds, setSelectedSizeIds] = useState<string[]>([]);
   
   // Image Array state
-  const [imageUrlInput, setImageUrlInput] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [images, setImages] = useState<
     Array<{ url: string; isPrimary: boolean; sortOrder: number }>
-  >([
-    {
-      url: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800',
-      isPrimary: true,
-      sortOrder: 1,
-    },
-  ]);
+  >([]);
 
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -58,17 +53,30 @@ export default function DashboardNewProductPage() {
     );
   };
 
-  const handleAddImageUrl = () => {
-    if (!imageUrlInput.trim()) return;
-    setImages((prev) => [
-      ...prev,
-      {
-        url: imageUrlInput.trim(),
-        isPrimary: prev.length === 0,
-        sortOrder: prev.length + 1,
-      },
-    ]);
-    setImageUrlInput('');
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !accessToken) return;
+
+    try {
+      setUploadingImage(true);
+      setError(null);
+      const res = await uploadImageApi(file, accessToken);
+      
+      setImages((prev) => [
+        ...prev,
+        {
+          url: res.url,
+          isPrimary: prev.length === 0,
+          sortOrder: prev.length + 1,
+        },
+      ]);
+    } catch (err: any) {
+      setError(err.message || 'Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+      // Reset input
+      e.target.value = '';
+    }
   };
 
   const handleRemoveImage = (index: number) => {
@@ -288,20 +296,17 @@ export default function DashboardNewProductPage() {
 
             <div className="flex gap-2">
               <input
-                type="url"
-                placeholder="Enter HTTPS Image URL (e.g. https://images.unsplash.com/...)"
-                value={imageUrlInput}
-                onChange={(e) => setImageUrlInput(e.target.value)}
-                className="flex-1 border border-stone-300 p-2.5 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+                type="file"
+                accept="image/png, image/jpeg, image/jpg, image/webp"
+                onChange={handleFileUpload}
+                disabled={uploadingImage}
+                className="flex-1 border border-stone-300 p-2 text-xs font-medium focus:border-[#C9A227] focus:outline-none file:mr-4 file:py-2 file:px-4 file:border-0 file:text-xs file:font-bold file:bg-stone-100 file:text-stone-700 hover:file:bg-stone-200 cursor-pointer"
               />
-              <button
-                type="button"
-                onClick={handleAddImageUrl}
-                className="inline-flex items-center gap-1.5 bg-stone-900 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors cursor-pointer"
-              >
-                <IconPlus className="size-4" />
-                <span>Add URL</span>
-              </button>
+              {uploadingImage && (
+                <div className="flex items-center px-4 py-2.5 text-xs font-bold text-stone-500">
+                  Uploading...
+                </div>
+              )}
             </div>
 
             {/* Image Preview Grid */}

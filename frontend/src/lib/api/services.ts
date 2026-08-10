@@ -361,3 +361,24 @@ export async function getRolesApi(token: string) {
     headers: { Authorization: `Bearer ${token}` },
   });
 }
+
+// Uploads
+export async function uploadImageApi(file: File, token: string) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1'}/upload`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || 'Failed to upload image');
+  }
+
+  return response.json() as Promise<{ url: string }>;
+}

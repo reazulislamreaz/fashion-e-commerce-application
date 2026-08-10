@@ -7,6 +7,7 @@ import { useAuth } from '@/context/auth-context';
 import { getMyOrdersApi } from '@/lib/api/services';
 import { Order, PaginatedList } from '@/types';
 import { IconBag, IconChevronRight } from '@/components/ui/icons';
+import { Pagination } from '@/components/ui/pagination';
 
 function CustomerOrdersContent() {
   const { accessToken } = useAuth();
@@ -23,6 +24,7 @@ function CustomerOrdersContent() {
     },
   });
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     if (accessToken) {
@@ -30,7 +32,7 @@ function CustomerOrdersContent() {
       const fetchOrders = async (t: string) => {
         setLoading(true);
         try {
-          const res = await getMyOrdersApi(t, 1, 20);
+          const res = await getMyOrdersApi(t, page, 10);
           setOrdersData(res);
         } catch {
           setOrdersData({
@@ -51,7 +53,7 @@ function CustomerOrdersContent() {
 
       fetchOrders(activeToken);
     }
-  }, [accessToken]);
+  }, [accessToken, page]);
 
   if (loading) {
     return (
@@ -153,6 +155,13 @@ function CustomerOrdersContent() {
               </div>
             );
           })}
+
+          <Pagination
+            meta={ordersData?.pagination || null}
+            onPageChange={setPage}
+            noun="orders"
+            variant="standalone"
+          />
         </div>
       )}
     </div>

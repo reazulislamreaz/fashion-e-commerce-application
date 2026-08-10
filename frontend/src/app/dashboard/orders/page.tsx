@@ -7,10 +7,9 @@ import { useAuth } from '@/context/auth-context';
 import { getMyOrdersApi, updateOrderStatusApi } from '@/lib/api/services';
 import { Order, OrderStatus, PaginationMeta } from '@/types';
 import {
-  IconChevronLeft,
-  IconChevronRight,
   IconEye,
 } from '@/components/ui/icons';
+import { Pagination } from '@/components/ui/pagination';
 
 const ORDER_STATUSES: OrderStatus[] = [
   'PENDING',
@@ -188,30 +187,7 @@ export default function DashboardOrdersPage() {
             </div>
           )}
 
-          {/* Pagination Controls */}
-          {meta && meta.totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-stone-100 px-4 py-3 text-xs text-stone-500">
-              <span>
-                Page {meta.page} of {meta.totalPages} ({meta.totalItems} orders)
-              </span>
-              <div className="flex items-center gap-2">
-                <button className="cursor-pointer"
-                  disabled={!meta.hasPreviousPage}
-                  onClick={() => setPage((p) => p - 1)}
-                  className="border border-stone-200 p-1.5 disabled:opacity-40"
-                >
-                  <IconChevronLeft className="size-4" />
-                </button>
-                <button className="cursor-pointer"
-                  disabled={!meta.hasNextPage}
-                  onClick={() => setPage((p) => p + 1)}
-                  className="border border-stone-200 p-1.5 disabled:opacity-40"
-                >
-                  <IconChevronRight className="size-4" />
-                </button>
-              </div>
-            </div>
-          )}
+          <Pagination meta={meta} onPageChange={setPage} noun="orders" />
         </div>
       </div>
     </DashboardShell>
