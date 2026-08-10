@@ -20,8 +20,8 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <AuthProvider>
-      <CartProvider>
-        <ToastProvider>
+      <ToastProvider>
+        <CartProvider>
           <div className="flex min-h-screen flex-col bg-[#FAFAFA] text-stone-900 selection:bg-[#C9A227] selection:text-stone-950">
             {!isDashboard && <Navbar />}
             <main className="flex-1 flex flex-col">{children}</main>
@@ -29,8 +29,8 @@ export function AppShell({ children }: AppShellProps) {
             {!isDashboard && <CartDrawer />}
           </div>
           <SessionExpiredModal />
-        </ToastProvider>
-      </CartProvider>
+        </CartProvider>
+      </ToastProvider>
     </AuthProvider>
   );
 }
