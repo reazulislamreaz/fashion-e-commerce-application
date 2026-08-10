@@ -17,6 +17,8 @@ import { SizesModule } from './modules/sizes/sizes.module';
 import { StylesModule } from './modules/styles/styles.module';
 import { ProductsModule } from './modules/products/products.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { UsersModule } from './modules/users/users.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -81,6 +83,8 @@ import { OrdersModule } from './modules/orders/orders.module';
     StylesModule,
     ProductsModule,
     OrdersModule,
+    UsersModule,
+    DashboardModule,
   ],
   providers: [
     {

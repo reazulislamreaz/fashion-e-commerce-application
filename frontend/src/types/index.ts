@@ -1,6 +1,13 @@
 export type RoleCode = 'SUPER_ADMIN' | 'ADMIN' | 'MANAGER' | 'CUSTOMER';
 export type UserStatus = 'ACTIVE' | 'INACTIVE';
 
+export type Role = {
+  id: string;
+  code: RoleCode;
+  name: string;
+  description?: string | null;
+};
+
 export type User = {
   id: string;
   fullName: string;
@@ -11,6 +18,7 @@ export type User = {
     id: string;
     code: RoleCode;
     name: string;
+    description?: string | null;
   };
   createdAt: string;
   updatedAt: string;
@@ -44,12 +52,12 @@ export type Size = {
 };
 
 export type ProductImage = {
-  id: string;
-  productId: string;
+  id?: string;
+  productId?: string;
   url: string;
-  sortOrder: number;
-  isPrimary: boolean;
-  createdAt: string;
+  sortOrder?: number;
+  isPrimary?: boolean;
+  createdAt?: string;
 };
 
 export type ProductSizeRelation = {
@@ -137,4 +145,78 @@ export type CartItem = {
   sizeId?: string;
   sizeName?: string;
   quantity: number;
+};
+
+export type DashboardStats = {
+  totalUsers: number;
+  totalCategories: number;
+  totalProducts: number;
+  totalOrders: number;
+};
+
+export type CreateProductInput = {
+  name: string;
+  description: string;
+  price: number;
+  categoryId: string;
+  styleId: string;
+  sizeIds: string[];
+  images: Array<{
+    url: string;
+    isPrimary?: boolean;
+    sortOrder?: number;
+  }>;
+};
+
+export type UpdateProductInput = Partial<CreateProductInput> & {
+  isActive?: boolean;
+};
+
+export type CreateCategoryInput = {
+  name: string;
+  description?: string;
+};
+
+export type UpdateCategoryInput = Partial<CreateCategoryInput> & {
+  isActive?: boolean;
+};
+
+export type CreateSizeInput = {
+  name: string;
+  sortOrder?: number;
+};
+
+export type UpdateSizeInput = Partial<CreateSizeInput> & {
+  isActive?: boolean;
+};
+
+export type CreateStyleInput = {
+  name: string;
+  description?: string;
+};
+
+export type UpdateStyleInput = Partial<CreateStyleInput> & {
+  isActive?: boolean;
+};
+
+export type CreateUserInput = {
+  fullName: string;
+  email: string;
+  phone?: string;
+  password: string;
+  roleCode: RoleCode;
+};
+
+export type UpdateUserInput = {
+  fullName?: string;
+  email?: string;
+  phone?: string;
+};
+
+export type UserQueryParams = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  role?: RoleCode;
+  status?: UserStatus;
 };

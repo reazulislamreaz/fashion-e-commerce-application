@@ -10,7 +10,9 @@ type ProductGalleryProps = {
 };
 
 export function ProductGallery({ images, productName }: ProductGalleryProps) {
-  const sortedImages = [...images].sort((a, b) => a.sortOrder - b.sortOrder);
+  const sortedImages = [...images].sort(
+    (a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0),
+  );
   const initialIndex = sortedImages.findIndex((img) => img.isPrimary);
   const [selectedIndex, setSelectedIndex] = useState(
     initialIndex > -1 ? initialIndex : 0,

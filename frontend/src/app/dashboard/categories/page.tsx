@@ -1,0 +1,363 @@
+'use client';
+
+import { useCallback, useEffect, useState } from 'react';
+import { DashboardShell } from '@/components/dashboard/dashboard-shell';
+import { useAuth } from '@/context/auth-context';
+import {
+  createCategoryApi,
+  deleteCategoryApi,
+  getCategories,
+  updateCategoryApi,
+} from '@/lib/api/services';
+import { Category, PaginationMeta } from '@/types';
+import {
+  IconChevronLeft,
+  IconChevronRight,
+  IconPencil,
+  IconPlus,
+  IconSearch,
+  IconTrash,
+  IconX,
+} from '@/components/ui/icons';
+
+export default function DashboardCategoriesPage() {
+  const { accessToken } = useAuth();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [meta, setMeta] = useState<PaginationMeta | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+
+  // Modal states
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [formData, setFormData] = useState({ name: '', description: '' });
+  const [formError, setFormError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Delete modal
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const fetchCategoriesList = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await getCategories({ page, limit: 10, search, status: 'all' });
+      setCategories(res.items || []);
+      setMeta(res.pagination || null);
+    } catch {
+      // Ignore
+    } finally {
+      setLoading(false);
+    }
+  }, [page, search]);
+
+  useEffect(() => {
+    fetchCategoriesList();
+  }, [fetchCategoriesList]);
+
+  const handleOpenCreate = () => {
+    setEditingCategory(null);
+    setFormData({ name: '', description: '' });
+    setFormError(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (cat: Category) => {
+    setEditingCategory(cat);
+    setFormData({ name: cat.name, description: cat.description || '' });
+    setFormError(null);
+    setIsModalOpen(true);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!accessToken) return;
+    if (!formData.name.trim()) {
+      setFormError('Category name is required.');
+      return;
+    }
+
+    setSubmitting(true);
+    setFormError(null);
+
+    try {
+      if (editingCategory) {
+        await updateCategoryApi(
+          editingCategory.id,
+          { name: formData.name.trim(), description: formData.description.trim() },
+          accessToken,
+        );
+      } else {
+        await createCategoryApi(
+          { name: formData.name.trim(), description: formData.description.trim() },
+          accessToken,
+        );
+      }
+      setIsModalOpen(false);
+      fetchCategoriesList();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setFormError(err.message);
+      } else {
+        setFormError('Failed to save category');
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!accessToken) return;
+    setDeleteError(null);
+
+    try {
+      await deleteCategoryApi(id, accessToken);
+      setDeletingId(null);
+      fetchCategoriesList();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setDeleteError(err.message);
+      } else {
+        setDeleteError('Cannot delete category');
+      }
+    }
+  };
+
+  return (
+    <DashboardShell allowedRoles={['SUPER_ADMIN', 'ADMIN']}>
+      <div className="flex flex-col gap-6">
+        {/* Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-extrabold text-stone-950 font-display">
+              Category Management
+            </h1>
+            <p className="mt-1 text-xs text-stone-500">
+              Create, view, edit, and organize product categories.
+            </p>
+          </div>
+
+          <button
+            onClick={handleOpenCreate}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-stone-950 px-4 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+          >
+            <IconPlus className="size-4" />
+            <span>Add Category</span>
+          </button>
+        </div>
+
+        {/* Search Toolbar */}
+        <div className="rounded-2xl border border-stone-200 bg-white p-4 shadow-xs">
+          <div className="relative max-w-sm">
+            <IconSearch className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
+            <input
+              type="text"
+              placeholder="Search category name..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="w-full rounded-xl border border-stone-200 bg-stone-50 py-2.5 pl-10 pr-4 text-xs font-medium text-stone-900 focus:border-[#C9A227] focus:bg-white focus:outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Category Table */}
+        <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-xs">
+          {loading ? (
+            <div className="p-8 text-center text-xs text-stone-500">
+              Loading categories...
+            </div>
+          ) : categories.length === 0 ? (
+            <div className="p-12 text-center text-xs text-stone-500">
+              No categories found matching your query.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs text-stone-700">
+                <thead className="bg-stone-50 text-[10px] font-bold uppercase tracking-wider text-stone-500 border-b border-stone-200">
+                  <tr>
+                    <th className="py-3.5 px-4">Name</th>
+                    <th className="py-3.5 px-4">Description</th>
+                    <th className="py-3.5 px-4">Status</th>
+                    <th className="py-3.5 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stone-100 font-medium">
+                  {categories.map((cat) => (
+                    <tr key={cat.id} className="hover:bg-stone-50/80 transition-colors">
+                      <td className="py-3.5 px-4 font-bold text-stone-950">{cat.name}</td>
+                      <td className="py-3.5 px-4 text-stone-500 max-w-xs truncate">
+                        {cat.description || '—'}
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span
+                          className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                            cat.isActive
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : 'bg-stone-100 text-stone-600 border border-stone-200'
+                          }`}
+                        >
+                          {cat.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => handleOpenEdit(cat)}
+                            className="p-1.5 text-stone-500 hover:text-stone-950 transition-colors"
+                            title="Edit Category"
+                          >
+                            <IconPencil className="size-4" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setDeletingId(cat.id);
+                              setDeleteError(null);
+                            }}
+                            className="p-1.5 text-rose-500 hover:text-rose-700 transition-colors"
+                            title="Delete Category"
+                          >
+                            <IconTrash className="size-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {meta && meta.totalPages > 1 && (
+            <div className="flex items-center justify-between border-t border-stone-100 px-4 py-3 text-xs text-stone-500">
+              <span>
+                Page {meta.page} of {meta.totalPages} ({meta.totalItems} categories)
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  disabled={!meta.hasPreviousPage}
+                  onClick={() => setPage((p) => p - 1)}
+                  className="rounded-lg border border-stone-200 p-1.5 disabled:opacity-40"
+                >
+                  <IconChevronLeft className="size-4" />
+                </button>
+                <button
+                  disabled={!meta.hasNextPage}
+                  onClick={() => setPage((p) => p + 1)}
+                  className="rounded-lg border border-stone-200 p-1.5 disabled:opacity-40"
+                >
+                  <IconChevronRight className="size-4" />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Create / Edit Modal */}
+        {isModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs p-4">
+            <div className="w-full max-w-md rounded-3xl border border-stone-200 bg-white p-6 shadow-2xl">
+              <div className="flex items-center justify-between border-b border-stone-100 pb-4 mb-4">
+                <h3 className="text-base font-bold text-stone-950 font-display">
+                  {editingCategory ? 'Edit Category' : 'Create New Category'}
+                </h3>
+                <button onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-900">
+                  <IconX className="size-5" />
+                </button>
+              </div>
+
+              {formError && (
+                <div className="mb-4 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700 font-medium">
+                  {formError}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 mb-1">
+                    Category Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full rounded-xl border border-stone-300 p-2.5 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+                    placeholder="e.g. Outerwear, Dresses, Accessories"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 mb-1">
+                    Description (Optional)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    className="w-full rounded-xl border border-stone-300 p-2.5 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+                    placeholder="Category description..."
+                  />
+                </div>
+
+                <div className="mt-2 flex items-center justify-end gap-3 border-t border-stone-100 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="rounded-xl border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="rounded-xl bg-stone-950 px-4 py-2 text-xs font-bold text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors disabled:opacity-50"
+                  >
+                    {submitting ? 'Saving...' : editingCategory ? 'Update' : 'Create'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {deletingId && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs p-4">
+            <div className="w-full max-w-sm rounded-3xl border border-stone-200 bg-white p-6 shadow-2xl text-center">
+              <h3 className="text-base font-bold text-stone-950 font-display">Delete Category?</h3>
+              <p className="mt-2 text-xs text-stone-500">
+                Are you sure you want to delete this category? This action cannot be undone.
+              </p>
+
+              {deleteError && (
+                <div className="mt-3 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700 font-medium">
+                  {deleteError}
+                </div>
+              )}
+
+              <div className="mt-6 flex items-center justify-center gap-3">
+                <button
+                  onClick={() => setDeletingId(null)}
+                  className="rounded-xl border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleDelete(deletingId)}
+                  className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-bold text-white hover:bg-rose-700 transition-colors"
+                >
+                  Confirm Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </DashboardShell>
+  );
+}
