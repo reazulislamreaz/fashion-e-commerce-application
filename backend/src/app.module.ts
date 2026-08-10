@@ -15,6 +15,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { SizesModule } from './modules/sizes/sizes.module';
 import { StylesModule } from './modules/styles/styles.module';
+import { ProductsModule } from './modules/products/products.module';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { StylesModule } from './modules/styles/styles.module';
     CategoriesModule,
     SizesModule,
     StylesModule,
+    ProductsModule,
   ],
   providers: [
     {

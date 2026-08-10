@@ -4,9 +4,9 @@ Technical assessment project for **Easy Fashion Limited**, developed incremental
 
 ## Current phase
 
-**Phase 4 — Category, Size & Style Management APIs**
+**Phase 5 — Product Management APIs**
 
-Phases 0–3 foundations are in place. Phase 4 adds authenticated catalog management for Categories, Sizes, and Styles with validation, RBAC, pagination, search, filtering, sorting, and safe deletes. Product/Order APIs and dashboard UI are intentionally not implemented yet.
+Phases 0–4 foundations are in place. Phase 5 adds authenticated Product Management APIs with Category, Style, and Size relationships, multiple images, validation, RBAC (`SUPER_ADMIN` and `ADMIN` for mutations; authenticated read access), pagination, search, multi-filtering (Category, Style, Size, Status), sorting, transaction safety, and e2e test suite. Order APIs and dashboard UI are intentionally not implemented yet.
 
 ## Technology stack
 
@@ -214,6 +214,60 @@ curl -X POST http://localhost:3000/api/v1/categories \
       "totalPages": 0
     }
   }
+}
+```
+
+## Product management APIs (Phase 5)
+
+All product routes require a Bearer access token. Mutations are limited to `SUPER_ADMIN` and `ADMIN`. `MANAGER` and `CUSTOMER` may read but cannot create/update/delete.
+
+| Method | Endpoint | Roles (mutations) | Description |
+| --- | --- | --- | --- |
+| `POST` | `/api/v1/products` | Super Admin, Admin | Create product with relations and images |
+| `GET` | `/api/v1/products` | Authenticated | List products with search, multi-filtering, sorting, pagination |
+| `GET` | `/api/v1/products/:id` | Authenticated | Get detailed product by ID |
+| `PATCH` | `/api/v1/products/:id` | Super Admin, Admin | Update product (partial update, replace sizes/images) |
+| `DELETE` | `/api/v1/products/:id` | Super Admin, Admin | Delete product (restricted if referenced by orders) |
+
+### Product Query Parameters
+
+| Param | Description |
+| --- | --- |
+| `page` | Page number (≥ 1, default 1) |
+| `limit` | Page size (1–100, default 20) |
+| `search` | Case-insensitive name contains |
+| `categoryId` | Filter by Category UUID |
+| `styleId` | Filter by Style UUID |
+| `sizeId` | Filter by Size UUID (via `ProductSize` join table) |
+| `status` | `active` / `inactive` (or `true` / `false`) |
+| `sortBy` | Allowlisted field (`name`, `price`, `createdAt`, `updatedAt`; default `createdAt`) |
+| `sortOrder` | `asc` or `desc` (default `desc` for createdAt, `asc` for others) |
+
+### Example Product Create Body
+
+```json
+{
+  "name": "Classic Cotton T-Shirt",
+  "description": "100% premium combed cotton crewneck shirt",
+  "price": 29.99,
+  "categoryId": "00000000-0000-4000-8000-000000000001",
+  "styleId": "00000000-0000-4000-8000-000000000002",
+  "sizeIds": [
+    "00000000-0000-4000-8000-000000000003",
+    "00000000-0000-4000-8000-000000000004"
+  ],
+  "images": [
+    {
+      "url": "https://images.example.com/products/shirt-front.jpg",
+      "sortOrder": 1,
+      "isPrimary": true
+    },
+    {
+      "url": "https://images.example.com/products/shirt-back.jpg",
+      "sortOrder": 2,
+      "isPrimary": false
+    }
+  ]
 }
 ```
 
