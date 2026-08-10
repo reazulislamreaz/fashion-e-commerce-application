@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RoleCode } from '@prisma/client';
@@ -112,6 +113,18 @@ export class UsersController {
       success: true,
       message: `User role updated to ${dto.roleCode}`,
       data: user,
+    };
+  }
+
+  @Delete(':id')
+  @Roles(RoleCode.SUPER_ADMIN)
+  @ApiOperation({ summary: 'Delete a user (Super Admin only)' })
+  async remove(@Param() params: IdParamDto) {
+    await this.usersService.remove(params.id);
+    return {
+      success: true,
+      message: 'User deleted successfully',
+      data: null,
     };
   }
 }

@@ -3,12 +3,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 import { useAuth } from '@/context/auth-context';
+import { useToast } from '@/components/ui/toast';
 import {
   createCategoryApi,
   deleteCategoryApi,
   getCategories,
   updateCategoryApi,
 } from '@/lib/api/services';
+import { extractErrorMessage } from '@/lib/api/errors';
 import { Category, PaginationMeta } from '@/types';
 import {
   IconPencil,
@@ -21,6 +23,7 @@ import { Pagination } from '@/components/ui/pagination';
 
 export default function DashboardCategoriesPage() {
   const { accessToken } = useAuth();
+  const { showToast } = useToast();
   const [categories, setCategories] = useState<Category[]>([]);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
   const [loading, setLoading] = useState(true);
@@ -44,8 +47,11 @@ export default function DashboardCategoriesPage() {
       const res = await getCategories({ page, limit: 10, search, status: 'all' });
       setCategories(res.items || []);
       setMeta(res.pagination || null);
-    } catch {
-      // Ignore
+    } catch (err) {
+      setCategories([]);
+      setMeta(null);
+      // Silently handled – table shows empty state
+      console.error('Failed to load categories:', extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -87,20 +93,18 @@ export default function DashboardCategoriesPage() {
           { name: formData.name.trim(), description: formData.description.trim() },
           accessToken,
         );
+        showToast('Category Updated', `Category "${formData.name}" has been updated.`);
       } else {
         await createCategoryApi(
           { name: formData.name.trim(), description: formData.description.trim() },
           accessToken,
         );
+        showToast('Category Created', `Category "${formData.name}" has been created.`);
       }
       setIsModalOpen(false);
       fetchCategoriesList();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setFormError(err.message);
-      } else {
-        setFormError('Failed to save category');
-      }
+      setFormError(extractErrorMessage(err, 'Failed to save category. Please try again.'));
     } finally {
       setSubmitting(false);
     }
@@ -112,14 +116,11 @@ export default function DashboardCategoriesPage() {
 
     try {
       await deleteCategoryApi(id, accessToken);
+      showToast('Category Deleted', 'The category has been deleted.');
       setDeletingId(null);
       fetchCategoriesList();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setDeleteError(err.message);
-      } else {
-        setDeleteError('Cannot delete category');
-      }
+      setDeleteError(extractErrorMessage(err, 'Cannot delete this category. It may have associated products.'));
     }
   };
 
@@ -204,14 +205,14 @@ export default function DashboardCategoriesPage() {
                       </td>
                       <td className="py-3.5 px-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button className="cursor-pointer"
+                          <button
                             onClick={() => handleOpenEdit(cat)}
                             className="p-1.5 text-stone-500 hover:text-stone-950 transition-colors"
                             title="Edit Category"
                           >
                             <IconPencil className="size-4" />
                           </button>
-                          <button className="cursor-pointer"
+                          <button
                             onClick={() => {
                               setDeletingId(cat.id);
                               setDeleteError(null);
@@ -241,7 +242,7 @@ export default function DashboardCategoriesPage() {
                 <h3 className="text-base font-bold text-stone-950 font-display">
                   {editingCategory ? 'Edit Category' : 'Create New Category'}
                 </h3>
-                <button className="cursor-pointer" onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-900">
+                <button onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-900 cursor-pointer">
                   <IconX className="size-5" />
                 </button>
               </div>
@@ -281,7 +282,7 @@ export default function DashboardCategoriesPage() {
                 </div>
 
                 <div className="mt-2 flex items-center justify-end gap-3 border-t border-stone-100 pt-4">
-                  <button className="cursor-pointer"
+                  <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
                     className="border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
@@ -317,13 +318,13 @@ export default function DashboardCategoriesPage() {
               )}
 
               <div className="mt-6 flex items-center justify-center gap-3">
-                <button className="cursor-pointer"
+                <button
                   onClick={() => setDeletingId(null)}
                   className="border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
                 >
                   Cancel
                 </button>
-                <button className="cursor-pointer"
+                <button
                   onClick={() => handleDelete(deletingId)}
                   className="bg-rose-600 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-rose-700 transition-colors"
                 >

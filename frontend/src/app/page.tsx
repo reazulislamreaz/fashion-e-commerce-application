@@ -88,7 +88,7 @@ export default async function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent z-0" />
             <div className="relative z-10 flex flex-col items-start">
               <h3 className="text-2xl sm:text-3xl font-bold tracking-tight font-display uppercase">
-                Men's Essentials
+                Men&apos;s Essentials
               </h3>
               <p className="mt-2 text-sm text-stone-200 max-w-sm">
                 Crafted for comfort, premium stitching, and modern silhouetted cuts.
@@ -113,7 +113,7 @@ export default async function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent z-0" />
             <div className="relative z-10 flex flex-col items-start">
               <h3 className="text-2xl sm:text-3xl font-bold tracking-tight font-display uppercase">
-                Women's Fashion
+                Women&apos;s Fashion
               </h3>
               <p className="mt-2 text-sm text-stone-200 max-w-sm">
                 Vibrant palettes, organic cottons, and timeless elegance for every occasion.

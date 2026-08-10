@@ -56,7 +56,7 @@ export function FilterSidebar({
           Categories
         </h4>
         <div className="flex flex-col gap-1.5">
-          <button className="cursor-pointer"
+          <button
             onClick={() => onSelectCategory(undefined)}
             className={`text-left text-xs px-3 py-2  font-medium transition-colors ${
               !selectedCategory
@@ -67,7 +67,7 @@ export function FilterSidebar({
             All Categories
           </button>
           {categories.map((cat) => (
-            <button className="cursor-pointer"
+            <button
               key={cat.id}
               onClick={() =>
                 onSelectCategory(selectedCategory === cat.id ? undefined : cat.id)
@@ -90,7 +90,7 @@ export function FilterSidebar({
           Styles
         </h4>
         <div className="flex flex-wrap gap-1.5">
-          <button className="cursor-pointer"
+          <button
             onClick={() => onSelectStyle(undefined)}
             className={`text-xs px-3 py-1.5  font-medium transition-colors ${
               !selectedStyle
@@ -101,7 +101,7 @@ export function FilterSidebar({
             All
           </button>
           {styles.map((st) => (
-            <button className="cursor-pointer"
+            <button
               key={st.id}
               onClick={() =>
                 onSelectStyle(selectedStyle === st.id ? undefined : st.id)
@@ -124,7 +124,7 @@ export function FilterSidebar({
           Sizes
         </h4>
         <div className="flex flex-wrap gap-1.5">
-          <button className="cursor-pointer"
+          <button
             onClick={() => onSelectSize(undefined)}
             className={`text-xs px-3 py-1.5  font-medium transition-colors ${
               !selectedSize
@@ -135,7 +135,7 @@ export function FilterSidebar({
             All Sizes
           </button>
           {sizes.map((sz) => (
-            <button className="cursor-pointer"
+            <button
               key={sz.id}
               onClick={() =>
                 onSelectSize(selectedSize === sz.id ? undefined : sz.id)

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useCart } from '@/context/cart-context';
 import { useToast } from '../ui/toast';
 import { Product } from '@/types';
-import { IconBag } from '../ui/icons';
+
 
 type ProductCardProps = {
   product: Product;
@@ -87,7 +87,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="mt-3 flex items-center gap-1.5 flex-wrap">
               <span className="text-[11px] font-semibold text-stone-400 mr-1">Size:</span>
               {availableSizes.map((size) => (
-                <button className="cursor-pointer"
+                <button
                   key={size.id}
                   type="button"
                   onClick={(e) => {

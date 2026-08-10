@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import { CartItem, Product } from '@/types';
+import { useToast } from '@/components/ui/toast';
 
 type CartContextType = {
   items: CartItem[];
@@ -31,6 +32,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -88,6 +90,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       ];
     });
 
+    showToast('Added to Cart', `Added ${quantity}x ${product.name} to your cart.`);
     openCart();
   };
 
@@ -97,6 +100,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         (item) => !(item.productId === productId && item.sizeId === sizeId),
       ),
     );
+    showToast('Removed from Cart', 'The item has been removed from your shopping cart.');
   };
 
   const updateQuantity = (
@@ -123,6 +127,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clearCart = () => {
     setItems([]);
+    showToast('Cart Cleared', 'All items have been removed from your shopping cart.');
   };
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);

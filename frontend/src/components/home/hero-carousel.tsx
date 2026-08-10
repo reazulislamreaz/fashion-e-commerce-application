@@ -141,7 +141,7 @@ export function HeroCarousel() {
       {/* Pagination Indicators */}
       <div className="absolute bottom-6 left-1/2 z-30 flex -translate-x-1/2 gap-2">
         {HERO_SLIDES.map((_, idx) => (
-          <button className="cursor-pointer"
+          <button
             key={idx}
             onClick={() => setCurrentSlide(idx)}
             className={`h-1 transition-all ${

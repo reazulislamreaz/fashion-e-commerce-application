@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/components/ui/toast';
 import { SocialAuthButtons } from '@/components/auth/social-auth-buttons';
-import { ApiClientError } from '@/lib/api/types';
+import { extractErrorMessage } from '@/lib/api/errors';
 
 function RegisterContent() {
   const router = useRouter();
@@ -53,11 +53,9 @@ function RegisterContent() {
       showToast('Account Created!', 'Welcome to Easy Fashion.');
       router.push(redirect);
     } catch (err) {
-      if (err instanceof ApiClientError) {
-        setErrorMessage(err.message);
-      } else {
-        setErrorMessage('Registration failed. The email address may already be registered.');
-      }
+      setErrorMessage(
+        extractErrorMessage(err, 'Registration failed. Please check your details and try again.'),
+      );
     } finally {
       setLoading(false);
     }
@@ -140,7 +138,7 @@ function RegisterContent() {
                 placeholder="Minimum 6 characters"
                 className="w-full border border-stone-300 p-3 pr-10 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
               />
-              <button className="cursor-pointer"
+              <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 text-xs font-semibold text-stone-400 hover:text-stone-700"

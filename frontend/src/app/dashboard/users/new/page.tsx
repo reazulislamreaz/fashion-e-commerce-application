@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 import { useAuth } from '@/context/auth-context';
+import { useToast } from '@/components/ui/toast';
 import { createUserApi } from '@/lib/api/services';
+import { extractErrorMessage } from '@/lib/api/errors';
 import { RoleCode } from '@/types';
 import { IconArrowRight } from '@/components/ui/icons';
 
@@ -14,6 +16,7 @@ const ROLE_OPTIONS: RoleCode[] = ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'CUSTOMER']
 export default function DashboardNewUserPage() {
   const router = useRouter();
   const { accessToken } = useAuth();
+  const { showToast } = useToast();
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -48,13 +51,10 @@ export default function DashboardNewUserPage() {
         accessToken,
       );
 
+      showToast('Account Created', `User "${fullName.trim()}" has been provisioned.`);
       router.push('/dashboard/users');
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Failed to create user');
-      }
+      setError(extractErrorMessage(err, 'Failed to create user. Please check your input and try again.'));
     } finally {
       setSubmitting(false);
     }

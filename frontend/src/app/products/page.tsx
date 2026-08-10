@@ -173,7 +173,7 @@ function ProductCatalogContent() {
               className="w-full border border-stone-300 bg-white py-2 pl-3 pr-9 text-xs text-stone-900 placeholder-stone-400 focus:border-[#C9A227] focus:outline-hidden focus:ring-1 focus:ring-[#C9A227]"
             />
             {searchInput ? (
-              <button className="cursor-pointer"
+              <button
                 type="button"
                 onClick={() => {
                   setSearchInput('');
@@ -203,7 +203,7 @@ function ProductCatalogContent() {
           </select>
 
           {/* Mobile Filter Button */}
-          <button className="cursor-pointer"
+          <button
             onClick={() => setIsFilterDrawerOpen(true)}
             className="inline-flex lg:hidden items-center gap-1.5 bg-stone-950 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white"
           >

@@ -362,6 +362,12 @@ export async function getRolesApi(token: string) {
   });
 }
 
+export async function deleteUserApi(id: string, token: string) {
+  return apiClient.delete<void>(`/users/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
 // Uploads
 export async function uploadImageApi(file: File, token: string) {
   const formData = new FormData();
@@ -380,5 +386,6 @@ export async function uploadImageApi(file: File, token: string) {
     throw new Error(errorData?.message || 'Failed to upload image');
   }
 
-  return response.json() as Promise<{ url: string }>;
+  const json = await response.json();
+  return (json.data || json) as { url: string };
 }

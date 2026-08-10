@@ -106,7 +106,7 @@ export default function CartPage() {
 
                   <div className="mt-4 flex items-center justify-between">
                     <div className="flex items-center border border-stone-300 bg-white">
-                      <button className="cursor-pointer"
+                      <button
                         onClick={() =>
                           updateQuantity(
                             item.productId,
@@ -121,7 +121,7 @@ export default function CartPage() {
                       <span className="w-10 text-center text-xs font-bold uppercase tracking-wider text-stone-900">
                         {item.quantity}
                       </span>
-                      <button className="cursor-pointer"
+                      <button
                         onClick={() =>
                           updateQuantity(
                             item.productId,
@@ -135,7 +135,7 @@ export default function CartPage() {
                       </button>
                     </div>
 
-                    <button className="cursor-pointer"
+                    <button
                       onClick={() => removeItem(item.productId, item.sizeId)}
                       className="flex items-center gap-1 text-xs font-semibold text-rose-600 hover:text-rose-700"
                     >

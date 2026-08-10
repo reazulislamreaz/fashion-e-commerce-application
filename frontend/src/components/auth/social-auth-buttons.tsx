@@ -29,7 +29,7 @@ export function SocialAuthButtons({ actionLabel = 'Continue' }: SocialAuthButton
 
       <div className="grid grid-cols-2 gap-3">
         {/* Google OAuth Button */}
-        <button className="cursor-pointer"
+        <button
           type="button"
           onClick={() => handleSocialAuth('Google')}
           className="flex items-center justify-center gap-2 border border-stone-300 bg-white py-2.5 px-4 text-xs font-semibold text-stone-700 shadow-2xs hover:bg-stone-50 hover:border-stone-400 transition-all"
@@ -56,7 +56,7 @@ export function SocialAuthButtons({ actionLabel = 'Continue' }: SocialAuthButton
         </button>
 
         {/* Facebook OAuth Button */}
-        <button className="cursor-pointer"
+        <button
           type="button"
           onClick={() => handleSocialAuth('Facebook')}
           className="flex items-center justify-center gap-2 border border-stone-300 bg-white py-2.5 px-4 text-xs font-semibold text-stone-700 shadow-2xs hover:bg-stone-50 hover:border-stone-400 transition-all"

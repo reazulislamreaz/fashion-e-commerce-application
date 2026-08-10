@@ -49,7 +49,7 @@ export function Navbar() {
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Mobile menu trigger */}
         <div className="flex items-center lg:hidden">
-          <button className="cursor-pointer"
+          <button
             onClick={() => setIsMobileMenuOpen(true)}
             className="p-2 text-stone-300 hover:text-white"
             aria-label="Open Navigation Menu"
@@ -143,7 +143,7 @@ export function Navbar() {
           <div className="relative">
             {isAuthenticated && user ? (
               <div>
-                <button className="cursor-pointer"
+                <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                   className="flex items-center gap-2 rounded-full border border-stone-800 bg-stone-900 px-3 py-1.5 text-xs font-medium text-stone-200 hover:border-[#C9A227]"
                 >
@@ -214,7 +214,7 @@ export function Navbar() {
                     EASY FASHION
                   </span>
                 </div>
-                <button className="cursor-pointer"
+                <button
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-stone-400 hover:text-white"
                 >
@@ -284,7 +284,7 @@ export function Navbar() {
                     <p className="text-xs font-semibold text-white">{user.fullName}</p>
                     <p className="text-[10px] text-stone-400">{user.email}</p>
                   </div>
-                  <button className="cursor-pointer"
+                  <button
                     onClick={() => {
                       logout();
                       setIsMobileMenuOpen(false);

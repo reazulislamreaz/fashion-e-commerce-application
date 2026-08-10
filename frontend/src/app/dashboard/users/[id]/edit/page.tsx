@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 import { useAuth } from '@/context/auth-context';
+import { useToast } from '@/components/ui/toast';
 import { getUserByIdApi, updateUserApi } from '@/lib/api/services';
+import { extractErrorMessage } from '@/lib/api/errors';
 import { IconArrowRight } from '@/components/ui/icons';
 
 type PageProps = {
@@ -16,6 +18,7 @@ export default function DashboardEditUserPage({ params }: PageProps) {
   const { id } = use(params);
   const router = useRouter();
   const { accessToken } = useAuth();
+  const { showToast } = useToast();
 
   const [loading, setLoading] = useState(true);
   const [fullName, setFullName] = useState('');
@@ -35,11 +38,7 @@ export default function DashboardEditUserPage({ params }: PageProps) {
         setEmail(u.email);
         setPhone(u.phone || '');
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('Failed to fetch user information');
-        }
+        setError(extractErrorMessage(err, 'Failed to fetch user information.'));
       } finally {
         setLoading(false);
       }
@@ -62,19 +61,15 @@ export default function DashboardEditUserPage({ params }: PageProps) {
         id,
         {
           fullName: fullName.trim(),
-          email: email.trim(),
           phone: phone.trim() || undefined,
         },
         accessToken,
       );
 
+      showToast('Profile Updated', `User "${fullName.trim()}" profile has been updated.`);
       router.push('/dashboard/users');
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Failed to update user');
-      }
+      setError(extractErrorMessage(err, 'Failed to update user. Please check your input and try again.'));
     } finally {
       setSubmitting(false);
     }
@@ -136,9 +131,10 @@ export default function DashboardEditUserPage({ params }: PageProps) {
             <input
               type="email"
               required
+              readOnly
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+              className="w-full border border-stone-300 bg-stone-100 text-stone-500 cursor-not-allowed p-3 text-xs font-medium focus:outline-none"
+              title="Email address cannot be changed"
             />
           </div>
 

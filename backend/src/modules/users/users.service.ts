@@ -162,26 +162,10 @@ export class UsersService {
   async update(id: string, dto: UpdateUserDto) {
     await this.findOne(id);
 
-    if (dto.email) {
-      const existing = await this.prisma.user.findFirst({
-        where: {
-          email: dto.email.toLowerCase(),
-          NOT: { id },
-        },
-      });
-
-      if (existing) {
-        throw new ConflictException(
-          `User with email '${dto.email}' already exists`,
-        );
-      }
-    }
-
     const updated = await this.prisma.user.update({
       where: { id },
       data: {
         ...(dto.fullName && { fullName: dto.fullName }),
-        ...(dto.email && { email: dto.email.toLowerCase() }),
         ...(dto.phone !== undefined && { phone: dto.phone }),
       },
       select: {
@@ -203,6 +187,21 @@ export class UsersService {
     });
 
     return updated;
+  }
+
+  async remove(id: string) {
+    const user = await this.findOne(id);
+    
+    // Prevent deleting super admin
+    if (user.role?.code === 'SUPER_ADMIN') {
+      throw new ConflictException('Super Admin cannot be deleted');
+    }
+
+    await this.prisma.user.delete({
+      where: { id },
+    });
+    
+    return { id };
   }
 
   async updateStatus(id: string, status: UserStatus) {

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 import { useAuth } from '@/context/auth-context';
+import { useToast } from '@/components/ui/toast';
 import {
   getCategories,
   getProductById,
@@ -15,7 +16,8 @@ import {
   uploadImageApi,
 } from '@/lib/api/services';
 import { Category, Size, Style } from '@/types';
-import { IconArrowRight, IconPlus, IconTrash } from '@/components/ui/icons';
+import { extractErrorMessage } from '@/lib/api/errors';
+import { IconArrowRight,  IconTrash } from '@/components/ui/icons';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -25,6 +27,7 @@ export default function DashboardEditProductPage({ params }: PageProps) {
   const { id } = use(params);
   const router = useRouter();
   const { accessToken } = useAuth();
+  const { showToast } = useToast();
 
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -84,11 +87,7 @@ export default function DashboardEditProductPage({ params }: PageProps) {
           }
         }
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('Failed to fetch product details');
-        }
+        setError(extractErrorMessage(err, 'Failed to load product details.'));
       } finally {
         setLoading(false);
       }
@@ -119,8 +118,8 @@ export default function DashboardEditProductPage({ params }: PageProps) {
           sortOrder: prev.length + 1,
         },
       ]);
-    } catch (err: any) {
-      setError(err.message || 'Failed to upload image');
+    } catch (err: unknown) {
+      setError(extractErrorMessage(err, 'Failed to upload image. Please try a different file.'));
     } finally {
       setUploadingImage(false);
       // Reset input
@@ -182,13 +181,10 @@ export default function DashboardEditProductPage({ params }: PageProps) {
         accessToken,
       );
 
+      showToast('Product Updated', `Product "${name.trim()}" has been updated.`);
       router.push('/dashboard/products');
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Failed to update product');
-      }
+      setError(extractErrorMessage(err, 'Failed to update product. Please check your input and try again.'));
     } finally {
       setSubmitting(false);
     }
@@ -340,7 +336,7 @@ export default function DashboardEditProductPage({ params }: PageProps) {
               {sizes.map((sz) => {
                 const isSelected = selectedSizeIds.includes(sz.id);
                 return (
-                  <button className="cursor-pointer"
+                  <button
                     key={sz.id}
                     type="button"
                     onClick={() => handleToggleSize(sz.id)}
@@ -400,7 +396,7 @@ export default function DashboardEditProductPage({ params }: PageProps) {
                   </div>
 
                   <div className="mt-2 flex items-center justify-between gap-1">
-                    <button className="cursor-pointer"
+                    <button
                       type="button"
                       onClick={() => handleSetPrimaryImage(idx)}
                       className={`text-[10px] font-bold uppercase tracking-wider  px-2 py-1 ${
@@ -412,7 +408,7 @@ export default function DashboardEditProductPage({ params }: PageProps) {
                       {img.isPrimary ? 'Primary' : 'Make Primary'}
                     </button>
 
-                    <button className="cursor-pointer"
+                    <button
                       type="button"
                       onClick={() => handleRemoveImage(idx)}
                       className="p-1 text-rose-500 hover:text-rose-700"

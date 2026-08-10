@@ -111,7 +111,7 @@ export function CartDrawer() {
 
                       <div className="mt-2 flex items-center justify-between">
                         <div className="flex items-center border border-stone-200 bg-stone-50">
-                          <button className="cursor-pointer"
+                          <button
                             onClick={() =>
                               updateQuantity(
                                 item.productId,
@@ -126,7 +126,7 @@ export function CartDrawer() {
                           <span className="w-8 text-center text-xs font-semibold text-stone-900">
                             {item.quantity}
                           </span>
-                          <button className="cursor-pointer"
+                          <button
                             onClick={() =>
                               updateQuantity(
                                 item.productId,
@@ -140,7 +140,7 @@ export function CartDrawer() {
                           </button>
                         </div>
 
-                        <button className="cursor-pointer"
+                        <button
                           onClick={() => removeItem(item.productId, item.sizeId)}
                           className="text-stone-400 hover:text-rose-600 transition-colors p-1"
                         >

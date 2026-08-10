@@ -4,17 +4,22 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 import { useAuth } from '@/context/auth-context';
+import { useToast } from '@/components/ui/toast';
 import {
   getRolesApi,
   getUsersApi,
   updateUserRoleApi,
   updateUserStatusApi,
+  deleteUserApi,
 } from '@/lib/api/services';
+import { extractErrorMessage } from '@/lib/api/errors';
 import { PaginationMeta, Role, RoleCode, User, UserStatus } from '@/types';
 import {
   IconPencil,
   IconPlus,
   IconSearch,
+  IconTrash,
+  IconX,
 } from '@/components/ui/icons';
 import { Pagination } from '@/components/ui/pagination';
 
@@ -22,10 +27,12 @@ const ROLE_OPTIONS: RoleCode[] = ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'CUSTOMER']
 
 export default function DashboardUsersPage() {
   const { user: currentUser, accessToken } = useAuth();
+  const { showToast } = useToast();
   const [users, setUsers] = useState<User[]>([]);
   const [, setRoles] = useState<Role[]>([]);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
   const [loading, setLoading] = useState(true);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   // Filters
   const [page, setPage] = useState(1);
@@ -51,8 +58,8 @@ export default function DashboardUsersPage() {
       );
       setUsers(res.items || []);
       setMeta(res.pagination || null);
-    } catch {
-      // Ignore
+    } catch (err) {
+      console.error('Failed to load users:', extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -73,23 +80,48 @@ export default function DashboardUsersPage() {
   const handleToggleStatus = async (user: User) => {
     if (!accessToken || !isSuperAdmin) return;
     const newStatus: UserStatus = user.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    setActionError(null);
 
     try {
       await updateUserStatusApi(user.id, newStatus, accessToken);
+      showToast(
+        'Status Updated',
+        `${user.fullName} is now ${newStatus.toLowerCase()}.`,
+      );
       fetchUsersList();
     } catch (err: unknown) {
-      if (err instanceof Error) alert(err.message);
+      setActionError(extractErrorMessage(err, `Failed to update status for ${user.fullName}.`));
     }
   };
 
   const handleRoleChange = async (userId: string, newRole: RoleCode) => {
     if (!accessToken || !isSuperAdmin) return;
+    setActionError(null);
 
     try {
       await updateUserRoleApi(userId, newRole, accessToken);
+      showToast('Role Updated', `User role changed to ${newRole}.`);
       fetchUsersList();
     } catch (err: unknown) {
-      if (err instanceof Error) alert(err.message);
+      setActionError(extractErrorMessage(err, 'Failed to change user role.'));
+    }
+  };
+
+  // Delete confirmation state
+  const [deletingUser, setDeletingUser] = useState<User | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const handleConfirmDelete = async () => {
+    if (!accessToken || !isSuperAdmin || !deletingUser) return;
+    setDeleteError(null);
+
+    try {
+      await deleteUserApi(deletingUser.id, accessToken);
+      showToast('User Deleted', `${deletingUser.fullName} has been removed.`);
+      setDeletingUser(null);
+      fetchUsersList();
+    } catch (err: unknown) {
+      setDeleteError(extractErrorMessage(err, 'Failed to delete user.'));
     }
   };
 
@@ -117,6 +149,16 @@ export default function DashboardUsersPage() {
             </Link>
           )}
         </div>
+
+        {/* Action Error Banner */}
+        {actionError && (
+          <div className="flex items-center justify-between border border-rose-200 bg-rose-50 p-3.5 text-xs font-semibold text-rose-700">
+            <span>{actionError}</span>
+            <button onClick={() => setActionError(null)} className="ml-2 text-rose-400 hover:text-rose-700">
+              <IconX className="size-4" />
+            </button>
+          </div>
+        )}
 
         {/* Filter Toolbar */}
         <div className="flex flex-col gap-3 border border-stone-200 bg-white p-4 md:flex-row md:items-center md:justify-between">
@@ -220,7 +262,7 @@ export default function DashboardUsersPage() {
                         )}
                       </td>
                       <td className="py-3.5 px-4">
-                        <button className="cursor-pointer"
+                        <button
                           disabled={!isSuperAdmin}
                           onClick={() => handleToggleStatus(u)}
                           className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider transition-opacity ${
@@ -234,13 +276,33 @@ export default function DashboardUsersPage() {
                       </td>
                       <td className="py-3.5 px-4 text-right">
                         {isSuperAdmin && (
-                          <Link
-                            href={`/dashboard/users/${u.id}/edit`}
-                            className="inline-flex items-center gap-1 text-stone-500 hover:text-stone-950 transition-colors"
-                            title="Edit User Info"
-                          >
-                            <IconPencil className="size-4" />
-                          </Link>
+                          <div className="flex items-center justify-end gap-3">
+                            <Link
+                              href={`/dashboard/users/${u.id}/edit`}
+                              className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-stone-500 hover:text-stone-950 transition-colors"
+                              title="Edit User"
+                            >
+                              <IconPencil className="size-3.5" />
+                              <span>Edit</span>
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (u.role?.code === 'SUPER_ADMIN') {
+                                  setActionError('Cannot delete a Super Admin account.');
+                                  return;
+                                }
+                                setDeletingUser(u);
+                                setDeleteError(null);
+                              }}
+                              className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-rose-500 hover:text-rose-700 transition-colors disabled:opacity-50"
+                              disabled={u.role?.code === 'SUPER_ADMIN'}
+                              title="Delete User"
+                            >
+                              <IconTrash className="size-3.5" />
+                              <span>Delete</span>
+                            </button>
+                          </div>
                         )}
                       </td>
                     </tr>
@@ -252,6 +314,38 @@ export default function DashboardUsersPage() {
 
           <Pagination meta={meta} onPageChange={setPage} noun="users" />
         </div>
+        {/* Delete Confirmation Modal */}
+        {deletingUser && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs p-4">
+            <div className="w-full max-w-sm border border-stone-200 bg-white p-6 text-center">
+              <h3 className="text-base font-bold text-stone-950 font-display">Delete User?</h3>
+              <p className="mt-2 text-xs text-stone-500">
+                Are you sure you want to permanently delete <strong>{deletingUser.fullName}</strong>? This action cannot be undone.
+              </p>
+
+              {deleteError && (
+                <div className="mt-3 bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700 font-medium">
+                  {deleteError}
+                </div>
+              )}
+
+              <div className="mt-6 flex items-center justify-center gap-3">
+                <button
+                  onClick={() => setDeletingUser(null)}
+                  className="border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  className="bg-rose-600 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-rose-700 transition-colors cursor-pointer"
+                >
+                  Confirm Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </DashboardShell>
   );

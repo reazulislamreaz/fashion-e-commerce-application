@@ -9,8 +9,9 @@ import {
   deleteProductApi,
   getCategories,
   getProducts,
-  getStyles,
 } from '@/lib/api/services';
+import { extractErrorMessage } from '@/lib/api/errors';
+import { useToast } from '@/components/ui/toast';
 import { Category, PaginationMeta, Product, Style } from '@/types';
 import {
   IconPencil,
@@ -22,6 +23,7 @@ import { Pagination } from '@/components/ui/pagination';
 
 export default function DashboardProductsPage() {
   const { accessToken } = useAuth();
+  const { showToast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [styles, setStyles] = useState<Style[]>([]);
@@ -51,8 +53,8 @@ export default function DashboardProductsPage() {
       });
       setProducts(res.items || []);
       setMeta(res.pagination || null);
-    } catch {
-      // Ignore
+    } catch (err) {
+      console.error('Failed to load products:', extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -77,14 +79,11 @@ export default function DashboardProductsPage() {
 
     try {
       await deleteProductApi(id, accessToken);
+      showToast('Product Deleted', 'The product has been removed from the catalog.');
       setDeletingId(null);
       fetchProductsList();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setDeleteError(err.message);
-      } else {
-        setDeleteError('Failed to delete product');
-      }
+      setDeleteError(extractErrorMessage(err, 'Failed to delete product.'));
     }
   };
 
@@ -249,7 +248,7 @@ export default function DashboardProductsPage() {
                             >
                               <IconPencil className="size-4" />
                             </Link>
-                            <button className="cursor-pointer"
+                            <button
                               onClick={() => {
                                 setDeletingId(prod.id);
                                 setDeleteError(null);
@@ -288,13 +287,13 @@ export default function DashboardProductsPage() {
               )}
 
               <div className="mt-6 flex items-center justify-center gap-3">
-                <button className="cursor-pointer"
+                <button
                   onClick={() => setDeletingId(null)}
                   className="border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
                 >
                   Cancel
                 </button>
-                <button className="cursor-pointer"
+                <button
                   onClick={() => handleDelete(deletingId)}
                   className="bg-rose-600 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-rose-700 transition-colors"
                 >

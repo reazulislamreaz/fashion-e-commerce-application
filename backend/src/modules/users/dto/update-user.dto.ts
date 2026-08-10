@@ -20,14 +20,7 @@ export class UpdateUserDto {
   @MaxLength(100)
   fullName?: string;
 
-  @ApiPropertyOptional({ example: 'john@example.com' })
-  @Transform(({ value }: { value: unknown }) =>
-    typeof value === 'string' ? value.trim().toLowerCase() : value,
-  )
-  @IsOptional()
-  @IsEmail()
-  @MaxLength(255)
-  email?: string;
+
 
   @ApiPropertyOptional({ example: '+8801712345678' })
   @Transform(({ value }: { value: unknown }) => {

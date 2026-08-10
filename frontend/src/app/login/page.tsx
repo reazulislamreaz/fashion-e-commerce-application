@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/components/ui/toast';
 import { SocialAuthButtons } from '@/components/auth/social-auth-buttons';
-import { ApiClientError } from '@/lib/api/types';
+import { extractErrorMessage } from '@/lib/api/errors';
 
 function LoginContent() {
   const router = useRouter();
@@ -33,11 +33,9 @@ function LoginContent() {
       showToast('Welcome back!', 'Successfully signed in to your account.');
       router.push(redirect);
     } catch (err) {
-      if (err instanceof ApiClientError) {
-        setErrorMessage(err.message);
-      } else {
-        setErrorMessage('Invalid email or password credentials. Please try again.');
-      }
+      setErrorMessage(
+        extractErrorMessage(err, 'Invalid email or password. Please try again.'),
+      );
     } finally {
       setLoading(false);
     }
@@ -94,7 +92,7 @@ function LoginContent() {
                 placeholder="••••••••"
                 className="w-full border border-stone-300 p-3 pr-10 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
               />
-              <button className="cursor-pointer"
+              <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 text-xs font-semibold text-stone-400 hover:text-stone-700"

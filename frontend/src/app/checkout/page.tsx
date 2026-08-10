@@ -7,7 +7,7 @@ import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
 import { useToast } from '@/components/ui/toast';
 import { createOrderApi } from '@/lib/api/services';
-import { ApiClientError } from '@/lib/api/types';
+import { extractErrorMessage } from '@/lib/api/errors';
 import { IconArrowRight } from '@/components/ui/icons';
 
 export default function CheckoutPage() {
@@ -86,11 +86,9 @@ export default function CheckoutPage() {
       showToast('Order Placed Successfully', `Order #${order.id.substring(0, 8)} has been generated.`);
       router.push(isAuthenticated ? `/orders/${order.id}` : `/orders/success?id=${order.id}`);
     } catch (err) {
-      if (err instanceof ApiClientError) {
-        setErrorMessage(err.message);
-      } else {
-        setErrorMessage('Failed to place order. Please try again.');
-      }
+      setErrorMessage(
+        extractErrorMessage(err, 'Failed to place order. Please try again.'),
+      );
     } finally {
       setSubmitting(false);
     }

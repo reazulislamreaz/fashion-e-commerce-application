@@ -3,12 +3,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 import { useAuth } from '@/context/auth-context';
+import { useToast } from '@/components/ui/toast';
 import {
   createSizeApi,
   deleteSizeApi,
   getSizes,
   updateSizeApi,
 } from '@/lib/api/services';
+import { extractErrorMessage } from '@/lib/api/errors';
 import { PaginationMeta, Size } from '@/types';
 import {
   IconPencil,
@@ -21,6 +23,7 @@ import { Pagination } from '@/components/ui/pagination';
 
 export default function DashboardSizesPage() {
   const { accessToken } = useAuth();
+  const { showToast } = useToast();
   const [sizes, setSizes] = useState<Size[]>([]);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
   const [loading, setLoading] = useState(true);
@@ -44,8 +47,8 @@ export default function DashboardSizesPage() {
       const res = await getSizes({ page, limit: 10, search, status: 'all' });
       setSizes(res.items || []);
       setMeta(res.pagination || null);
-    } catch {
-      // Ignore
+    } catch (err) {
+      console.error('Failed to load sizes:', extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -87,20 +90,18 @@ export default function DashboardSizesPage() {
           { name: formData.name.trim(), sortOrder: Number(formData.sortOrder) },
           accessToken,
         );
+        showToast('Size Updated', `Size "${formData.name}" has been updated.`);
       } else {
         await createSizeApi(
           { name: formData.name.trim(), sortOrder: Number(formData.sortOrder) },
           accessToken,
         );
+        showToast('Size Created', `Size "${formData.name}" has been created.`);
       }
       setIsModalOpen(false);
       fetchSizesList();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setFormError(err.message);
-      } else {
-        setFormError('Failed to save size');
-      }
+      setFormError(extractErrorMessage(err, 'Failed to save size. Please try again.'));
     } finally {
       setSubmitting(false);
     }
@@ -112,14 +113,11 @@ export default function DashboardSizesPage() {
 
     try {
       await deleteSizeApi(id, accessToken);
+      showToast('Size Deleted', 'The size has been deleted.');
       setDeletingId(null);
       fetchSizesList();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setDeleteError(err.message);
-      } else {
-        setDeleteError('Cannot delete size');
-      }
+      setDeleteError(extractErrorMessage(err, 'Cannot delete this size. It may be assigned to products.'));
     }
   };
 
@@ -202,14 +200,14 @@ export default function DashboardSizesPage() {
                       </td>
                       <td className="py-3.5 px-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button className="cursor-pointer"
+                          <button
                             onClick={() => handleOpenEdit(sz)}
                             className="p-1.5 text-stone-500 hover:text-stone-950 transition-colors"
                             title="Edit Size"
                           >
                             <IconPencil className="size-4" />
                           </button>
-                          <button className="cursor-pointer"
+                          <button
                             onClick={() => {
                               setDeletingId(sz.id);
                               setDeleteError(null);
@@ -239,7 +237,7 @@ export default function DashboardSizesPage() {
                 <h3 className="text-base font-bold text-stone-950 font-display">
                   {editingSize ? 'Edit Size' : 'Create New Size'}
                 </h3>
-                <button className="cursor-pointer" onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-900">
+                <button onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-900 cursor-pointer">
                   <IconX className="size-5" />
                 </button>
               </div>
@@ -281,7 +279,7 @@ export default function DashboardSizesPage() {
                 </div>
 
                 <div className="mt-2 flex items-center justify-end gap-3 border-t border-stone-100 pt-4">
-                  <button className="cursor-pointer"
+                  <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
                     className="border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
@@ -317,13 +315,13 @@ export default function DashboardSizesPage() {
               )}
 
               <div className="mt-6 flex items-center justify-center gap-3">
-                <button className="cursor-pointer"
+                <button
                   onClick={() => setDeletingId(null)}
                   className="border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
                 >
                   Cancel
                 </button>
-                <button className="cursor-pointer"
+                <button
                   onClick={() => handleDelete(deletingId)}
                   className="bg-rose-600 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-rose-700 transition-colors"
                 >

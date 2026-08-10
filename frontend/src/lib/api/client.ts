@@ -101,7 +101,7 @@ export async function apiRequest<T>(
     );
   }
 
-  const metaPayload = payload as unknown as { meta?: { pagination?: any } };
+  const metaPayload = payload as unknown as { meta?: { pagination?: Record<string, unknown> } };
   if (Array.isArray(payload.data) && metaPayload.meta?.pagination) {
     return {
       items: payload.data,

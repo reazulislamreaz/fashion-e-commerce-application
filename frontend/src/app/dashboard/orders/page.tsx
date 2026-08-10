@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 import { useAuth } from '@/context/auth-context';
 import { getMyOrdersApi, updateOrderStatusApi } from '@/lib/api/services';
+import { extractErrorMessage } from '@/lib/api/errors';
+import { useToast } from '@/components/ui/toast';
 import { Order, OrderStatus, PaginationMeta } from '@/types';
 import {
   IconEye,
@@ -22,6 +24,7 @@ const ORDER_STATUSES: OrderStatus[] = [
 
 export default function DashboardOrdersPage() {
   const { accessToken } = useAuth();
+  const { showToast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
   const [loading, setLoading] = useState(true);
@@ -43,8 +46,8 @@ export default function DashboardOrdersPage() {
       const orderMeta = Array.isArray(res) ? null : res?.pagination || null;
       setOrders(orderList);
       setMeta(orderMeta);
-    } catch {
-      // Ignore
+    } catch (err) {
+      console.error('Failed to load orders:', extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -60,9 +63,10 @@ export default function DashboardOrdersPage() {
 
     try {
       await updateOrderStatusApi(orderId, newStatus, accessToken);
+      showToast('Order Updated', `Order #${orderId.substring(0, 8)} status changed to ${newStatus}.`);
       fetchOrdersList();
-    } catch {
-      // Ignore
+    } catch (err) {
+      showToast('Status Update Failed', extractErrorMessage(err, 'Failed to update order status.'));
     } finally {
       setUpdatingId(null);
     }

@@ -41,7 +41,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
       {sortedImages.length > 1 && (
         <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-none">
           {sortedImages.map((img, idx) => (
-            <button className="cursor-pointer"
+            <button
               key={img.id || idx}
               onClick={() => setSelectedIndex(idx)}
               className={`relative size-20 shrink-0 overflow-hidden  border-2 transition-all ${

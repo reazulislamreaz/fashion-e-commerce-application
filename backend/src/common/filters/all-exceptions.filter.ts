@@ -44,7 +44,17 @@ export class AllExceptionsFilter implements ExceptionFilter {
       } else if (typeof res === 'object' && res !== null) {
         const resObj = res as Record<string, unknown>;
         if (Array.isArray(resObj.message)) {
-          message = 'Validation failed';
+          // Build a human-readable message from the validation error array
+          const validationMessages = resObj.message.filter(
+            (m: unknown): m is string => typeof m === 'string',
+          );
+          message =
+            validationMessages.length > 0
+              ? validationMessages.join('. ') +
+                (validationMessages[validationMessages.length - 1].endsWith('.')
+                  ? ''
+                  : '.')
+              : 'Validation failed. Please check your input and try again.';
           errors = resObj.message;
           code = 'VALIDATION_ERROR';
         } else if (typeof resObj.message === 'string') {

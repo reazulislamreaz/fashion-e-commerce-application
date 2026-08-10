@@ -177,7 +177,7 @@ export default function ProductDetailPage({
 
                 <div className="flex flex-wrap gap-2">
                   {availableSizes.map((size) => (
-                    <button className="cursor-pointer"
+                    <button
                       key={size.id}
                       type="button"
                       onClick={() => setSelectedSizeId(size.id)}
@@ -200,7 +200,7 @@ export default function ProductDetailPage({
                 Quantity
               </label>
               <div className="inline-flex items-center border border-stone-300 bg-white p-1">
-                <button className="cursor-pointer"
+                <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   className="flex size-9 items-center justify-center text-stone-600 hover:bg-stone-100"
@@ -210,7 +210,7 @@ export default function ProductDetailPage({
                 <span className="w-12 text-center text-sm font-bold text-stone-900">
                   {quantity}
                 </span>
-                <button className="cursor-pointer"
+                <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.min(99, q + 1))}
                   className="flex size-9 items-center justify-center text-stone-600 hover:bg-stone-100"

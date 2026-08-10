@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 import { useAuth } from '@/context/auth-context';
+import { useToast } from '@/components/ui/toast';
 import {
   createProductApi,
   getCategories,
@@ -14,11 +15,13 @@ import {
   uploadImageApi,
 } from '@/lib/api/services';
 import { Category, Size, Style } from '@/types';
-import { IconArrowRight, IconPlus, IconTrash } from '@/components/ui/icons';
+import { extractErrorMessage } from '@/lib/api/errors';
+import { IconArrowRight,  IconTrash } from '@/components/ui/icons';
 
 export default function DashboardNewProductPage() {
   const router = useRouter();
   const { accessToken } = useAuth();
+  const { showToast } = useToast();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [styles, setStyles] = useState<Style[]>([]);
@@ -70,8 +73,8 @@ export default function DashboardNewProductPage() {
           sortOrder: prev.length + 1,
         },
       ]);
-    } catch (err: any) {
-      setError(err.message || 'Failed to upload image');
+    } catch (err: unknown) {
+      setError(extractErrorMessage(err, 'Failed to upload image. Please try a different file.'));
     } finally {
       setUploadingImage(false);
       // Reset input
@@ -130,14 +133,11 @@ export default function DashboardNewProductPage() {
         },
         accessToken,
       );
-
+      
+      showToast('Product Created', `Product "${name.trim()}" has been published.`);
       router.push('/dashboard/products');
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Failed to create product');
-      }
+      setError(extractErrorMessage(err, 'Failed to create product. Please check your input and try again.'));
     } finally {
       setSubmitting(false);
     }
@@ -271,7 +271,7 @@ export default function DashboardNewProductPage() {
               {sizes.map((sz) => {
                 const isSelected = selectedSizeIds.includes(sz.id);
                 return (
-                  <button className="cursor-pointer"
+                  <button
                     key={sz.id}
                     type="button"
                     onClick={() => handleToggleSize(sz.id)}
@@ -331,7 +331,7 @@ export default function DashboardNewProductPage() {
                   </div>
 
                   <div className="mt-2 flex items-center justify-between gap-1">
-                    <button className="cursor-pointer"
+                    <button
                       type="button"
                       onClick={() => handleSetPrimaryImage(idx)}
                       className={`text-[10px] font-bold uppercase tracking-wider  px-2 py-1 ${
@@ -343,7 +343,7 @@ export default function DashboardNewProductPage() {
                       {img.isPrimary ? 'Primary' : 'Make Primary'}
                     </button>
 
-                    <button className="cursor-pointer"
+                    <button
                       type="button"
                       onClick={() => handleRemoveImage(idx)}
                       className="p-1 text-rose-500 hover:text-rose-700"

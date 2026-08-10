@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import { useAuth } from '@/context/auth-context';
 import { getMyOrdersApi } from '@/lib/api/services';
+import { extractErrorMessage } from '@/lib/api/errors';
 import { Order, PaginatedList } from '@/types';
 import { IconBag, IconChevronRight } from '@/components/ui/icons';
 import { Pagination } from '@/components/ui/pagination';
@@ -34,7 +35,8 @@ function CustomerOrdersContent() {
         try {
           const res = await getMyOrdersApi(t, page, 10);
           setOrdersData(res);
-        } catch {
+        } catch (err) {
+          console.error('Failed to load customer orders:', extractErrorMessage(err));
           setOrdersData({
             items: [],
             pagination: {

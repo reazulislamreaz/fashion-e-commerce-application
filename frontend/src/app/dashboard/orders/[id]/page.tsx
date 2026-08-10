@@ -5,7 +5,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 import { useAuth } from '@/context/auth-context';
+import { useToast } from '@/components/ui/toast';
 import { getOrderByIdApi, updateOrderStatusApi } from '@/lib/api/services';
+import { extractErrorMessage } from '@/lib/api/errors';
 import { Order, OrderStatus } from '@/types';
 import { IconArrowRight } from '@/components/ui/icons';
 
@@ -25,6 +27,7 @@ type PageProps = {
 export default function DashboardOrderDetailPage({ params }: PageProps) {
   const { id } = use(params);
   const { accessToken } = useAuth();
+  const { showToast } = useToast();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -38,11 +41,7 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
         const res = await getOrderByIdApi(id, accessToken);
         setOrder(res);
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('Failed to fetch order details');
-        }
+        setError(extractErrorMessage(err, 'Failed to fetch order details.'));
       } finally {
         setLoading(false);
       }
@@ -57,10 +56,9 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
     try {
       const updated = await updateOrderStatusApi(id, newStatus, accessToken);
       setOrder(updated);
+      showToast('Order Updated', `Order #${id.substring(0, 8)} status changed to ${newStatus}.`);
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        alert(err.message);
-      }
+      showToast('Status Update Failed', extractErrorMessage(err, 'Failed to update order status.'));
     } finally {
       setUpdating(false);
     }
