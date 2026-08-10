@@ -14,9 +14,9 @@ const sans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: 'Easy Fashion Limited',
+  title: 'Easy Fashion Limited | Premium Fashion E-Commerce',
   description:
-    'Easy Fashion Limited technical assessment — Phase 0 application foundation',
+    'Discover luxury menswear, elegant womenswear, and contemporary apparel at Easy Fashion Limited.',
 };
 
 export default function RootLayout({

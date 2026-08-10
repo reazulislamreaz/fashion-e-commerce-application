@@ -4,9 +4,9 @@ Technical assessment project for **Easy Fashion Limited**, developed incremental
 
 ## Current phase
 
-**Phase 6 — Order Management Backend**
+**Phase 7 — Backend Quality Assurance & Hardening**
 
-Phases 0–5 foundations are in place. Phase 6 adds customer order placement, server-side price calculation, historical unit price snapshots, atomic database transactions, customer ownership isolation, management order listing/search/filtering/pagination, and status transition state machine validation. Dashboard UI and payment processing are intentionally not implemented yet.
+Phases 0–6 foundations are complete. Phase 7 completes security hardening, quality assurance, input validation auditing, error response masking, database performance index verification, and automated E2E regression testing (58/58 passing tests across 5 test suites). Dashboard UI and Customer Storefront UI will be implemented in subsequent phases.
 
 ## Technology stack
 
@@ -421,24 +421,24 @@ Expected shape:
 
 API docs (non-production): `http://localhost:3000/docs`
 
-## Future implementation phases
+## Phase progress
 
-Completed:
+Completed backend phases:
 
-1. Phase 0 — project foundation
-2. Phase 1 — database schema & seed
-3. Phase 2 — authentication & JWT system
-4. Phase 3 — RBAC foundation (roles guard used by catalog mutations)
-5. Phase 4 — Category, Size & Style management APIs
+1. **Phase 0** — Project foundation & environment validation
+2. **Phase 1** — Database schema, relationships, constraints & seed system
+3. **Phase 2** — Authentication, password hashing, and JWT refresh token system
+4. **Phase 3** — Role-Based Access Control (RBAC) foundation & authorization guards
+5. **Phase 4** — Category, Size & Style management APIs
+6. **Phase 5** — Product management APIs (CRUD, image sorting, multi-size tagging)
+7. **Phase 6** — Order management backend (order placement, price validation, snapshotting, status state machine)
+8. **Phase 7** — Backend quality assurance, security hardening & E2E regression testing (58/58 passing tests)
+9. **Phase 8** — Next.js Customer E-Commerce Storefront (Hero carousel, catalog metrics, product gallery, cart, checkout, auth, orders)
 
-Planned next:
+Planned future phases:
 
-1. Product management APIs
-2. Order management APIs
-3. OAuth (Google/Facebook)
-4. Customer storefront
-5. Management dashboard
-6. Broader testing and hardening
+1. OAuth (Google / Facebook) integration
+2. Management Dashboard UI (Next.js)
 
 ## Assumptions
 

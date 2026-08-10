@@ -1,13 +1,17 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #f3eee6;
-  --foreground: #1c1917;
+  --background: #fafafa;
+  --foreground: #111111;
+  --gold: #c9a227;
+  --gold-hover: #d4b03a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-gold: var(--gold);
+  --color-gold-hover: var(--gold-hover);
   --font-sans: var(--font-sans);
   --font-display: var(--font-display);
 }
@@ -17,3 +21,4 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), 'Segoe UI', sans-serif;
 }
+
