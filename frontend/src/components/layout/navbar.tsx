@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
+import { getCategories } from '@/lib/api/services';
 import { IconBag, IconMenu, IconSearch, IconUser, IconX } from '../ui/icons';
 
 export function Navbar() {
@@ -14,6 +15,25 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [menCategoryId, setMenCategoryId] = useState<string>('');
+  const [womenCategoryId, setWomenCategoryId] = useState<string>('');
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const res = await getCategories();
+        if (res.items) {
+          const men = res.items.find((c) => c.name === "Men's Collection");
+          const women = res.items.find((c) => c.name === "Women's Collection");
+          if (men) setMenCategoryId(men.id);
+          if (women) setWomenCategoryId(women.id);
+        }
+      } catch {
+        // ignore
+      }
+    }
+    loadCategories();
+  }, []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,11 +45,11 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-stone-800 bg-stone-950 text-white shadow-md">
+    <header className="sticky top-0 z-40 w-full border-b border-stone-800 bg-stone-950 text-white">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Mobile menu trigger */}
         <div className="flex items-center lg:hidden">
-          <button
+          <button className="cursor-pointer"
             onClick={() => setIsMobileMenuOpen(true)}
             className="p-2 text-stone-300 hover:text-white"
             aria-label="Open Navigation Menu"
@@ -41,7 +61,7 @@ export function Navbar() {
         {/* Brand Logo */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2 group">
-            <span className="flex size-9 items-center justify-center rounded-lg bg-[#C9A227] text-stone-950 font-bold text-lg shadow-xs group-hover:bg-[#D4B03A] transition-colors">
+            <span className="flex size-9 items-center justify-center bg-[#C9A227] text-stone-950 font-bold text-lg group-hover:bg-[#D4B03A] transition-colors">
               EF
             </span>
             <div className="flex flex-col">
@@ -70,13 +90,13 @@ export function Navbar() {
             Shop Catalog
           </Link>
           <Link
-            href="/products?categoryId=00000000-0000-4000-8000-000000000001"
+            href={menCategoryId ? `/products?categoryId=${menCategoryId}` : '/products'}
             className="text-sm font-medium text-stone-200 hover:text-[#C9A227] transition-colors"
           >
-            Men&apos;s Wear
+            Men&apos;s Collection
           </Link>
           <Link
-            href="/products?categoryId=00000000-0000-4000-8000-000000000002"
+            href={womenCategoryId ? `/products?categoryId=${womenCategoryId}` : '/products'}
             className="text-sm font-medium text-stone-200 hover:text-[#C9A227] transition-colors"
           >
             Women&apos;s Collection
@@ -99,7 +119,7 @@ export function Navbar() {
             />
             <button
               type="submit"
-              className="absolute right-2 text-stone-400 hover:text-[#C9A227]"
+              className="absolute right-2 text-stone-400 hover:text-[#C9A227] cursor-pointer"
             >
               <IconSearch className="size-4" />
             </button>
@@ -108,12 +128,12 @@ export function Navbar() {
           {/* Cart Icon button */}
           <button
             onClick={openCart}
-            className="relative flex items-center p-2 text-stone-300 hover:text-[#C9A227] transition-colors"
+            className="relative flex items-center p-2 text-stone-300 hover:text-[#C9A227] transition-colors cursor-pointer"
             aria-label="View Cart"
           >
             <IconBag className="size-6" />
             {itemCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-[#C9A227] text-[11px] font-bold text-stone-950 shadow-xs">
+              <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-[#C9A227] text-[11px] font-bold text-stone-950">
                 {itemCount}
               </span>
             )}
@@ -123,7 +143,7 @@ export function Navbar() {
           <div className="relative">
             {isAuthenticated && user ? (
               <div>
-                <button
+                <button className="cursor-pointer"
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                   className="flex items-center gap-2 rounded-full border border-stone-800 bg-stone-900 px-3 py-1.5 text-xs font-medium text-stone-200 hover:border-[#C9A227]"
                 >
@@ -135,7 +155,7 @@ export function Navbar() {
 
                 {isUserMenuOpen && (
                   <div
-                    className="absolute right-0 mt-2 w-48 rounded-xl border border-stone-800 bg-stone-900 p-2 shadow-xl z-50 text-xs"
+                    className="absolute right-0 mt-2 w-48 border border-stone-800 bg-stone-900 p-2 z-50 text-xs"
                     onClick={() => setIsUserMenuOpen(false)}
                   >
                     <div className="px-3 py-2 border-b border-stone-800">
@@ -144,19 +164,19 @@ export function Navbar() {
                     </div>
                     <Link
                       href="/profile"
-                      className="block w-full text-left px-3 py-2 text-stone-200 hover:bg-stone-800 rounded-lg transition-colors"
+                      className="block w-full text-left px-3 py-2 text-stone-200 hover:bg-stone-800 transition-colors"
                     >
                       My Profile
                     </Link>
                     <Link
                       href="/orders"
-                      className="block w-full text-left px-3 py-2 text-stone-200 hover:bg-stone-800 rounded-lg transition-colors"
+                      className="block w-full text-left px-3 py-2 text-stone-200 hover:bg-stone-800 transition-colors"
                     >
                       My Orders
                     </Link>
                     <button
                       onClick={logout}
-                      className="block w-full text-left px-3 py-2 text-rose-400 hover:bg-rose-950/50 rounded-lg transition-colors mt-1"
+                      className="block w-full text-left px-3 py-2 text-rose-400 hover:bg-rose-950/50 transition-colors mt-1 cursor-pointer"
                     >
                       Sign Out
                     </button>
@@ -166,7 +186,7 @@ export function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-1.5 rounded-full bg-[#C9A227] px-4 py-1.5 text-xs font-bold text-stone-950 hover:bg-[#D4B03A] transition-colors"
+                className="flex items-center gap-1.5 rounded-full bg-[#C9A227] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-stone-950 hover:bg-[#D4B03A] transition-colors"
               >
                 <IconUser className="size-4" />
                 <span>Sign In</span>
@@ -183,18 +203,18 @@ export function Navbar() {
             className="fixed inset-0 bg-stone-950/80 backdrop-blur-xs"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 w-3/4 max-w-xs bg-stone-950 p-6 text-white shadow-2xl flex flex-col justify-between">
+          <div className="fixed inset-y-0 left-0 w-3/4 max-w-xs bg-stone-950 p-6 text-white flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between border-b border-stone-800 pb-4">
                 <div className="flex items-center gap-2">
-                  <span className="flex size-8 items-center justify-center rounded-md bg-[#C9A227] text-stone-950 font-bold text-sm">
+                  <span className="flex size-8 items-center justify-center bg-[#C9A227] text-stone-950 font-bold text-sm">
                     EF
                   </span>
                   <span className="font-bold text-base tracking-wider font-display">
                     EASY FASHION
                   </span>
                 </div>
-                <button
+                <button className="cursor-pointer"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-stone-400 hover:text-white"
                 >
@@ -209,11 +229,11 @@ export function Navbar() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search products..."
-                  className="w-full rounded-lg border border-stone-800 bg-stone-900 py-2 pl-3 pr-9 text-xs text-white placeholder-stone-400"
+                  className="w-full border border-stone-800 bg-stone-900 py-2 pl-3 pr-9 text-xs text-white placeholder-stone-400"
                 />
                 <button
                   type="submit"
-                  className="absolute right-2.5 top-2.5 text-stone-400"
+                  className="absolute right-2.5 top-2.5 text-stone-400 cursor-pointer"
                 >
                   <IconSearch className="size-4" />
                 </button>
@@ -224,14 +244,14 @@ export function Navbar() {
                 <Link
                   href="/"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
+                  className="px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
                 >
                   Home
                 </Link>
                 <Link
                   href="/products"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
+                  className="px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
                 >
                   Shop All Products
                 </Link>
@@ -240,14 +260,14 @@ export function Navbar() {
                     <Link
                       href="/profile"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="rounded-lg px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
+                      className="px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
                     >
                       My Profile
                     </Link>
                     <Link
                       href="/orders"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="rounded-lg px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
+                      className="px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
                     >
                       My Orders
                     </Link>
@@ -264,7 +284,7 @@ export function Navbar() {
                     <p className="text-xs font-semibold text-white">{user.fullName}</p>
                     <p className="text-[10px] text-stone-400">{user.email}</p>
                   </div>
-                  <button
+                  <button className="cursor-pointer"
                     onClick={() => {
                       logout();
                       setIsMobileMenuOpen(false);
@@ -278,7 +298,7 @@ export function Navbar() {
                 <Link
                   href="/login"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full rounded-lg bg-[#C9A227] py-2.5 text-center text-xs font-bold text-stone-950"
+                  className="block w-full bg-[#C9A227] py-2.5 text-center text-xs font-bold uppercase tracking-wider text-stone-950"
                 >
                   Sign In / Register
                 </Link>

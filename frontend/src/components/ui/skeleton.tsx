@@ -6,7 +6,7 @@ export function Skeleton({
 }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={`animate-pulse rounded-xl bg-stone-200/80 ${className}`}
+      className={`animate-pulse  bg-stone-200/80 ${className}`}
       {...props}
     />
   );
@@ -14,15 +14,15 @@ export function Skeleton({
 
 export function ProductCardSkeleton() {
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white p-3 shadow-xs">
-      <Skeleton className="aspect-3/4 w-full rounded-xl" />
+    <div className="flex flex-col overflow-hidden border border-stone-200 bg-white p-3">
+      <Skeleton className="aspect-3/4 w-full" />
       <div className="mt-3 flex flex-col gap-2">
         <Skeleton className="h-3 w-1/3" />
         <Skeleton className="h-4 w-3/4" />
         <Skeleton className="h-4 w-1/2" />
         <div className="mt-2 flex items-center justify-between pt-2">
           <Skeleton className="h-5 w-1/4" />
-          <Skeleton className="h-9 w-24 rounded-xl" />
+          <Skeleton className="h-9 w-24" />
         </div>
       </div>
     </div>
@@ -53,13 +53,13 @@ export function TableRowSkeleton({ columns = 5 }: { columns?: number }) {
 
 export function DashboardCardSkeleton() {
   return (
-    <div className="h-32 rounded-2xl border border-stone-200 bg-white p-5 shadow-xs flex items-center justify-between">
+    <div className="h-32 border border-stone-200 bg-white p-5 flex items-center justify-between">
       <div className="flex flex-col gap-2 w-2/3">
         <Skeleton className="h-3 w-1/2" />
         <Skeleton className="h-8 w-3/4" />
         <Skeleton className="h-3 w-4/5" />
       </div>
-      <Skeleton className="size-12 rounded-2xl shrink-0" />
+      <Skeleton className="size-12 shrink-0" />
     </div>
   );
 }

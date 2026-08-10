@@ -11,12 +11,12 @@ function OrderSuccessContent() {
 
   return (
     <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center px-4 py-16 text-center sm:px-6">
-      <div className="rounded-3xl border border-stone-200 bg-white p-8 shadow-2xl">
-        <div className="mx-auto flex size-20 items-center justify-center rounded-full bg-[#C9A227] text-stone-950 shadow-lg">
+      <div className="border border-stone-200 bg-white p-8">
+        <div className="mx-auto flex size-20 items-center justify-center rounded-full bg-[#C9A227] text-stone-950">
           <IconCheck className="size-10" />
         </div>
 
-        <h1 className="mt-6 text-3xl font-extrabold text-stone-950 font-display">
+        <h1 className="mt-6 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
           Order Placed Successfully!
         </h1>
 
@@ -25,7 +25,7 @@ function OrderSuccessContent() {
         </p>
 
         {orderId && (
-          <div className="mt-6 rounded-2xl border border-stone-200 bg-stone-50 p-4">
+          <div className="mt-6 border border-stone-200 bg-stone-50 p-4">
             <p className="text-xs font-bold uppercase tracking-wider text-stone-400">
               Order Reference ID
             </p>
@@ -38,7 +38,7 @@ function OrderSuccessContent() {
         <div className="mt-8 flex flex-col gap-3">
           <Link
             href="/products"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-stone-950 py-3.5 text-xs font-bold text-white shadow-md hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+            className="flex w-full items-center justify-center gap-2 bg-stone-950 py-3.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
           >
             <span>Continue Shopping</span>
             <IconArrowRight className="size-4" />

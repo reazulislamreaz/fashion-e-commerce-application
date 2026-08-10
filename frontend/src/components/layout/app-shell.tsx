@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { AuthProvider } from '@/context/auth-context';
 import { CartProvider } from '@/context/cart-context';
 import { ToastProvider } from '../ui/toast';
+import { SessionExpiredModal } from '../ui/session-expired-modal';
 import { Navbar } from './navbar';
 import { Footer } from './footer';
 import { CartDrawer } from '../cart/cart-drawer';
@@ -21,6 +22,7 @@ export function AppShell({ children }: AppShellProps) {
             <Footer />
             <CartDrawer />
           </div>
+          <SessionExpiredModal />
         </ToastProvider>
       </CartProvider>
     </AuthProvider>

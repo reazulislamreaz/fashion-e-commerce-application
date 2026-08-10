@@ -130,7 +130,7 @@ export default function DashboardCategoriesPage() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-extrabold text-stone-950 font-display">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
               Category Management
             </h1>
             <p className="mt-1 text-xs text-stone-500">
@@ -140,7 +140,7 @@ export default function DashboardCategoriesPage() {
 
           <button
             onClick={handleOpenCreate}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-stone-950 px-4 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+            className="inline-flex items-center justify-center gap-2 bg-stone-950 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors cursor-pointer"
           >
             <IconPlus className="size-4" />
             <span>Add Category</span>
@@ -148,7 +148,7 @@ export default function DashboardCategoriesPage() {
         </div>
 
         {/* Search Toolbar */}
-        <div className="rounded-2xl border border-stone-200 bg-white p-4 shadow-xs">
+        <div className="border border-stone-200 bg-white p-4">
           <div className="relative max-w-sm">
             <IconSearch className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
             <input
@@ -159,13 +159,13 @@ export default function DashboardCategoriesPage() {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              className="w-full rounded-xl border border-stone-200 bg-stone-50 py-2.5 pl-10 pr-4 text-xs font-medium text-stone-900 focus:border-[#C9A227] focus:bg-white focus:outline-none"
+              className="w-full border border-stone-200 bg-stone-50 py-2.5 pl-10 pr-4 text-xs font-medium text-stone-900 focus:border-[#C9A227] focus:bg-white focus:outline-none"
             />
           </div>
         </div>
 
         {/* Category Table */}
-        <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-xs">
+        <div className="overflow-hidden border border-stone-200 bg-white">
           {loading ? (
             <div className="p-8 text-center text-xs text-stone-500">
               Loading categories...
@@ -205,14 +205,14 @@ export default function DashboardCategoriesPage() {
                       </td>
                       <td className="py-3.5 px-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button
+                          <button className="cursor-pointer"
                             onClick={() => handleOpenEdit(cat)}
                             className="p-1.5 text-stone-500 hover:text-stone-950 transition-colors"
                             title="Edit Category"
                           >
                             <IconPencil className="size-4" />
                           </button>
-                          <button
+                          <button className="cursor-pointer"
                             onClick={() => {
                               setDeletingId(cat.id);
                               setDeleteError(null);
@@ -238,17 +238,17 @@ export default function DashboardCategoriesPage() {
                 Page {meta.page} of {meta.totalPages} ({meta.totalItems} categories)
               </span>
               <div className="flex items-center gap-2">
-                <button
+                <button className="cursor-pointer"
                   disabled={!meta.hasPreviousPage}
                   onClick={() => setPage((p) => p - 1)}
-                  className="rounded-lg border border-stone-200 p-1.5 disabled:opacity-40"
+                  className="border border-stone-200 p-1.5 disabled:opacity-40"
                 >
                   <IconChevronLeft className="size-4" />
                 </button>
-                <button
+                <button className="cursor-pointer"
                   disabled={!meta.hasNextPage}
                   onClick={() => setPage((p) => p + 1)}
-                  className="rounded-lg border border-stone-200 p-1.5 disabled:opacity-40"
+                  className="border border-stone-200 p-1.5 disabled:opacity-40"
                 >
                   <IconChevronRight className="size-4" />
                 </button>
@@ -260,18 +260,18 @@ export default function DashboardCategoriesPage() {
         {/* Create / Edit Modal */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs p-4">
-            <div className="w-full max-w-md rounded-3xl border border-stone-200 bg-white p-6 shadow-2xl">
+            <div className="w-full max-w-md border border-stone-200 bg-white p-6">
               <div className="flex items-center justify-between border-b border-stone-100 pb-4 mb-4">
                 <h3 className="text-base font-bold text-stone-950 font-display">
                   {editingCategory ? 'Edit Category' : 'Create New Category'}
                 </h3>
-                <button onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-900">
+                <button className="cursor-pointer" onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-900">
                   <IconX className="size-5" />
                 </button>
               </div>
 
               {formError && (
-                <div className="mb-4 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700 font-medium">
+                <div className="mb-4 bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700 font-medium">
                   {formError}
                 </div>
               )}
@@ -286,7 +286,7 @@ export default function DashboardCategoriesPage() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full rounded-xl border border-stone-300 p-2.5 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+                    className="w-full border border-stone-300 p-2.5 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
                     placeholder="e.g. Outerwear, Dresses, Accessories"
                   />
                 </div>
@@ -299,23 +299,23 @@ export default function DashboardCategoriesPage() {
                     rows={3}
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full rounded-xl border border-stone-300 p-2.5 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+                    className="w-full border border-stone-300 p-2.5 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
                     placeholder="Category description..."
                   />
                 </div>
 
                 <div className="mt-2 flex items-center justify-end gap-3 border-t border-stone-100 pt-4">
-                  <button
+                  <button className="cursor-pointer"
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="rounded-xl border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
+                    className="border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="rounded-xl bg-stone-950 px-4 py-2 text-xs font-bold text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors disabled:opacity-50"
+                    className="bg-stone-950 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors disabled:opacity-50 cursor-pointer"
                   >
                     {submitting ? 'Saving...' : editingCategory ? 'Update' : 'Create'}
                   </button>
@@ -328,28 +328,28 @@ export default function DashboardCategoriesPage() {
         {/* Delete Confirmation Modal */}
         {deletingId && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs p-4">
-            <div className="w-full max-w-sm rounded-3xl border border-stone-200 bg-white p-6 shadow-2xl text-center">
+            <div className="w-full max-w-sm border border-stone-200 bg-white p-6 text-center">
               <h3 className="text-base font-bold text-stone-950 font-display">Delete Category?</h3>
               <p className="mt-2 text-xs text-stone-500">
                 Are you sure you want to delete this category? This action cannot be undone.
               </p>
 
               {deleteError && (
-                <div className="mt-3 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700 font-medium">
+                <div className="mt-3 bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700 font-medium">
                   {deleteError}
                 </div>
               )}
 
               <div className="mt-6 flex items-center justify-center gap-3">
-                <button
+                <button className="cursor-pointer"
                   onClick={() => setDeletingId(null)}
-                  className="rounded-xl border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
+                  className="border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
                 >
                   Cancel
                 </button>
-                <button
+                <button className="cursor-pointer"
                   onClick={() => handleDelete(deletingId)}
-                  className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-bold text-white hover:bg-rose-700 transition-colors"
+                  className="bg-rose-600 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-rose-700 transition-colors"
                 >
                   Confirm Delete
                 </button>

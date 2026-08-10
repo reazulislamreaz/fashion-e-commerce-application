@@ -17,6 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { RoleCode } from '@prisma/client';
 import { Roles } from '@/common/decorators/roles.decorator';
+import { Public } from '@/common/decorators/public.decorator';
 import { IdParamDto } from '@/common/dto/id-param.dto';
 import { SizesService } from './sizes.service';
 import { CreateSizeDto } from './dto/create-size.dto';
@@ -42,6 +43,7 @@ export class SizesController {
   }
 
   @Get()
+  @Public()
   @ApiOperation({ summary: 'List sizes with pagination and search' })
   async findAll(@Query() query: SizeQueryDto) {
     const result = await this.sizesService.findAll(query);
@@ -54,6 +56,7 @@ export class SizesController {
   }
 
   @Get(':id')
+  @Public()
   @ApiOperation({ summary: 'Get a size by ID' })
   async findOne(@Param() params: IdParamDto) {
     const data = await this.sizesService.findOne(params.id);

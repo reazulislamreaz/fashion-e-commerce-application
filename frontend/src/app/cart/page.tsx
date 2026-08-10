@@ -15,7 +15,7 @@ export default function CartPage() {
         <div className="mx-auto flex size-20 items-center justify-center rounded-full bg-stone-100 text-stone-400">
           <IconBag className="size-10" />
         </div>
-        <h1 className="mt-6 text-3xl font-extrabold text-stone-950 font-display">
+        <h1 className="mt-6 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
           Your Shopping Cart is Empty
         </h1>
         <p className="mt-2 text-sm text-stone-500 max-w-md mx-auto">
@@ -24,7 +24,7 @@ export default function CartPage() {
         <div className="mt-8">
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 rounded-xl bg-stone-950 px-7 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+            className="inline-flex items-center gap-2 bg-stone-950 px-7 py-3.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
           >
             <span>Explore Shop Catalog</span>
             <IconArrowRight className="size-4" />
@@ -38,7 +38,7 @@ export default function CartPage() {
     <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between border-b border-stone-200 pb-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-stone-950 font-display">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
             Shopping Cart
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-stone-500">
@@ -47,7 +47,7 @@ export default function CartPage() {
         </div>
         <button
           onClick={clearCart}
-          className="text-xs font-semibold text-rose-600 hover:text-rose-700 underline"
+          className="text-xs font-semibold text-rose-600 hover:text-rose-700 underline cursor-pointer"
         >
           Clear Entire Cart
         </button>
@@ -70,11 +70,11 @@ export default function CartPage() {
             return (
               <div
                 key={`${item.productId}-${item.sizeId || 'nosize'}`}
-                className="flex gap-4 sm:gap-6 rounded-2xl border border-stone-200 bg-white p-4 sm:p-5 shadow-xs"
+                className="flex gap-4 sm:gap-6 border border-stone-200 bg-white p-4 sm:p-5"
               >
                 <Link
                   href={`/products/${item.productId}`}
-                  className="relative size-24 sm:size-28 shrink-0 overflow-hidden rounded-xl border border-stone-200 bg-stone-100"
+                  className="relative size-24 sm:size-28 shrink-0 overflow-hidden border border-stone-200 bg-stone-100"
                 >
                   <Image
                     src={primaryImage}
@@ -92,21 +92,21 @@ export default function CartPage() {
                           {item.product.name}
                         </h3>
                       </Link>
-                      <span className="text-base font-extrabold text-stone-950 font-display">
+                      <span className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
                         ${(priceNum * item.quantity).toFixed(2)}
                       </span>
                     </div>
 
                     {item.sizeName && (
-                      <span className="mt-1 inline-block rounded-md bg-stone-100 px-2.5 py-0.5 text-xs font-semibold text-stone-700">
+                      <span className="mt-1 inline-block bg-stone-100 px-2.5 py-0.5 text-xs font-semibold text-stone-700">
                         Size: {item.sizeName}
                       </span>
                     )}
                   </div>
 
                   <div className="mt-4 flex items-center justify-between">
-                    <div className="flex items-center rounded-xl border border-stone-300 bg-white">
-                      <button
+                    <div className="flex items-center border border-stone-300 bg-white">
+                      <button className="cursor-pointer"
                         onClick={() =>
                           updateQuantity(
                             item.productId,
@@ -118,10 +118,10 @@ export default function CartPage() {
                       >
                         <IconMinus className="size-4" />
                       </button>
-                      <span className="w-10 text-center text-xs font-bold text-stone-900">
+                      <span className="w-10 text-center text-xs font-bold uppercase tracking-wider text-stone-900">
                         {item.quantity}
                       </span>
-                      <button
+                      <button className="cursor-pointer"
                         onClick={() =>
                           updateQuantity(
                             item.productId,
@@ -135,7 +135,7 @@ export default function CartPage() {
                       </button>
                     </div>
 
-                    <button
+                    <button className="cursor-pointer"
                       onClick={() => removeItem(item.productId, item.sizeId)}
                       className="flex items-center gap-1 text-xs font-semibold text-rose-600 hover:text-rose-700"
                     >
@@ -150,8 +150,8 @@ export default function CartPage() {
         </div>
 
         {/* Order Summary Card */}
-        <div className="h-fit rounded-2xl border border-stone-200 bg-white p-6 shadow-md">
-          <h2 className="text-lg font-bold text-stone-950 font-display border-b border-stone-100 pb-4">
+        <div className="h-fit border border-stone-200 bg-white p-6">
+          <h2 className="text-lg font-bold tracking-tight text-stone-950 font-display uppercase border-b border-stone-100 pb-4">
             Order Summary
           </h2>
 
@@ -177,7 +177,7 @@ export default function CartPage() {
           <div className="mt-6 flex flex-col gap-3">
             <Link
               href="/checkout"
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-stone-950 py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+              className="flex w-full items-center justify-center gap-2 bg-stone-950 py-3.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
             >
               <span>Proceed to Checkout</span>
               <IconArrowRight className="size-4" />

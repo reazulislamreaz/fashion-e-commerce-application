@@ -79,12 +79,12 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
   if (error || !order) {
     return (
       <DashboardShell allowedRoles={['SUPER_ADMIN', 'ADMIN', 'MANAGER']}>
-        <div className="rounded-3xl border border-stone-200 bg-white p-12 text-center">
+        <div className="border border-stone-200 bg-white p-12 text-center">
           <h3 className="text-base font-bold text-stone-900">Order Not Found</h3>
           <p className="mt-1 text-xs text-stone-500">{error || 'Invalid order ID'}</p>
           <Link
             href="/dashboard/orders"
-            className="mt-4 inline-block rounded-xl bg-stone-950 px-5 py-2.5 text-xs font-bold text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+            className="mt-4 inline-block bg-stone-950 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
           >
             Back to Orders List
           </Link>
@@ -116,20 +116,20 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
               <IconArrowRight className="size-3" />
               <span className="text-stone-900 font-bold">Order Details</span>
             </div>
-            <h1 className="text-2xl font-extrabold text-stone-950 font-display">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
               Order #{order.id.substring(0, 8)}
             </h1>
             <p className="text-xs text-stone-500">Placed on {formattedDate}</p>
           </div>
 
           {/* Status Changer */}
-          <div className="flex items-center gap-3 rounded-2xl border border-stone-200 bg-white p-3 shadow-xs">
+          <div className="flex items-center gap-3 border border-stone-200 bg-white p-3">
             <span className="text-xs font-bold text-stone-700">Order Status:</span>
             <select
               disabled={updating}
               value={order.status}
               onChange={(e) => handleStatusChange(e.target.value as OrderStatus)}
-              className="rounded-xl border border-stone-300 bg-stone-50 py-1.5 px-3 text-xs font-extrabold text-stone-900 focus:border-[#C9A227] focus:outline-none disabled:opacity-50"
+              className="border border-stone-300 bg-stone-50 py-1.5 px-3 text-xs font-extrabold text-stone-900 focus:border-[#C9A227] focus:outline-none disabled:opacity-50"
             >
               {ORDER_STATUSES.map((st) => (
                 <option key={st} value={st}>
@@ -142,7 +142,7 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
 
         {/* Customer & Shipping Summary Cards */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-xs">
+          <div className="border border-stone-200 bg-white p-6">
             <h3 className="text-xs font-bold uppercase tracking-wider text-stone-400 mb-3">
               Customer Information
             </h3>
@@ -151,7 +151,7 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
             <p className="mt-0.5 text-xs text-stone-500">User Account ID: {order.userId}</p>
           </div>
 
-          <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-xs">
+          <div className="border border-stone-200 bg-white p-6">
             <h3 className="text-xs font-bold uppercase tracking-wider text-stone-400 mb-3">
               Shipping Destination
             </h3>
@@ -162,7 +162,7 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
         </div>
 
         {/* Line Items Snapshot */}
-        <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-xs">
+        <div className="border border-stone-200 bg-white p-6">
           <h2 className="text-base font-bold text-stone-950 font-display border-b border-stone-100 pb-3 mb-4">
             Ordered Line Items ({order.items.length})
           </h2>
@@ -185,7 +185,7 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
               return (
                 <div key={item.id} className="flex items-center justify-between py-4">
                   <div className="flex items-center gap-4">
-                    <div className="relative size-12 shrink-0 overflow-hidden rounded-xl border border-stone-200 bg-stone-100">
+                    <div className="relative size-12 shrink-0 overflow-hidden border border-stone-200 bg-stone-100">
                       <Image
                         src={imgUrl}
                         alt={item.product?.name || 'Product'}
@@ -195,7 +195,7 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
                       />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-stone-950">
+                      <p className="text-xs font-bold uppercase tracking-wider text-stone-950">
                         {item.product?.name || 'Garment Item'}
                       </p>
                       <p className="text-[11px] text-stone-500">
@@ -204,7 +204,7 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
                     </div>
                   </div>
 
-                  <p className="text-xs font-extrabold text-stone-950 font-display">
+                  <p className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
                     ${subtotalNum.toFixed(2)}
                   </p>
                 </div>
@@ -214,7 +214,7 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
 
           <div className="border-t border-stone-200 pt-4 mt-4 flex items-center justify-between">
             <span className="text-xs font-bold text-stone-700">Authoritative Server Total</span>
-            <span className="text-lg font-extrabold text-stone-950 font-display">
+            <span className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
               ${grandTotalNum.toFixed(2)}
             </span>
           </div>

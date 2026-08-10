@@ -101,20 +101,20 @@ export default function DashboardEditUserPage({ params }: PageProps) {
             <IconArrowRight className="size-3" />
             <span className="text-stone-900 font-bold">Edit User</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-stone-950 font-display">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
             Edit User Profile
           </h1>
         </div>
 
         {error && (
-          <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-xs font-medium text-rose-700 shadow-xs">
+          <div className="border border-rose-200 bg-rose-50 p-4 text-xs font-medium text-rose-700">
             {error}
           </div>
         )}
 
         <form
           onSubmit={handleSubmit}
-          className="rounded-3xl border border-stone-200 bg-white p-6 shadow-xs flex flex-col gap-4"
+          className="border border-stone-200 bg-white p-6 flex flex-col gap-4"
         >
           <div>
             <label className="block text-xs font-bold text-stone-700 mb-1">
@@ -125,7 +125,7 @@ export default function DashboardEditUserPage({ params }: PageProps) {
               required
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full rounded-xl border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+              className="w-full border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
             />
           </div>
 
@@ -138,7 +138,7 @@ export default function DashboardEditUserPage({ params }: PageProps) {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+              className="w-full border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
             />
           </div>
 
@@ -150,21 +150,21 @@ export default function DashboardEditUserPage({ params }: PageProps) {
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full rounded-xl border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+              className="w-full border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
             />
           </div>
 
           <div className="mt-4 flex items-center justify-end gap-3 border-t border-stone-100 pt-4">
             <Link
               href="/dashboard/users"
-              className="rounded-xl border border-stone-300 px-5 py-2.5 text-xs font-bold text-stone-700 hover:bg-stone-50"
+              className="border border-stone-300 px-5 py-2.5 text-xs font-bold text-stone-700 hover:bg-stone-50"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-xl bg-stone-950 px-6 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#C9A227] hover:text-stone-950 transition-colors disabled:opacity-50"
+              className="bg-stone-950 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors disabled:opacity-50 cursor-pointer"
             >
               {submitting ? 'Saving...' : 'Save Changes'}
             </button>

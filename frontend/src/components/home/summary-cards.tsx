@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getCategories, getProducts, getSizes, getStyles } from '@/lib/api/services';
+import { IconGrid, IconTag, IconRuler, IconStyle } from '../ui/icons';
 
 type CatalogSummary = {
   totalCategories: number;
@@ -18,10 +19,10 @@ export function SummaryCards() {
     async function fetchCounts() {
       try {
         const [catRes, prodRes, sizeRes, styleRes] = await Promise.all([
-          getCategories().catch(() => ({ pagination: { totalItems: 0 } })),
+          getCategories({ limit: 1 }).catch(() => ({ pagination: { totalItems: 0 } })),
           getProducts({ limit: 1 }).catch(() => ({ pagination: { totalItems: 0 } })),
-          getSizes().catch(() => ({ pagination: { totalItems: 0 } })),
-          getStyles().catch(() => ({ pagination: { totalItems: 0 } })),
+          getSizes({ limit: 1 }).catch(() => ({ pagination: { totalItems: 0 } })),
+          getStyles({ limit: 1 }).catch(() => ({ pagination: { totalItems: 0 } })),
         ]);
 
         setSummary({
@@ -46,34 +47,32 @@ export function SummaryCards() {
   }, []);
 
   const cards = [
-    { label: 'Total Categories', value: summary?.totalCategories, icon: '📂' },
-    { label: 'Fashion Products', value: summary?.totalProducts, icon: '👕' },
-    { label: 'Available Sizes', value: summary?.totalSizes, icon: '📏' },
-    { label: 'Available Styles', value: summary?.totalStyles, icon: '✨' },
+    { label: 'Total Categories', value: summary?.totalCategories, icon: <IconGrid className="size-5 text-stone-900" /> },
+    { label: 'Fashion Products', value: summary?.totalProducts, icon: <IconTag className="size-5 text-stone-900" /> },
+    { label: 'Available Sizes', value: summary?.totalSizes, icon: <IconRuler className="size-5 text-stone-900" /> },
+    { label: 'Available Styles', value: summary?.totalStyles, icon: <IconStyle className="size-5 text-stone-900" /> },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-y-12 lg:grid-cols-4 lg:divide-x lg:divide-stone-300">
       {cards.map((card, idx) => (
         <div
           key={idx}
-          className="flex items-center gap-4 rounded-2xl border border-stone-200/80 bg-white p-5 shadow-xs hover:border-[#C9A227]/50 hover:shadow-md transition-all"
+          className="flex flex-col items-center justify-center text-center px-6 group"
         >
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-stone-100 text-xl shadow-inner">
+          <span className="mb-4 flex text-stone-900 opacity-80 group-hover:opacity-100 transition-opacity">
             {card.icon}
           </span>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-              {card.label}
+          {loading ? (
+            <div className="h-8 w-16 animate-pulse bg-stone-200 mb-1" />
+          ) : (
+            <p className="text-4xl font-bold text-stone-950 font-display tracking-tight">
+              {card.value ?? 0}
             </p>
-            {loading ? (
-              <div className="mt-1 h-7 w-12 animate-pulse rounded bg-stone-200" />
-            ) : (
-              <p className="mt-0.5 text-2xl font-bold text-stone-900 font-display">
-                {card.value ?? 0}
-              </p>
-            )}
-          </div>
+          )}
+          <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-stone-500">
+            {card.label}
+          </p>
         </div>
       ))}
     </div>

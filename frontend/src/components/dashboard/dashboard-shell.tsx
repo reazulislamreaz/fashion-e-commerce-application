@@ -32,9 +32,9 @@ export function DashboardShell({
               className="fixed inset-0 bg-stone-950/75 backdrop-blur-xs"
               onClick={() => setMobileMenuOpen(false)}
             />
-            <div className="fixed inset-y-0 left-0 w-72 bg-stone-900 text-white shadow-2xl flex flex-col justify-between z-50">
+            <div className="fixed inset-y-0 left-0 w-72 bg-stone-900 text-white flex flex-col justify-between z-50">
               <div className="absolute right-3 top-3">
-                <button
+                <button className="cursor-pointer"
                   onClick={() => setMobileMenuOpen(false)}
                   className="p-2 text-stone-400 hover:text-white"
                 >

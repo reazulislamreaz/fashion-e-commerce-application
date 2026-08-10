@@ -27,19 +27,19 @@ export function CartDrawer() {
       />
 
       <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
-        <div className="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+        <div className="w-screen max-w-md bg-white flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-stone-200 px-6 py-4 bg-stone-900 text-white">
             <div className="flex items-center gap-2">
               <IconBag className="size-5 text-[#C9A227]" />
               <h2 className="text-base font-semibold tracking-tight">Your Cart</h2>
-              <span className="ml-1 rounded-full bg-[#C9A227] px-2 py-0.5 text-xs font-bold text-stone-950">
+              <span className="ml-1 rounded-full bg-[#C9A227] px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-stone-950">
                 {itemCount}
               </span>
             </div>
             <button
               onClick={closeCart}
-              className="rounded-full p-1 text-stone-400 hover:bg-stone-800 hover:text-white"
+              className="rounded-full p-1 text-stone-400 hover:bg-stone-800 hover:text-white cursor-pointer"
             >
               <IconX className="size-5" />
             </button>
@@ -60,7 +60,7 @@ export function CartDrawer() {
                 </p>
                 <button
                   onClick={closeCart}
-                  className="mt-6 rounded-lg bg-stone-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-stone-800"
+                  className="mt-6 bg-stone-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-stone-800 cursor-pointer"
                 >
                   Explore Shop
                 </button>
@@ -82,7 +82,7 @@ export function CartDrawer() {
                     key={`${item.productId}-${item.sizeId || 'nosize'}`}
                     className="flex gap-4 py-4 first:pt-0 last:pb-0"
                   >
-                    <div className="relative size-20 shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-100">
+                    <div className="relative size-20 shrink-0 overflow-hidden border border-stone-200 bg-stone-100">
                       <Image
                         src={primaryImage}
                         alt={item.product.name}
@@ -103,15 +103,15 @@ export function CartDrawer() {
                         </div>
 
                         {item.sizeName && (
-                          <span className="mt-1 inline-block rounded-md bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-600">
+                          <span className="mt-1 inline-block bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-600">
                             Size: {item.sizeName}
                           </span>
                         )}
                       </div>
 
                       <div className="mt-2 flex items-center justify-between">
-                        <div className="flex items-center rounded-lg border border-stone-200 bg-stone-50">
-                          <button
+                        <div className="flex items-center border border-stone-200 bg-stone-50">
+                          <button className="cursor-pointer"
                             onClick={() =>
                               updateQuantity(
                                 item.productId,
@@ -126,7 +126,7 @@ export function CartDrawer() {
                           <span className="w-8 text-center text-xs font-semibold text-stone-900">
                             {item.quantity}
                           </span>
-                          <button
+                          <button className="cursor-pointer"
                             onClick={() =>
                               updateQuantity(
                                 item.productId,
@@ -140,7 +140,7 @@ export function CartDrawer() {
                           </button>
                         </div>
 
-                        <button
+                        <button className="cursor-pointer"
                           onClick={() => removeItem(item.productId, item.sizeId)}
                           className="text-stone-400 hover:text-rose-600 transition-colors p-1"
                         >
@@ -169,14 +169,14 @@ export function CartDrawer() {
                 <Link
                   href="/checkout"
                   onClick={closeCart}
-                  className="flex w-full items-center justify-center rounded-xl bg-stone-900 px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+                  className="flex w-full items-center justify-center bg-stone-900 px-6 py-3 text-sm font-semibold text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
                 >
                   Proceed to Checkout
                 </Link>
                 <Link
                   href="/cart"
                   onClick={closeCart}
-                  className="flex w-full items-center justify-center rounded-xl border border-stone-300 bg-white px-6 py-2.5 text-sm font-medium text-stone-700 hover:bg-stone-100"
+                  className="flex w-full items-center justify-center border border-stone-300 bg-white px-6 py-2.5 text-sm font-medium text-stone-700 hover:bg-stone-100"
                 >
                   View Full Cart
                 </Link>

@@ -20,7 +20,7 @@ export function ErrorState({
         <button
           type="button"
           onClick={onRetry}
-          className="rounded-md bg-stone-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-stone-700"
+          className="bg-stone-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-stone-700 cursor-pointer"
         >
           Try again
         </button>

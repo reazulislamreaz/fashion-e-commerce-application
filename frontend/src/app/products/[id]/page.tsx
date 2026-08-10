@@ -50,12 +50,12 @@ export default function ProductDetailPage({
     return (
       <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <div className="aspect-4/5 w-full animate-pulse rounded-2xl bg-stone-200" />
+          <div className="aspect-4/5 w-full animate-pulse bg-stone-200" />
           <div className="flex flex-col gap-4">
-            <div className="h-4 w-1/4 animate-pulse rounded bg-stone-200" />
-            <div className="h-8 w-3/4 animate-pulse rounded bg-stone-200" />
-            <div className="h-6 w-1/3 animate-pulse rounded bg-stone-200" />
-            <div className="mt-4 h-24 w-full animate-pulse rounded bg-stone-200" />
+            <div className="h-4 w-1/4 animate-pulse bg-stone-200" />
+            <div className="h-8 w-3/4 animate-pulse bg-stone-200" />
+            <div className="h-6 w-1/3 animate-pulse bg-stone-200" />
+            <div className="mt-4 h-24 w-full animate-pulse bg-stone-200" />
           </div>
         </div>
       </div>
@@ -71,7 +71,7 @@ export default function ProductDetailPage({
         </p>
         <Link
           href="/products"
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-stone-950 px-6 py-3 text-xs font-bold text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+          className="mt-6 inline-flex items-center gap-2 bg-stone-950 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
         >
           Back to Shop Catalog
         </Link>
@@ -141,12 +141,12 @@ export default function ProductDetailPage({
               )}
             </div>
 
-            <h1 className="mt-4 text-3xl font-extrabold text-stone-950 font-display sm:text-4xl">
+            <h1 className="mt-4 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase sm:text-4xl">
               {product.name}
             </h1>
 
             <div className="mt-4 flex items-baseline gap-3">
-              <span className="text-3xl font-extrabold text-stone-950 font-display">
+              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
                 ${priceNum.toFixed(2)}
               </span>
               <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200/60 rounded-full px-2.5 py-0.5">
@@ -177,13 +177,13 @@ export default function ProductDetailPage({
 
                 <div className="flex flex-wrap gap-2">
                   {availableSizes.map((size) => (
-                    <button
+                    <button className="cursor-pointer"
                       key={size.id}
                       type="button"
                       onClick={() => setSelectedSizeId(size.id)}
-                      className={`min-w-12 h-10 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center ${
+                      className={`min-w-12 h-10 px-3  text-xs font-bold transition-all flex items-center justify-center ${
                         selectedSizeId === size.id
-                          ? 'bg-stone-950 text-[#C9A227] shadow-md ring-2 ring-stone-950'
+                          ? 'bg-stone-950 text-[#C9A227]  ring-2 ring-stone-950'
                           : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
                       }`}
                     >
@@ -199,21 +199,21 @@ export default function ProductDetailPage({
               <label className="text-xs font-bold uppercase tracking-wider text-stone-700 block mb-2">
                 Quantity
               </label>
-              <div className="inline-flex items-center rounded-xl border border-stone-300 bg-white p-1">
-                <button
+              <div className="inline-flex items-center border border-stone-300 bg-white p-1">
+                <button className="cursor-pointer"
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="flex size-9 items-center justify-center rounded-lg text-stone-600 hover:bg-stone-100"
+                  className="flex size-9 items-center justify-center text-stone-600 hover:bg-stone-100"
                 >
                   <IconMinus className="size-4" />
                 </button>
                 <span className="w-12 text-center text-sm font-bold text-stone-900">
                   {quantity}
                 </span>
-                <button
+                <button className="cursor-pointer"
                   type="button"
                   onClick={() => setQuantity((q) => Math.min(99, q + 1))}
-                  className="flex size-9 items-center justify-center rounded-lg text-stone-600 hover:bg-stone-100"
+                  className="flex size-9 items-center justify-center text-stone-600 hover:bg-stone-100"
                 >
                   <IconPlus className="size-4" />
                 </button>
@@ -226,7 +226,7 @@ export default function ProductDetailPage({
             <button
               type="button"
               onClick={handleAddToCart}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-stone-950 py-4 text-sm font-bold text-white shadow-xl hover:bg-[#C9A227] hover:text-stone-950 transition-colors transform hover:-translate-y-0.5"
+              className="flex w-full items-center justify-center gap-2 bg-stone-950 py-4 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors transform hover:-translate-y-0.5 cursor-pointer"
             >
               <IconBag className="size-5" />
               <span>Add to Cart — ${(priceNum * quantity).toFixed(2)}</span>

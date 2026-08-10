@@ -169,10 +169,10 @@ function ProductCatalogContent() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search by product name..."
-              className="w-full rounded-xl border border-stone-300 bg-white py-2 pl-3 pr-9 text-xs text-stone-900 placeholder-stone-400 focus:border-[#C9A227] focus:outline-hidden focus:ring-1 focus:ring-[#C9A227]"
+              className="w-full border border-stone-300 bg-white py-2 pl-3 pr-9 text-xs text-stone-900 placeholder-stone-400 focus:border-[#C9A227] focus:outline-hidden focus:ring-1 focus:ring-[#C9A227]"
             />
             {searchInput ? (
-              <button
+              <button className="cursor-pointer"
                 type="button"
                 onClick={() => {
                   setSearchInput('');
@@ -183,7 +183,7 @@ function ProductCatalogContent() {
                 <IconX className="size-4" />
               </button>
             ) : (
-              <button type="submit" className="absolute right-2.5 top-2.5 text-stone-400">
+              <button type="submit" className="absolute right-2.5 top-2.5 text-stone-400 cursor-pointer">
                 <IconSearch className="size-4" />
               </button>
             )}
@@ -193,7 +193,7 @@ function ProductCatalogContent() {
           <select
             value={currentSortVal}
             onChange={handleSortChange}
-            className="rounded-xl border border-stone-300 bg-white py-2 px-3 text-xs font-semibold text-stone-700 focus:border-[#C9A227] focus:outline-hidden"
+            className="border border-stone-300 bg-white py-2 px-3 text-xs font-semibold text-stone-700 focus:border-[#C9A227] focus:outline-hidden"
           >
             <option value="newest">Sort by: Newest</option>
             <option value="price_asc">Price: Low to High</option>
@@ -202,9 +202,9 @@ function ProductCatalogContent() {
           </select>
 
           {/* Mobile Filter Button */}
-          <button
+          <button className="cursor-pointer"
             onClick={() => setIsFilterDrawerOpen(true)}
-            className="inline-flex lg:hidden items-center gap-1.5 rounded-xl bg-stone-950 px-4 py-2 text-xs font-bold text-white shadow-xs"
+            className="inline-flex lg:hidden items-center gap-1.5 bg-stone-950 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white"
           >
             <IconFilter className="size-4 text-[#C9A227]" />
             <span>Filters</span>
@@ -255,7 +255,7 @@ function ProductCatalogContent() {
               ))}
             </div>
           ) : !productsData || productsData.items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-stone-300 bg-white p-12 text-center">
+            <div className="flex flex-col items-center justify-center border border-dashed border-stone-300 bg-white p-12 text-center">
               <div className="flex size-14 items-center justify-center rounded-full bg-stone-100 text-stone-400">
                 <IconSearch className="size-7" />
               </div>
@@ -268,7 +268,7 @@ function ProductCatalogContent() {
               {hasActiveFilters && (
                 <button
                   onClick={handleResetFilters}
-                  className="mt-6 rounded-xl bg-stone-950 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+                  className="mt-6 bg-stone-950 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors cursor-pointer"
                 >
                   Reset All Filters
                 </button>
@@ -285,10 +285,10 @@ function ProductCatalogContent() {
               {/* Pagination */}
               {productsData.pagination && productsData.pagination.totalPages > 1 && (
                 <div className="mt-6 flex items-center justify-between border-t border-stone-200 pt-6">
-                  <button
+                  <button className="cursor-pointer"
                     disabled={!productsData.pagination.hasPreviousPage}
                     onClick={() => updateQueryParams({ page: String(pageParam - 1) })}
-                    className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-xs font-semibold text-stone-700 disabled:opacity-40 hover:bg-stone-50"
+                    className="border border-stone-300 bg-white px-4 py-2 text-xs font-semibold text-stone-700 disabled:opacity-40 hover:bg-stone-50"
                   >
                     Previous Page
                   </button>
@@ -298,10 +298,10 @@ function ProductCatalogContent() {
                     <strong className="text-stone-900">{productsData.pagination.totalPages}</strong>
                   </span>
 
-                  <button
+                  <button className="cursor-pointer"
                     disabled={!productsData.pagination.hasNextPage}
                     onClick={() => updateQueryParams({ page: String(pageParam + 1) })}
-                    className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-xs font-semibold text-stone-700 disabled:opacity-40 hover:bg-stone-50"
+                    className="border border-stone-300 bg-white px-4 py-2 text-xs font-semibold text-stone-700 disabled:opacity-40 hover:bg-stone-50"
                   >
                     Next Page
                   </button>

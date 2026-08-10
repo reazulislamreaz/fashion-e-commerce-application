@@ -24,7 +24,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           required={required}
-          className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-xs font-medium text-stone-900 placeholder:text-stone-400 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#C9A227] focus-visible:border-transparent disabled:opacity-50 disabled:bg-stone-50 ${
+          className={`w-full  border bg-white px-3.5 py-2.5 text-xs font-medium text-stone-900 placeholder:text-stone-400 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#C9A227] focus-visible:border-transparent disabled:opacity-50 disabled:bg-stone-50 ${
             error
               ? 'border-rose-400 bg-rose-50/20 text-rose-900 focus-visible:ring-rose-500'
               : 'border-stone-300 hover:border-stone-400'
@@ -67,7 +67,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           id={textareaId}
           required={required}
           rows={rows}
-          className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-xs font-medium text-stone-900 placeholder:text-stone-400 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#C9A227] focus-visible:border-transparent disabled:opacity-50 disabled:bg-stone-50 ${
+          className={`w-full  border bg-white px-3.5 py-2.5 text-xs font-medium text-stone-900 placeholder:text-stone-400 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#C9A227] focus-visible:border-transparent disabled:opacity-50 disabled:bg-stone-50 ${
             error
               ? 'border-rose-400 bg-rose-50/20 text-rose-900 focus-visible:ring-rose-500'
               : 'border-stone-300 hover:border-stone-400'

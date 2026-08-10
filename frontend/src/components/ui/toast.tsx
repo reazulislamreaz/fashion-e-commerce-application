@@ -47,7 +47,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           <div
             key={toast.id}
             role="status"
-            className={`flex items-start justify-between rounded-xl border p-4 shadow-lg transition-all backdrop-blur-md ${
+            className={`flex items-start justify-between  border p-4  transition-all backdrop-blur-md ${
               toast.type === 'success'
                 ? 'border-amber-400/40 bg-stone-900/95 text-white'
                 : toast.type === 'error'
@@ -68,7 +68,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 )}
               </div>
             </div>
-            <button
+            <button className="cursor-pointer"
               onClick={() => removeToast(toast.id)}
               aria-label="Close notification"
               className="ml-2 text-stone-400 hover:text-white"

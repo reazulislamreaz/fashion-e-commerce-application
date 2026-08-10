@@ -30,7 +30,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantStyles = {
       primary:
-        'bg-stone-950 text-white hover:bg-[#C9A227] hover:text-stone-950 active:scale-[0.98] shadow-xs',
+        'bg-stone-950 text-white hover:bg-[#C9A227] hover:text-stone-950 active:scale-[0.98] ',
       secondary:
         'bg-stone-100 text-stone-900 hover:bg-stone-200 active:scale-[0.98]',
       outline:
@@ -38,13 +38,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ghost:
         'text-stone-700 hover:bg-stone-100 hover:text-stone-950 active:scale-[0.98]',
       danger:
-        'bg-rose-600 text-white hover:bg-rose-700 active:scale-[0.98] shadow-xs',
+        'bg-rose-600 text-white hover:bg-rose-700 active:scale-[0.98] ',
     };
 
     const sizeStyles = {
-      sm: 'h-8 rounded-lg px-3 text-[11px] gap-1.5',
-      md: 'h-10 rounded-xl px-4 text-xs gap-2',
-      lg: 'h-12 rounded-xl px-6 text-sm gap-2.5',
+      sm: 'h-8  px-3 text-[11px] gap-1.5',
+      md: 'h-10  px-4 text-xs gap-2',
+      lg: 'h-12  px-6 text-sm gap-2.5',
     };
 
     const widthStyle = fullWidth ? 'w-full' : '';
@@ -54,7 +54,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={type}
         disabled={disabled || isLoading}
-        className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${widthStyle} ${className}`}
+        className={`cursor-pointer ${`${baseStyles}`} ${variantStyles[variant]} ${sizeStyles[size]} ${widthStyle} ${className}`}
         {...props}
       >
         {isLoading && <IconSpinner className="size-4 animate-spin shrink-0" />}

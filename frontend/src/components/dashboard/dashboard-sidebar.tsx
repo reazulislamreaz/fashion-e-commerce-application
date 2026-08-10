@@ -84,7 +84,7 @@ export function DashboardSidebar({ onNavClick }: DashboardSidebarProps) {
       <div>
         {/* Brand Header */}
         <div className="flex h-16 items-center gap-3 border-b border-stone-800 px-6">
-          <span className="flex size-8 items-center justify-center rounded-lg bg-[#C9A227] font-bold text-stone-950 text-sm shadow-xs">
+          <span className="flex size-8 items-center justify-center bg-[#C9A227] font-bold text-stone-950 text-sm">
             EF
           </span>
           <div className="flex flex-col">
@@ -115,9 +115,9 @@ export function DashboardSidebar({ onNavClick }: DashboardSidebarProps) {
                 key={item.name}
                 href={item.href}
                 onClick={onNavClick}
-                className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all ${
+                className={`flex items-center gap-3  px-3.5 py-2.5 text-xs font-bold transition-all ${
                   isActive
-                    ? 'bg-[#C9A227] text-stone-950 shadow-sm'
+                    ? 'bg-[#C9A227] text-stone-950 '
                     : 'text-stone-300 hover:bg-stone-800 hover:text-white'
                 }`}
               >
@@ -132,8 +132,8 @@ export function DashboardSidebar({ onNavClick }: DashboardSidebarProps) {
       {/* Footer Info & Logout */}
       <div className="border-t border-stone-800 p-4">
         {user && (
-          <div className="mb-3 rounded-xl bg-stone-800/80 p-3">
-            <p className="text-xs font-bold text-white truncate">{user.fullName}</p>
+          <div className="mb-3 bg-stone-800/80 p-3">
+            <p className="text-xs font-bold uppercase tracking-wider text-white truncate">{user.fullName}</p>
             <div className="flex items-center justify-between mt-1">
               <span className="text-[10px] font-medium text-stone-400 truncate max-w-[110px]">
                 {user.email}
@@ -147,7 +147,7 @@ export function DashboardSidebar({ onNavClick }: DashboardSidebarProps) {
 
         <button
           onClick={logout}
-          className="flex w-full items-center justify-center gap-2 rounded-xl border border-stone-700 bg-stone-800 py-2.5 text-xs font-bold text-rose-400 hover:bg-rose-950/40 hover:border-rose-800 transition-colors"
+          className="flex w-full items-center justify-center gap-2 border border-stone-700 bg-stone-800 py-2.5 text-xs font-bold text-rose-400 hover:bg-rose-950/40 hover:border-rose-800 transition-colors cursor-pointer"
         >
           <IconLogout className="size-4" />
           <span>Sign Out</span>

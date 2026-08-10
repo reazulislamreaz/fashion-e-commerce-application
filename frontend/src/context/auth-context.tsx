@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -15,6 +16,8 @@ import {
   refreshApi,
   registerApi,
 } from '@/lib/api/services';
+import { dispatchSessionExpired } from '@/components/ui/session-expired-modal';
+import { setAuthInterceptor } from '@/lib/api/client';
 import { User } from '@/types';
 
 type AuthContextType = {
@@ -44,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const isRefreshingRef = useRef(false);
 
   const clearAuthState = useCallback(() => {
     setUser(null);
@@ -52,6 +56,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
   }, []);
+
+  const handleSessionExpired = useCallback(() => {
+    clearAuthState();
+    dispatchSessionExpired();
+  }, [clearAuthState]);
 
   const refreshSession = useCallback(async (): Promise<boolean> => {
     if (typeof window === 'undefined') return false;
@@ -105,6 +114,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     initAuth();
   }, [clearAuthState, refreshSession]);
+
+  // Register the 401 interceptor so the API client can auto-refresh or
+  // trigger the session-expired modal when the access token is invalid.
+  useEffect(() => {
+    setAuthInterceptor(async () => {
+      if (isRefreshingRef.current) return null;
+      isRefreshingRef.current = true;
+
+      try {
+        const storedRefresh = localStorage.getItem(REFRESH_TOKEN_KEY);
+        if (!storedRefresh) {
+          handleSessionExpired();
+          return null;
+        }
+
+        const authRes = await refreshApi(storedRefresh);
+        setUser(authRes.user);
+        setAccessToken(authRes.accessToken);
+        setRefreshToken(authRes.refreshToken);
+        localStorage.setItem(ACCESS_TOKEN_KEY, authRes.accessToken);
+        localStorage.setItem(REFRESH_TOKEN_KEY, authRes.refreshToken);
+        return authRes.accessToken;
+      } catch {
+        handleSessionExpired();
+        return null;
+      } finally {
+        isRefreshingRef.current = false;
+      }
+    });
+
+    return () => setAuthInterceptor(null);
+  }, [handleSessionExpired]);
 
   const login = async (email: string, password: string) => {
     const res = await loginApi({ email, password });

@@ -13,6 +13,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RoleCode } from '@prisma/client';
 import { Roles } from '@/common/decorators/roles.decorator';
+import { Public } from '@/common/decorators/public.decorator';
 import { IdParamDto } from '@/common/dto/id-param.dto';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -38,6 +39,7 @@ export class ProductsController {
   }
 
   @Get()
+  @Public()
   @ApiOperation({
     summary: 'List products with pagination, search, multi-filtering, and sorting',
   })
@@ -52,6 +54,7 @@ export class ProductsController {
   }
 
   @Get(':id')
+  @Public()
   @ApiOperation({ summary: 'Get a product by ID' })
   async findOne(@Param() params: IdParamDto) {
     const data = await this.productsService.findOne(params.id);

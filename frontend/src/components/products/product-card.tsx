@@ -44,26 +44,26 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-xs hover:border-[#C9A227]/50 hover:shadow-xl transition-all duration-300">
+    <div className="group relative flex flex-col bg-transparent transition-all duration-300">
       {/* Image container */}
-      <Link href={`/products/${product.id}`} className="relative aspect-4/5 w-full overflow-hidden bg-stone-100">
+      <Link href={`/products/${product.id}`} className="relative aspect-4/5 w-full overflow-hidden bg-stone-100 mb-4">
         <Image
           src={primaryImage}
           alt={product.name}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
         />
 
         {/* Category & Style badges overlay */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
           {product.category?.name && (
-            <span className="rounded-full bg-stone-950/80 backdrop-blur-xs px-2.5 py-0.5 text-[10px] font-bold text-white tracking-wide uppercase">
+            <span className="bg-white/90 backdrop-blur-sm px-2.5 py-0.5 text-[10px] font-bold text-stone-900 tracking-wide uppercase">
               {product.category.name}
             </span>
           )}
           {product.style?.name && (
-            <span className="rounded-full bg-[#C9A227] px-2.5 py-0.5 text-[10px] font-bold text-stone-950 tracking-wide uppercase">
+            <span className="bg-stone-900/90 backdrop-blur-sm px-2.5 py-0.5 text-[10px] font-bold text-white tracking-wide uppercase">
               {product.style.name}
             </span>
           )}
@@ -74,7 +74,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="flex flex-1 flex-col justify-between p-4">
         <div>
           <Link href={`/products/${product.id}`}>
-            <h3 className="text-sm font-bold text-stone-900 line-clamp-1 group-hover:text-[#C9A227] transition-colors">
+            <h3 className="text-sm font-bold text-stone-900 line-clamp-1 group-hover:text-stone-600 transition-colors">
               {product.name}
             </h3>
           </Link>
@@ -87,17 +87,17 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="mt-3 flex items-center gap-1.5 flex-wrap">
               <span className="text-[11px] font-semibold text-stone-400 mr-1">Size:</span>
               {availableSizes.map((size) => (
-                <button
+                <button className="cursor-pointer"
                   key={size.id}
                   type="button"
                   onClick={(e) => {
                     e.preventDefault();
                     setSelectedSizeId(size.id);
                   }}
-                  className={`flex size-6 items-center justify-center rounded-md text-[10px] font-bold transition-all ${
+                  className={`text-[10px] font-bold uppercase transition-colors ${
                     selectedSizeId === size.id
-                      ? 'bg-stone-900 text-[#C9A227] ring-1 ring-stone-900'
-                      : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                      ? 'text-stone-950 underline decoration-2 underline-offset-4'
+                      : 'text-stone-400 hover:text-stone-600'
                   }`}
                 >
                   {size.name}
@@ -108,20 +108,16 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Price & Add to Cart Action */}
-        <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-3">
-          <div>
-            <span className="text-xs text-stone-400 block font-medium">Price</span>
-            <span className="text-base font-extrabold text-stone-950 font-display">
-              ${priceNum.toFixed(2)}
-            </span>
-          </div>
+        <div className="mt-3 flex items-end justify-between">
+          <p className="text-sm font-bold text-stone-900">
+            ${priceNum.toFixed(2)}
+          </p>
 
           <button
             onClick={handleAddToCart}
-            className="flex items-center gap-1.5 rounded-xl bg-stone-950 px-3.5 py-2 text-xs font-bold text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors shadow-xs"
+            className="text-[10px] font-bold uppercase tracking-widest text-stone-500 hover:text-stone-950 transition-colors border-b border-transparent hover:border-stone-950 cursor-pointer"
           >
-            <IconBag className="size-4" />
-            <span>Add</span>
+            Add to Bag
           </button>
         </div>
       </div>

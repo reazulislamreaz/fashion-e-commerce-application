@@ -66,7 +66,7 @@ export function HeroCarousel() {
   const active = HERO_SLIDES[currentSlide];
 
   return (
-    <div className="relative w-full overflow-hidden bg-stone-950 text-white min-h-[440px] sm:min-h-[520px] lg:min-h-[600px] flex items-center">
+    <div className="relative w-full overflow-hidden bg-stone-950 text-white min-h-[500px] sm:min-h-[600px] lg:min-h-[750px] flex items-center">
       {/* Background Image Carousel */}
       {HERO_SLIDES.map((slide, index) => (
         <div
@@ -90,27 +90,30 @@ export function HeroCarousel() {
 
       {/* Slide Content Overlay */}
       <div className="relative z-20 mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="max-w-2xl">
-          <span className="inline-block rounded-full border border-amber-400/40 bg-amber-400/10 px-3.5 py-1 text-xs font-semibold tracking-wider text-[#C9A227]">
+        <div
+          key={active.id}
+          className="max-w-2xl transition-all duration-700"
+        >
+          <span className="inline-block bg-white px-3 py-1 text-[10px] font-bold tracking-widest text-stone-950 uppercase">
             {active.badge}
           </span>
-          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl font-display leading-[1.1]">
+          <h1 className="mt-6 text-3xl font-bold tracking-tight text-white sm:text-5xl lg:text-7xl font-display leading-[1.1] uppercase">
             {active.title}
           </h1>
-          <p className="mt-4 text-sm sm:text-base text-stone-300 leading-relaxed max-w-xl">
+          <p className="mt-5 text-sm sm:text-base text-stone-300 leading-relaxed max-w-xl">
             {active.subtitle}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href={active.ctaLink}
-              className="inline-flex items-center justify-center rounded-xl bg-[#C9A227] px-7 py-3 text-sm font-bold text-stone-950 shadow-lg hover:bg-[#D4B03A] transition-all transform hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center bg-white px-8 py-3.5 text-xs font-bold uppercase tracking-wider text-stone-950 hover:bg-stone-200 transition-colors uppercase tracking-widest"
             >
               {active.ctaText}
             </Link>
             <Link
               href="/products"
-              className="inline-flex items-center justify-center rounded-xl border border-stone-700 bg-stone-900/80 backdrop-blur-xs px-6 py-3 text-sm font-semibold text-white hover:bg-stone-800 transition-all"
+              className="inline-flex items-center justify-center border border-white px-8 py-3.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-white hover:text-stone-950 transition-colors uppercase tracking-widest"
             >
               View All Products
             </Link>
@@ -121,7 +124,7 @@ export function HeroCarousel() {
       {/* Left/Right Navigation Controls */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 z-30 flex size-10 items-center justify-center rounded-full bg-stone-900/60 text-white backdrop-blur-xs hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+        className="absolute left-4 z-30 flex size-12 items-center justify-center bg-stone-950/50 text-white hover:bg-stone-950 transition-colors cursor-pointer"
         aria-label="Previous Slide"
       >
         <IconChevronLeft className="size-5" />
@@ -129,7 +132,7 @@ export function HeroCarousel() {
 
       <button
         onClick={nextSlide}
-        className="absolute right-4 z-30 flex size-10 items-center justify-center rounded-full bg-stone-900/60 text-white backdrop-blur-xs hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+        className="absolute right-4 z-30 flex size-12 items-center justify-center bg-stone-950/50 text-white hover:bg-stone-950 transition-colors cursor-pointer"
         aria-label="Next Slide"
       >
         <IconChevronRight className="size-5" />
@@ -138,11 +141,11 @@ export function HeroCarousel() {
       {/* Pagination Indicators */}
       <div className="absolute bottom-6 left-1/2 z-30 flex -translate-x-1/2 gap-2">
         {HERO_SLIDES.map((_, idx) => (
-          <button
+          <button className="cursor-pointer"
             key={idx}
             onClick={() => setCurrentSlide(idx)}
-            className={`h-2 rounded-full transition-all ${
-              idx === currentSlide ? 'w-8 bg-[#C9A227]' : 'w-2 bg-white/40 hover:bg-white/70'
+            className={`h-1 transition-all ${
+              idx === currentSlide ? 'w-12 bg-white' : 'w-4 bg-white/40 hover:bg-white/70'
             }`}
             aria-label={`Go to slide ${idx + 1}`}
           />

@@ -17,6 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { RoleCode } from '@prisma/client';
 import { Roles } from '@/common/decorators/roles.decorator';
+import { Public } from '@/common/decorators/public.decorator';
 import { IdParamDto } from '@/common/dto/id-param.dto';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -42,6 +43,7 @@ export class CategoriesController {
   }
 
   @Get()
+  @Public()
   @ApiOperation({ summary: 'List categories with pagination and search' })
   async findAll(@Query() query: CategoryQueryDto) {
     const result = await this.categoriesService.findAll(query);
@@ -54,6 +56,7 @@ export class CategoriesController {
   }
 
   @Get(':id')
+  @Public()
   @ApiOperation({ summary: 'Get a category by ID' })
   async findOne(@Param() params: IdParamDto) {
     const data = await this.categoriesService.findOne(params.id);

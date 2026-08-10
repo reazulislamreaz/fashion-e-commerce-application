@@ -33,11 +33,12 @@ export async function getCategories(query?: {
   search?: string;
   status?: string;
 }) {
+  const statusVal = query?.status ?? 'active';
   return apiClient.get<PaginatedList<Category>>('/categories', {
     query: {
       page: query?.page ?? 1,
       limit: query?.limit ?? 100,
-      status: query?.status ?? 'active',
+      ...(statusVal !== 'all' ? { status: statusVal } : {}),
       ...(query?.search ? { search: query.search } : {}),
     },
   });
@@ -49,11 +50,12 @@ export async function getStyles(query?: {
   search?: string;
   status?: string;
 }) {
+  const statusVal = query?.status ?? 'active';
   return apiClient.get<PaginatedList<Style>>('/styles', {
     query: {
       page: query?.page ?? 1,
       limit: query?.limit ?? 100,
-      status: query?.status ?? 'active',
+      ...(statusVal !== 'all' ? { status: statusVal } : {}),
       ...(query?.search ? { search: query.search } : {}),
     },
   });
@@ -65,11 +67,12 @@ export async function getSizes(query?: {
   search?: string;
   status?: string;
 }) {
+  const statusVal = query?.status ?? 'active';
   return apiClient.get<PaginatedList<Size>>('/sizes', {
     query: {
       page: query?.page ?? 1,
       limit: query?.limit ?? 100,
-      status: query?.status ?? 'active',
+      ...(statusVal !== 'all' ? { status: statusVal } : {}),
       ...(query?.search ? { search: query.search } : {}),
     },
   });
@@ -89,11 +92,12 @@ export type ProductQueryParams = {
 };
 
 export async function getProducts(params?: ProductQueryParams) {
+  const statusVal = params?.status ?? 'active';
   return apiClient.get<PaginatedList<Product>>('/products', {
     query: {
       page: params?.page ?? 1,
       limit: params?.limit ?? 12,
-      status: params?.status ?? 'active',
+      ...(statusVal !== 'all' ? { status: statusVal } : {}),
       ...(params?.search ? { search: params.search } : {}),
       ...(params?.categoryId ? { categoryId: params.categoryId } : {}),
       ...(params?.styleId ? { styleId: params.styleId } : {}),

@@ -65,12 +65,12 @@ function RegisterContent() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-12 sm:px-6">
-      <div className="rounded-3xl border border-stone-200 bg-white p-8 shadow-xl">
+      <div className="border border-stone-200 bg-white p-8">
         <div className="text-center">
-          <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-[#C9A227] text-stone-950 font-bold text-xl shadow-md">
+          <span className="inline-flex size-12 items-center justify-center bg-[#C9A227] text-stone-950 font-bold text-xl">
             EF
           </span>
-          <h1 className="mt-4 text-2xl font-extrabold text-stone-950 font-display">
+          <h1 className="mt-4 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
             Create Customer Account
           </h1>
           <p className="mt-1 text-xs text-stone-500">
@@ -79,7 +79,7 @@ function RegisterContent() {
         </div>
 
         {errorMessage && (
-          <div className="mt-6 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs font-semibold text-rose-700">
+          <div className="mt-6 border border-rose-200 bg-rose-50 p-3.5 text-xs font-semibold text-rose-700">
             {errorMessage}
           </div>
         )}
@@ -95,7 +95,7 @@ function RegisterContent() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="e.g. Jane Doe"
-              className="rounded-xl border border-stone-300 p-3 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
+              className="border border-stone-300 p-3 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
             />
           </div>
 
@@ -109,7 +109,7 @@ function RegisterContent() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="jane@example.com"
-              className="rounded-xl border border-stone-300 p-3 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
+              className="border border-stone-300 p-3 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
             />
           </div>
 
@@ -122,7 +122,7 @@ function RegisterContent() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+880 1711-223344"
-              className="rounded-xl border border-stone-300 p-3 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
+              className="border border-stone-300 p-3 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
             />
           </div>
 
@@ -138,9 +138,9 @@ function RegisterContent() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Minimum 6 characters"
-                className="w-full rounded-xl border border-stone-300 p-3 pr-10 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
+                className="w-full border border-stone-300 p-3 pr-10 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
               />
-              <button
+              <button className="cursor-pointer"
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 text-xs font-semibold text-stone-400 hover:text-stone-700"
@@ -161,7 +161,7 @@ function RegisterContent() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Re-enter your password"
-              className="rounded-xl border border-stone-300 p-3 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
+              className="border border-stone-300 p-3 text-sm text-stone-900 focus:border-[#C9A227] focus:outline-hidden"
             />
           </div>
 
@@ -171,7 +171,7 @@ function RegisterContent() {
               required
               checked={agreeTerms}
               onChange={(e) => setAgreeTerms(e.target.checked)}
-              className="size-4 rounded border-stone-300 text-stone-950 focus:ring-[#C9A227]"
+              className="size-4 border-stone-300 text-stone-950 focus:ring-[#C9A227]"
             />
             <span>I agree to the terms and privacy policy.</span>
           </div>
@@ -179,7 +179,7 @@ function RegisterContent() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 w-full rounded-xl bg-stone-950 py-3.5 text-xs font-bold text-white shadow-md hover:bg-[#C9A227] hover:text-stone-950 transition-colors disabled:opacity-50"
+            className="mt-2 w-full bg-stone-950 py-3.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? 'Registering Account...' : 'Create Account'}
           </button>

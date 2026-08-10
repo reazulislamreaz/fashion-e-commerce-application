@@ -95,7 +95,7 @@ export default function DashboardProductsPage() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-extrabold text-stone-950 font-display">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
               Product Management
             </h1>
             <p className="mt-1 text-xs text-stone-500">
@@ -105,7 +105,7 @@ export default function DashboardProductsPage() {
 
           <Link
             href="/dashboard/products/new"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-stone-950 px-4 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+            className="inline-flex items-center justify-center gap-2 bg-stone-950 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
           >
             <IconPlus className="size-4" />
             <span>Create Product</span>
@@ -113,7 +113,7 @@ export default function DashboardProductsPage() {
         </div>
 
         {/* Filters Toolbar */}
-        <div className="flex flex-col gap-3 rounded-2xl border border-stone-200 bg-white p-4 shadow-xs md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-3 border border-stone-200 bg-white p-4 md:flex-row md:items-center md:justify-between">
           <div className="relative flex-1 max-w-sm">
             <IconSearch className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
             <input
@@ -124,7 +124,7 @@ export default function DashboardProductsPage() {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              className="w-full rounded-xl border border-stone-200 bg-stone-50 py-2.5 pl-10 pr-4 text-xs font-medium text-stone-900 focus:border-[#C9A227] focus:bg-white focus:outline-none"
+              className="w-full border border-stone-200 bg-stone-50 py-2.5 pl-10 pr-4 text-xs font-medium text-stone-900 focus:border-[#C9A227] focus:bg-white focus:outline-none"
             />
           </div>
 
@@ -135,7 +135,7 @@ export default function DashboardProductsPage() {
                 setCategoryId(e.target.value);
                 setPage(1);
               }}
-              className="rounded-xl border border-stone-200 bg-stone-50 py-2.5 px-3 text-xs font-medium text-stone-900 focus:border-[#C9A227] focus:bg-white focus:outline-none"
+              className="border border-stone-200 bg-stone-50 py-2.5 px-3 text-xs font-medium text-stone-900 focus:border-[#C9A227] focus:bg-white focus:outline-none"
             >
               <option value="">All Categories</option>
               {categories.map((cat) => (
@@ -151,7 +151,7 @@ export default function DashboardProductsPage() {
                 setStyleId(e.target.value);
                 setPage(1);
               }}
-              className="rounded-xl border border-stone-200 bg-stone-50 py-2.5 px-3 text-xs font-medium text-stone-900 focus:border-[#C9A227] focus:bg-white focus:outline-none"
+              className="border border-stone-200 bg-stone-50 py-2.5 px-3 text-xs font-medium text-stone-900 focus:border-[#C9A227] focus:bg-white focus:outline-none"
             >
               <option value="">All Styles</option>
               {styles.map((st) => (
@@ -164,7 +164,7 @@ export default function DashboardProductsPage() {
         </div>
 
         {/* Product Table */}
-        <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-xs">
+        <div className="overflow-hidden border border-stone-200 bg-white">
           {loading ? (
             <div className="p-8 text-center text-xs text-stone-500">
               Loading product database...
@@ -202,7 +202,7 @@ export default function DashboardProductsPage() {
                       <tr key={prod.id} className="hover:bg-stone-50/80 transition-colors">
                         <td className="py-3.5 px-4">
                           <div className="flex items-center gap-3">
-                            <div className="relative size-10 shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-100">
+                            <div className="relative size-10 shrink-0 overflow-hidden border border-stone-200 bg-stone-100">
                               <Image
                                 src={primaryImg}
                                 alt={prod.name}
@@ -250,7 +250,7 @@ export default function DashboardProductsPage() {
                             >
                               <IconPencil className="size-4" />
                             </Link>
-                            <button
+                            <button className="cursor-pointer"
                               onClick={() => {
                                 setDeletingId(prod.id);
                                 setDeleteError(null);
@@ -277,17 +277,17 @@ export default function DashboardProductsPage() {
                 Page {meta.page} of {meta.totalPages} ({meta.totalItems} products)
               </span>
               <div className="flex items-center gap-2">
-                <button
+                <button className="cursor-pointer"
                   disabled={!meta.hasPreviousPage}
                   onClick={() => setPage((p) => p - 1)}
-                  className="rounded-lg border border-stone-200 p-1.5 disabled:opacity-40"
+                  className="border border-stone-200 p-1.5 disabled:opacity-40"
                 >
                   <IconChevronLeft className="size-4" />
                 </button>
-                <button
+                <button className="cursor-pointer"
                   disabled={!meta.hasNextPage}
                   onClick={() => setPage((p) => p + 1)}
-                  className="rounded-lg border border-stone-200 p-1.5 disabled:opacity-40"
+                  className="border border-stone-200 p-1.5 disabled:opacity-40"
                 >
                   <IconChevronRight className="size-4" />
                 </button>
@@ -299,28 +299,28 @@ export default function DashboardProductsPage() {
         {/* Delete Confirmation Modal */}
         {deletingId && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs p-4">
-            <div className="w-full max-w-sm rounded-3xl border border-stone-200 bg-white p-6 shadow-2xl text-center">
+            <div className="w-full max-w-sm border border-stone-200 bg-white p-6 text-center">
               <h3 className="text-base font-bold text-stone-950 font-display">Delete Product?</h3>
               <p className="mt-2 text-xs text-stone-500">
                 Are you sure you want to permanently delete this product?
               </p>
 
               {deleteError && (
-                <div className="mt-3 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700 font-medium">
+                <div className="mt-3 bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700 font-medium">
                   {deleteError}
                 </div>
               )}
 
               <div className="mt-6 flex items-center justify-center gap-3">
-                <button
+                <button className="cursor-pointer"
                   onClick={() => setDeletingId(null)}
-                  className="rounded-xl border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
+                  className="border border-stone-300 px-4 py-2 text-xs font-bold text-stone-700 hover:bg-stone-50"
                 >
                   Cancel
                 </button>
-                <button
+                <button className="cursor-pointer"
                   onClick={() => handleDelete(deletingId)}
-                  className="rounded-xl bg-rose-600 px-4 py-2 text-xs font-bold text-white hover:bg-rose-700 transition-colors"
+                  className="bg-rose-600 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-rose-700 transition-colors"
                 >
                   Confirm Delete
                 </button>

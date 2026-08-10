@@ -10,6 +10,15 @@ type RequestOptions = Omit<RequestInit, 'body'> & {
   query?: Record<string, string | number | boolean | undefined | null>;
 };
 
+// Auth interceptor: called when a 401 is received on an authenticated request.
+// Returns a new access token if refresh succeeded, or null if the session is dead.
+type AuthInterceptor = () => Promise<string | null>;
+let _authInterceptor: AuthInterceptor | null = null;
+
+export function setAuthInterceptor(interceptor: AuthInterceptor | null) {
+  _authInterceptor = interceptor;
+}
+
 function buildUrl(path: string, query?: RequestOptions['query']): string {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   const url = new URL(`${env.apiBaseUrl}${normalizedPath}`);
@@ -33,13 +42,14 @@ async function parseJson<T>(response: Response): Promise<ApiResponse<T>> {
   }
 }
 
-export async function apiRequest<T>(
+async function executeRequest<T>(
   path: string,
-  options: RequestOptions = {},
-): Promise<T> {
+  options: RequestOptions,
+): Promise<{ response: Response; payload: ApiResponse<T>; url: string }> {
   const { body, query, headers, ...rest } = options;
+  const url = buildUrl(path, query);
 
-  const response = await fetch(buildUrl(path, query), {
+  const response = await fetch(url, {
     ...rest,
     headers: {
       Accept: 'application/json',
@@ -50,6 +60,37 @@ export async function apiRequest<T>(
   });
 
   const payload = await parseJson<T>(response);
+  return { response, payload, url };
+}
+
+export async function apiRequest<T>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<T> {
+  let { response, payload } = await executeRequest<T>(path, options);
+
+  // If the request returned 401 and had a Bearer token, attempt a silent refresh.
+  if (response.status === 401 && _authInterceptor) {
+    const authHeader =
+      (options.headers as Record<string, string>)?.Authorization ?? '';
+
+    if (authHeader.startsWith('Bearer ')) {
+      const newToken = await _authInterceptor();
+      if (newToken) {
+        // Retry with the refreshed token
+        const retryOptions: RequestOptions = {
+          ...options,
+          headers: {
+            ...(options.headers as Record<string, string>),
+            Authorization: `Bearer ${newToken}`,
+          },
+        };
+        const retry = await executeRequest<T>(path, retryOptions);
+        response = retry.response;
+        payload = retry.payload;
+      }
+    }
+  }
 
   if (!response.ok || payload.success === false) {
     const errorBody = payload as ApiErrorResponse;
@@ -58,6 +99,17 @@ export async function apiRequest<T>(
       response.status,
       errorBody.success === false ? errorBody : undefined,
     );
+  }
+
+  const metaPayload = payload as unknown as { meta?: { pagination?: any } };
+  if (Array.isArray(payload.data) && metaPayload.meta?.pagination) {
+    return {
+      items: payload.data,
+      pagination: {
+        ...metaPayload.meta.pagination,
+        totalItems: metaPayload.meta.pagination.totalItems ?? metaPayload.meta.pagination.total,
+      },
+    } as unknown as T;
   }
 
   return payload.data;

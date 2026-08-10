@@ -26,7 +26,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
   return (
     <div className="flex flex-col gap-4">
       {/* Primary Image Display */}
-      <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl border border-stone-200 bg-stone-100 shadow-xs">
+      <div className="relative aspect-4/5 w-full overflow-hidden border border-stone-200 bg-stone-100">
         <Image
           src={activeImageUrl}
           alt={`${productName} view ${selectedIndex + 1}`}
@@ -41,12 +41,12 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
       {sortedImages.length > 1 && (
         <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-none">
           {sortedImages.map((img, idx) => (
-            <button
+            <button className="cursor-pointer"
               key={img.id || idx}
               onClick={() => setSelectedIndex(idx)}
-              className={`relative size-20 shrink-0 overflow-hidden rounded-xl border-2 transition-all ${
+              className={`relative size-20 shrink-0 overflow-hidden  border-2 transition-all ${
                 selectedIndex === idx
-                  ? 'border-[#C9A227] shadow-md ring-1 ring-[#C9A227]'
+                  ? 'border-[#C9A227]  ring-1 ring-[#C9A227]'
                   : 'border-stone-200 opacity-70 hover:opacity-100'
               }`}
             >

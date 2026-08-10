@@ -34,13 +34,13 @@ export function FilterDrawer({
       />
 
       <div className="fixed inset-y-0 left-0 flex max-w-full pr-10">
-        <div className="w-screen max-w-xs bg-white shadow-2xl flex flex-col justify-between">
+        <div className="w-screen max-w-xs bg-white flex flex-col justify-between">
           <div className="p-4 border-b border-stone-200 flex items-center justify-between bg-stone-950 text-white">
             <div className="flex items-center gap-2">
               <IconFilter className="size-4 text-[#C9A227]" />
               <span className="font-bold text-sm">Filter Catalog</span>
             </div>
-            <button onClick={onClose} className="p-1 text-stone-400 hover:text-white">
+            <button onClick={onClose} className="p-1 text-stone-400 hover:text-white cursor-pointer">
               <IconX className="size-5" />
             </button>
           </div>
@@ -52,7 +52,7 @@ export function FilterDrawer({
           <div className="p-4 border-t border-stone-200 bg-stone-50">
             <button
               onClick={onClose}
-              className="w-full rounded-xl bg-stone-950 py-3 text-xs font-bold text-white shadow-md hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+              className="w-full bg-stone-950 py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors cursor-pointer"
             >
               Apply Filters
             </button>

@@ -56,13 +56,15 @@ function CustomerOrdersContent() {
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6 text-center">
-        <div className="h-8 w-48 animate-pulse rounded bg-stone-200 mx-auto" />
-        <div className="mt-6 h-64 w-full animate-pulse rounded-2xl bg-stone-200" />
+        <div className="h-8 w-48 animate-pulse bg-stone-200 mx-auto" />
+        <div className="mt-6 h-64 w-full animate-pulse bg-stone-200" />
       </div>
     );
   }
 
-  const { items: orders } = ordersData;
+  const orders = Array.isArray(ordersData)
+    ? ordersData
+    : ordersData?.items || [];
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
@@ -77,7 +79,7 @@ function CustomerOrdersContent() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-6 mb-6">
         <div>
-          <h1 className="text-2xl font-extrabold text-stone-950 font-display">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
             Order History
           </h1>
           <p className="mt-1 text-xs text-stone-500">
@@ -87,8 +89,8 @@ function CustomerOrdersContent() {
       </div>
 
       {orders.length === 0 ? (
-        <div className="rounded-3xl border border-stone-200 bg-white p-12 text-center shadow-xs">
-          <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-stone-100 text-stone-400">
+        <div className="border border-stone-200 bg-white p-12 text-center">
+          <div className="mx-auto flex size-16 items-center justify-center bg-stone-100 text-stone-400">
             <IconBag className="size-8" />
           </div>
           <h3 className="mt-4 text-base font-bold text-stone-950">No Orders Found</h3>
@@ -97,7 +99,7 @@ function CustomerOrdersContent() {
           </p>
           <Link
             href="/products"
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-stone-950 px-6 py-3 text-xs font-bold text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+            className="mt-6 inline-flex items-center gap-2 bg-stone-950 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
           >
             Explore Catalog
           </Link>
@@ -122,7 +124,7 @@ function CustomerOrdersContent() {
             return (
               <div
                 key={order.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-stone-200 bg-white p-5 hover:border-stone-400 hover:shadow-md transition-all"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-stone-200 bg-white p-5 hover:border-stone-400 hover: transition-all"
               >
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
@@ -137,14 +139,14 @@ function CustomerOrdersContent() {
                   <p className="text-xs text-stone-500">
                     Placed on {formattedDate} • {order.items?.length || 0} Item(s)
                   </p>
-                  <p className="text-xs font-bold text-stone-900 mt-1">
+                  <p className="text-xs font-bold uppercase tracking-wider text-stone-900 mt-1">
                     Total: ${totalNum.toFixed(2)}
                   </p>
                 </div>
 
                 <Link
                   href={`/orders/${order.id}`}
-                  className="inline-flex items-center justify-center rounded-xl bg-stone-950 px-4 py-2 text-xs font-bold text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+                  className="inline-flex items-center justify-center bg-stone-950 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
                 >
                   View Order Details
                 </Link>

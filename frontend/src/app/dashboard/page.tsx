@@ -57,12 +57,12 @@ function DashboardOverviewContent() {
     return (
       <div className="flex flex-col gap-6">
         <div>
-          <div className="h-7 w-48 animate-pulse rounded bg-stone-200" />
-          <div className="mt-2 h-4 w-72 animate-pulse rounded bg-stone-200" />
+          <div className="h-7 w-48 animate-pulse bg-stone-200" />
+          <div className="mt-2 h-4 w-72 animate-pulse bg-stone-200" />
         </div>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-32 animate-pulse rounded-2xl bg-stone-200" />
+            <div key={i} className="h-32 animate-pulse bg-stone-200" />
           ))}
         </div>
       </div>
@@ -71,14 +71,14 @@ function DashboardOverviewContent() {
 
   if (error || !stats) {
     return (
-      <div className="rounded-3xl border border-stone-200 bg-white p-12 text-center shadow-xs">
+      <div className="border border-stone-200 bg-white p-12 text-center">
         <h3 className="text-lg font-bold text-stone-900">Unable to load dashboard data</h3>
         <p className="mt-1 text-xs text-stone-500">
           Ensure your management session is valid and server connection is active.
         </p>
         <button
           onClick={fetchDashboardData}
-          className="mt-4 rounded-xl bg-stone-950 px-5 py-2.5 text-xs font-bold text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+          className="mt-4 bg-stone-950 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors cursor-pointer"
         >
           Try Again
         </button>
@@ -90,7 +90,7 @@ function DashboardOverviewContent() {
     <div className="flex flex-col gap-8">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-extrabold text-stone-950 font-display">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
           System Overview
         </h1>
         <p className="mt-1 text-xs text-stone-500">
@@ -101,80 +101,80 @@ function DashboardOverviewContent() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {/* Card 1: Total Users */}
-        <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-xs flex items-center justify-between">
+        <div className="border border-stone-200 bg-white p-5 flex items-center justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-stone-500">
               Total Users
             </p>
-            <p className="mt-1 text-3xl font-extrabold text-stone-950 font-display">
+            <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
               {stats.totalUsers}
             </p>
             <p className="mt-1 text-[11px] font-medium text-stone-400">
               Registered customers & staff
             </p>
           </div>
-          <div className="flex size-12 items-center justify-center rounded-2xl bg-amber-50 text-[#C9A227]">
+          <div className="flex size-12 items-center justify-center bg-amber-50 text-[#C9A227]">
             <IconUsers className="size-6" />
           </div>
         </div>
 
         {/* Card 2: Total Categories */}
-        <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-xs flex items-center justify-between">
+        <div className="border border-stone-200 bg-white p-5 flex items-center justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-stone-500">
               Categories
             </p>
-            <p className="mt-1 text-3xl font-extrabold text-stone-950 font-display">
+            <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
               {stats.totalCategories}
             </p>
             <p className="mt-1 text-[11px] font-medium text-stone-400">
               Active catalog categories
             </p>
           </div>
-          <div className="flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <div className="flex size-12 items-center justify-center bg-blue-50 text-blue-600">
             <IconTag className="size-6" />
           </div>
         </div>
 
         {/* Card 3: Total Products */}
-        <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-xs flex items-center justify-between">
+        <div className="border border-stone-200 bg-white p-5 flex items-center justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-stone-500">
               Total Products
             </p>
-            <p className="mt-1 text-3xl font-extrabold text-stone-950 font-display">
+            <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
               {stats.totalProducts}
             </p>
             <p className="mt-1 text-[11px] font-medium text-stone-400">
               Items in product database
             </p>
           </div>
-          <div className="flex size-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+          <div className="flex size-12 items-center justify-center bg-emerald-50 text-emerald-600">
             <IconGrid className="size-6" />
           </div>
         </div>
 
         {/* Card 4: Total Orders */}
-        <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-xs flex items-center justify-between">
+        <div className="border border-stone-200 bg-white p-5 flex items-center justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-stone-500">
               Total Orders
             </p>
-            <p className="mt-1 text-3xl font-extrabold text-stone-950 font-display">
+            <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
               {stats.totalOrders}
             </p>
             <p className="mt-1 text-[11px] font-medium text-stone-400">
               Customer orders generated
             </p>
           </div>
-          <div className="flex size-12 items-center justify-center rounded-2xl bg-purple-50 text-purple-600">
+          <div className="flex size-12 items-center justify-center bg-purple-50 text-purple-600">
             <IconBag className="size-6" />
           </div>
         </div>
       </div>
 
       {/* Recent Orders Section */}
-      <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-xs">
+      <div className="border border-stone-200 bg-white p-6">
         <div className="flex items-center justify-between border-b border-stone-100 pb-4 mb-4">
           <div>
             <h2 className="text-base font-bold text-stone-950 font-display">

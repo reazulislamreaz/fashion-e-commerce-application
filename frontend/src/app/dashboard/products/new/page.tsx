@@ -147,20 +147,20 @@ export default function DashboardNewProductPage() {
             <IconArrowRight className="size-3" />
             <span className="text-stone-900 font-bold">New Product</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-stone-950 font-display">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
             Create Fashion Product
           </h1>
         </div>
 
         {error && (
-          <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-xs font-medium text-rose-700 shadow-xs">
+          <div className="border border-rose-200 bg-rose-50 p-4 text-xs font-medium text-rose-700">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {/* Section 1: Basic Information */}
-          <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-xs flex flex-col gap-4">
+          <div className="border border-stone-200 bg-white p-6 flex flex-col gap-4">
             <h2 className="text-base font-bold text-stone-950 font-display border-b border-stone-100 pb-3">
               Basic Details
             </h2>
@@ -175,7 +175,7 @@ export default function DashboardNewProductPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Italian Wool Double-Breasted Overcoat"
-                className="w-full rounded-xl border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+                className="w-full border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
               />
             </div>
 
@@ -189,7 +189,7 @@ export default function DashboardNewProductPage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Detailed garment description, material breakdown, and fit information..."
-                className="w-full rounded-xl border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+                className="w-full border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
               />
             </div>
 
@@ -206,7 +206,7 @@ export default function DashboardNewProductPage() {
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   placeholder="299.99"
-                  className="w-full rounded-xl border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+                  className="w-full border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
                 />
               </div>
 
@@ -218,7 +218,7 @@ export default function DashboardNewProductPage() {
                   required
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
-                  className="w-full rounded-xl border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none bg-white"
+                  className="w-full border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none bg-white"
                 >
                   <option value="">Select Category</option>
                   {categories.map((c) => (
@@ -237,7 +237,7 @@ export default function DashboardNewProductPage() {
                   required
                   value={styleId}
                   onChange={(e) => setStyleId(e.target.value)}
-                  className="w-full rounded-xl border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none bg-white"
+                  className="w-full border border-stone-300 p-3 text-xs font-medium focus:border-[#C9A227] focus:outline-none bg-white"
                 >
                   <option value="">Select Style</option>
                   {styles.map((s) => (
@@ -251,7 +251,7 @@ export default function DashboardNewProductPage() {
           </div>
 
           {/* Section 2: Available Sizes */}
-          <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-xs flex flex-col gap-3">
+          <div className="border border-stone-200 bg-white p-6 flex flex-col gap-3">
             <h2 className="text-base font-bold text-stone-950 font-display border-b border-stone-100 pb-3">
               Available Sizes *
             </h2>
@@ -263,13 +263,13 @@ export default function DashboardNewProductPage() {
               {sizes.map((sz) => {
                 const isSelected = selectedSizeIds.includes(sz.id);
                 return (
-                  <button
+                  <button className="cursor-pointer"
                     key={sz.id}
                     type="button"
                     onClick={() => handleToggleSize(sz.id)}
-                    className={`rounded-xl border px-4 py-2.5 text-xs font-bold transition-all ${
+                    className={` border px-4 py-2.5 text-xs font-bold transition-all ${
                       isSelected
-                        ? 'border-stone-950 bg-stone-950 text-[#C9A227] shadow-sm'
+                        ? 'border-stone-950 bg-stone-950 text-[#C9A227] '
                         : 'border-stone-200 bg-stone-50 text-stone-700 hover:border-stone-400'
                     }`}
                   >
@@ -281,7 +281,7 @@ export default function DashboardNewProductPage() {
           </div>
 
           {/* Section 3: Product Images */}
-          <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-xs flex flex-col gap-4">
+          <div className="border border-stone-200 bg-white p-6 flex flex-col gap-4">
             <h2 className="text-base font-bold text-stone-950 font-display border-b border-stone-100 pb-3">
               Product Images *
             </h2>
@@ -292,12 +292,12 @@ export default function DashboardNewProductPage() {
                 placeholder="Enter HTTPS Image URL (e.g. https://images.unsplash.com/...)"
                 value={imageUrlInput}
                 onChange={(e) => setImageUrlInput(e.target.value)}
-                className="flex-1 rounded-xl border border-stone-300 p-2.5 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
+                className="flex-1 border border-stone-300 p-2.5 text-xs font-medium focus:border-[#C9A227] focus:outline-none"
               />
               <button
                 type="button"
                 onClick={handleAddImageUrl}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-stone-900 px-4 py-2.5 text-xs font-bold text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors"
+                className="inline-flex items-center gap-1.5 bg-stone-900 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors cursor-pointer"
               >
                 <IconPlus className="size-4" />
                 <span>Add URL</span>
@@ -309,13 +309,13 @@ export default function DashboardNewProductPage() {
               {images.map((img, idx) => (
                 <div
                   key={idx}
-                  className={`relative flex flex-col rounded-2xl border p-2 transition-all ${
+                  className={`relative flex flex-col  border p-2 transition-all ${
                     img.isPrimary
                       ? 'border-[#C9A227] bg-amber-50/40 ring-2 ring-[#C9A227]/30'
                       : 'border-stone-200 bg-stone-50'
                   }`}
                 >
-                  <div className="relative aspect-3/4 w-full overflow-hidden rounded-xl bg-stone-200">
+                  <div className="relative aspect-3/4 w-full overflow-hidden bg-stone-200">
                     <Image
                       src={img.url}
                       alt={`Product image ${idx + 1}`}
@@ -326,10 +326,10 @@ export default function DashboardNewProductPage() {
                   </div>
 
                   <div className="mt-2 flex items-center justify-between gap-1">
-                    <button
+                    <button className="cursor-pointer"
                       type="button"
                       onClick={() => handleSetPrimaryImage(idx)}
-                      className={`text-[10px] font-bold uppercase tracking-wider rounded-md px-2 py-1 ${
+                      className={`text-[10px] font-bold uppercase tracking-wider  px-2 py-1 ${
                         img.isPrimary
                           ? 'bg-[#C9A227] text-stone-950'
                           : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
@@ -338,7 +338,7 @@ export default function DashboardNewProductPage() {
                       {img.isPrimary ? 'Primary' : 'Make Primary'}
                     </button>
 
-                    <button
+                    <button className="cursor-pointer"
                       type="button"
                       onClick={() => handleRemoveImage(idx)}
                       className="p-1 text-rose-500 hover:text-rose-700"
@@ -355,14 +355,14 @@ export default function DashboardNewProductPage() {
           <div className="flex items-center justify-end gap-4">
             <Link
               href="/dashboard/products"
-              className="rounded-xl border border-stone-300 bg-white px-6 py-3 text-xs font-bold text-stone-700 hover:bg-stone-50"
+              className="border border-stone-300 bg-white px-6 py-3 text-xs font-bold text-stone-700 hover:bg-stone-50"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-xl bg-stone-950 px-8 py-3 text-xs font-bold text-white shadow-lg hover:bg-[#C9A227] hover:text-stone-950 transition-colors disabled:opacity-50"
+              className="bg-stone-950 px-8 py-3 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#C9A227] hover:text-stone-950 transition-colors disabled:opacity-50 cursor-pointer"
             >
               {submitting ? 'Creating Product...' : 'Publish Product'}
             </button>

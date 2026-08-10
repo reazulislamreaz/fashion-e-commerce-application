@@ -21,11 +21,11 @@ export function DashboardHeader({ onOpenMobileMenu }: DashboardHeaderProps) {
     : 'EF';
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-stone-200 bg-white px-4 sm:px-6 lg:px-8 shadow-xs">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-stone-200 bg-white px-4 sm:px-6 lg:px-8">
       <div className="flex items-center gap-4">
         <button
           onClick={onOpenMobileMenu}
-          className="p-2 text-stone-600 hover:text-stone-900 lg:hidden"
+          className="p-2 text-stone-600 hover:text-stone-900 lg:hidden cursor-pointer"
           aria-label="Open Mobile Menu"
         >
           <IconMenu className="size-6" />
@@ -43,7 +43,7 @@ export function DashboardHeader({ onOpenMobileMenu }: DashboardHeaderProps) {
         <Link
           href="/"
           target="_blank"
-          className="hidden sm:flex items-center gap-1.5 rounded-xl border border-stone-300 bg-stone-50 px-3.5 py-1.5 text-xs font-bold text-stone-700 hover:border-[#C9A227] hover:bg-white transition-all"
+          className="hidden sm:flex items-center gap-1.5 border border-stone-300 bg-stone-50 px-3.5 py-1.5 text-xs font-bold text-stone-700 hover:border-[#C9A227] hover:bg-white transition-all"
         >
           <span>View Customer Storefront</span>
           <IconArrowRight className="size-3 text-stone-400" />
@@ -56,7 +56,7 @@ export function DashboardHeader({ onOpenMobileMenu }: DashboardHeaderProps) {
               {userInitials}
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-xs font-bold text-stone-900 leading-none">
+              <span className="text-xs font-bold uppercase tracking-wider text-stone-900 leading-none">
                 {user.fullName.split(' ')[0]}
               </span>
               <span className="text-[9px] font-semibold text-[#96740c] uppercase">

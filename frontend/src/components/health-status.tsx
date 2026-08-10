@@ -70,13 +70,13 @@ export function HealthStatus() {
 
   return (
     <div className="grid gap-4 sm:grid-cols-3">
-      <div className="rounded-xl border border-stone-900/10 bg-white/70 p-4">
+      <div className="border border-stone-900/10 bg-white/70 p-4">
         <p className="text-xs uppercase tracking-wide text-stone-500">Status</p>
         <p className="mt-2 text-xl font-semibold capitalize">
           {state.data.status}
         </p>
       </div>
-      <div className="rounded-xl border border-stone-900/10 bg-white/70 p-4">
+      <div className="border border-stone-900/10 bg-white/70 p-4">
         <p className="text-xs uppercase tracking-wide text-stone-500">
           Database
         </p>
@@ -84,7 +84,7 @@ export function HealthStatus() {
           {state.data.database}
         </p>
       </div>
-      <div className="rounded-xl border border-stone-900/10 bg-white/70 p-4">
+      <div className="border border-stone-900/10 bg-white/70 p-4">
         <p className="text-xs uppercase tracking-wide text-stone-500">Uptime</p>
         <p className="mt-2 text-xl font-semibold">
           {Math.round(state.data.uptime)}s

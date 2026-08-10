@@ -1,6 +1,38 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { getCategories, getStyles } from '@/lib/api/services';
 
 export function Footer() {
+  const [menId, setMenId] = useState<string>('');
+  const [womenId, setWomenId] = useState<string>('');
+  const [casualId, setCasualId] = useState<string>('');
+  const [formalId, setFormalId] = useState<string>('');
+
+  useEffect(() => {
+    async function loadMeta() {
+      try {
+        const [cRes, sRes] = await Promise.all([getCategories(), getStyles()]);
+        if (cRes.items) {
+          const men = cRes.items.find((c) => c.name === "Men's Collection");
+          const women = cRes.items.find((c) => c.name === "Women's Collection");
+          if (men) setMenId(men.id);
+          if (women) setWomenId(women.id);
+        }
+        if (sRes.items) {
+          const casual = sRes.items.find((s) => s.name === 'Modern Casual');
+          const formal = sRes.items.find((s) => s.name === 'Formal Elegance');
+          if (casual) setCasualId(casual.id);
+          if (formal) setFormalId(formal.id);
+        }
+      } catch {
+        // ignore
+      }
+    }
+    loadMeta();
+  }, []);
+
   return (
     <footer className="border-t border-stone-900 bg-stone-950 text-stone-300">
       <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -8,7 +40,7 @@ export function Footer() {
           {/* Company Info */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <span className="flex size-8 items-center justify-center rounded-md bg-[#C9A227] text-stone-950 font-bold text-sm">
+              <span className="flex size-8 items-center justify-center bg-[#C9A227] text-stone-950 font-bold text-sm">
                 EF
               </span>
               <span className="text-lg font-bold tracking-wider text-white font-display">
@@ -79,23 +111,23 @@ export function Footer() {
             <ul className="mt-4 flex flex-col gap-2.5 text-xs text-stone-400">
               <li>
                 <Link
-                  href="/products?categoryId=00000000-0000-4000-8000-000000000001"
+                  href={menId ? `/products?categoryId=${menId}` : '/products'}
                   className="hover:text-white transition-colors"
                 >
-                  Men&apos;s Apparel
+                  Men&apos;s Collection
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/products?categoryId=00000000-0000-4000-8000-000000000002"
+                  href={womenId ? `/products?categoryId=${womenId}` : '/products'}
                   className="hover:text-white transition-colors"
                 >
-                  Women&apos;s Wear
+                  Women&apos;s Collection
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/products?styleId=00000000-0000-4000-8000-000000000001"
+                  href={casualId ? `/products?styleId=${casualId}` : '/products'}
                   className="hover:text-white transition-colors"
                 >
                   Casual Style
@@ -103,7 +135,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/products?styleId=00000000-0000-4000-8000-000000000002"
+                  href={formalId ? `/products?styleId=${formalId}` : '/products'}
                   className="hover:text-white transition-colors"
                 >
                   Formal Style

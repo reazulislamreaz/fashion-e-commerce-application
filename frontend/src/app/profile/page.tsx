@@ -55,15 +55,15 @@ function ProfileContent() {
       </nav>
 
       {/* Main Profile Header Card */}
-      <div className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-8 shadow-xl">
+      <div className="border border-stone-200 bg-white p-6 sm:p-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-stone-200 pb-8">
           <div className="flex items-center gap-4">
-            <div className="flex size-16 items-center justify-center rounded-2xl bg-stone-950 text-[#C9A227] font-extrabold text-xl shadow-md">
+            <div className="flex size-16 items-center justify-center bg-stone-950 text-[#C9A227] font-extrabold text-xl">
               {userInitials}
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-extrabold text-stone-950 font-display">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
                   {user.fullName}
                 </h1>
                 <span className="rounded-full bg-[#C9A227]/20 px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[#96740c]">
@@ -79,7 +79,7 @@ function ProfileContent() {
 
           <button
             onClick={handleLogout}
-            className="rounded-xl border border-rose-200 bg-rose-50 px-5 py-2.5 text-xs font-bold text-rose-700 shadow-2xs hover:bg-rose-100 transition-colors"
+            className="border border-rose-200 bg-rose-50 px-5 py-2.5 text-xs font-bold text-rose-700 shadow-2xs hover:bg-rose-100 transition-colors cursor-pointer"
           >
             Sign Out
           </button>
@@ -88,7 +88,7 @@ function ProfileContent() {
         {/* Profile Information Details */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Account Overview */}
-          <div className="rounded-2xl border border-stone-200 bg-stone-50/70 p-5">
+          <div className="border border-stone-200 bg-stone-50/70 p-5">
             <div className="flex items-center gap-2 text-stone-900 font-bold text-sm mb-4">
               <IconUser className="size-4 text-[#C9A227]" />
               <span>Personal Details</span>
@@ -123,7 +123,7 @@ function ProfileContent() {
           </div>
 
           {/* Quick Actions Card */}
-          <div className="rounded-2xl border border-stone-200 bg-stone-50/70 p-5 flex flex-col justify-between">
+          <div className="border border-stone-200 bg-stone-50/70 p-5 flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-2 text-stone-900 font-bold text-sm mb-4">
                 <IconBag className="size-4 text-[#C9A227]" />
@@ -137,7 +137,7 @@ function ProfileContent() {
             <div className="flex flex-col gap-2.5">
               <Link
                 href="/orders"
-                className="flex items-center justify-between rounded-xl bg-white border border-stone-200 p-3 text-xs font-bold text-stone-900 hover:border-[#C9A227] hover:shadow-xs transition-all"
+                className="flex items-center justify-between bg-white border border-stone-200 p-3 text-xs font-bold uppercase tracking-wider text-stone-900 hover:border-[#C9A227] hover: transition-all"
               >
                 <span>View Order History</span>
                 <IconArrowRight className="size-4 text-stone-400" />
@@ -145,7 +145,7 @@ function ProfileContent() {
 
               <Link
                 href="/cart"
-                className="flex items-center justify-between rounded-xl bg-white border border-stone-200 p-3 text-xs font-bold text-stone-900 hover:border-[#C9A227] hover:shadow-xs transition-all"
+                className="flex items-center justify-between bg-white border border-stone-200 p-3 text-xs font-bold uppercase tracking-wider text-stone-900 hover:border-[#C9A227] hover: transition-all"
               >
                 <span>Shopping Cart</span>
                 <IconArrowRight className="size-4 text-stone-400" />

@@ -17,6 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { RoleCode } from '@prisma/client';
 import { Roles } from '@/common/decorators/roles.decorator';
+import { Public } from '@/common/decorators/public.decorator';
 import { IdParamDto } from '@/common/dto/id-param.dto';
 import { StylesService } from './styles.service';
 import { CreateStyleDto } from './dto/create-style.dto';
@@ -42,6 +43,7 @@ export class StylesController {
   }
 
   @Get()
+  @Public()
   @ApiOperation({ summary: 'List styles with pagination and search' })
   async findAll(@Query() query: StyleQueryDto) {
     const result = await this.stylesService.findAll(query);
@@ -54,6 +56,7 @@ export class StylesController {
   }
 
   @Get(':id')
+  @Public()
   @ApiOperation({ summary: 'Get a style by ID' })
   async findOne(@Param() params: IdParamDto) {
     const data = await this.stylesService.findOne(params.id);
