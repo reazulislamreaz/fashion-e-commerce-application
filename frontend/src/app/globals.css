@@ -20,5 +20,39 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), 'Segoe UI', sans-serif;
+  overflow-x: hidden;
 }
 
+/* Accessible focus visible rings */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #C9A227;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(160, 160, 160, 0.4);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(160, 160, 160, 0.7);
+}
+
+/* Hide scrollbar utility */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
