@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  output: 'standalone',
   // Keep tracing scoped to this package (sibling backend/ has its own lockfile).
   outputFileTracingRoot: path.join(__dirname),
   images: {
