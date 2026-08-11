@@ -40,7 +40,7 @@ async function bootstrap() {
   const bodyLimit = configService.get<string>('BODY_LIMIT') ?? '1mb';
   const nodeEnv = configService.get<string>('NODE_ENV') ?? 'development';
 
-  app.use(helmet());
+  app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
   app.use(compression());
   app.use(json({ limit: bodyLimit }));
   app.use(urlencoded({ extended: true, limit: bodyLimit }));
