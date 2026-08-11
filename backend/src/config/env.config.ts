@@ -43,6 +43,7 @@ export const envValidationSchema = Joi.object({
   APP_USER_EMAIL: Joi.string().optional().allow(''),
   APP_PASSWORD: Joi.string().optional().allow(''),
   FRONTEND_URL: Joi.string().default('http://localhost:3001'),
+  BACKEND_URL: Joi.string().optional().allow(''),
 
   THROTTLE_TTL: Joi.number().default(60000),
   THROTTLE_LIMIT: Joi.number().default(100),

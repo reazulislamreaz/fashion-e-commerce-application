@@ -26,7 +26,7 @@ type AuthContextType = {
   refreshToken: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   register: (data: {
     fullName: string;
     email: string;
@@ -148,7 +148,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => setAuthInterceptor(null);
   }, [handleSessionExpired]);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<User> => {
     const res = await loginApi({ email, password });
     setUser(res.user);
     setAccessToken(res.accessToken);
@@ -156,6 +156,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     localStorage.setItem(ACCESS_TOKEN_KEY, res.accessToken);
     localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
+
+    return res.user;
   };
 
   const setSession = useCallback((res: AuthResult) => {

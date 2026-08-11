@@ -1,19 +1,20 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/components/ui/toast';
 import { SocialAuthButtons } from '@/components/auth/social-auth-buttons';
 import { extractErrorMessage } from '@/lib/api/errors';
+import { getRoleDefaultRedirect } from '@/lib/utils/auth-redirect';
 
 function RegisterContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/';
+  const rawRedirect = searchParams.get('redirect');
 
-  const { register } = useAuth();
+  const { register, user, isAuthenticated, isLoading } = useAuth();
   const { showToast } = useToast();
 
   const [fullName, setFullName] = useState('');
@@ -26,6 +27,14 @@ function RegisterContent() {
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // If already authenticated, redirect appropriately
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && user) {
+      const target = getRoleDefaultRedirect(user, rawRedirect);
+      router.replace(target);
+    }
+  }, [isLoading, isAuthenticated, user, router, rawRedirect]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +53,7 @@ function RegisterContent() {
     setLoading(true);
 
     try {
-      await register({
+      const res = await register({
         fullName: fullName.trim(),
         email: email.trim(),
         phone: phone.trim() || undefined,
@@ -56,7 +65,8 @@ function RegisterContent() {
         'Welcome to Easy Fashion! Your account has been successfully created.',
         'success',
       );
-      router.push(redirect || '/');
+      const target = getRoleDefaultRedirect(res.user, rawRedirect);
+      router.push(target);
     } catch (err) {
       setErrorMessage(
         extractErrorMessage(err, 'Registration failed. Please check your details and try again.'),
@@ -193,7 +203,7 @@ function RegisterContent() {
         <div className="mt-6 text-center text-xs text-stone-500">
           Already registered?{' '}
           <Link
-            href={`/login${redirect ? `?redirect=${encodeURIComponent(redirect)}` : ''}`}
+            href={`/login${rawRedirect ? `?redirect=${encodeURIComponent(rawRedirect)}` : ''}`}
             className="font-bold text-[#C9A227] hover:underline"
           >
             Sign In Here

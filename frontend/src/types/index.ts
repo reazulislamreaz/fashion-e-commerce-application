@@ -160,6 +160,10 @@ export type DashboardStats = {
   totalCategories: number;
   totalProducts: number;
   totalOrders: number;
+  totalSizes?: number;
+  totalStyles?: number;
+  pendingOrders?: number;
+  totalRevenue?: number;
 };
 
 export type CreateProductInput = {

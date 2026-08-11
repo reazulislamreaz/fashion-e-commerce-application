@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/components/ui/toast';
 import { getMeApi } from '@/lib/api/services';
+import { getRoleDefaultRedirect } from '@/lib/utils/auth-redirect';
 
 function OAuthCallbackContent() {
   const router = useRouter();
@@ -39,12 +40,9 @@ function OAuthCallbackContent() {
         setSession({ user, accessToken: accessToken!, refreshToken: refreshToken! });
         showToast('Login Successful', `Welcome, ${user.fullName}!`, 'success');
 
-        const isStaff = ['SUPER_ADMIN', 'ADMIN', 'MANAGER'].includes(user.role?.code);
-        if (isStaff) {
-          router.push('/dashboard');
-        } else {
-          router.push('/');
-        }
+        const rawRedirect = searchParams.get('redirect');
+        const target = getRoleDefaultRedirect(user, rawRedirect);
+        router.push(target);
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : 'Failed to finalize OAuth session.';
         showToast('Session Setup Failed', msg, 'error');

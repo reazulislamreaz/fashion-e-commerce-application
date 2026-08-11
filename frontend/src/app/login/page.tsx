@@ -1,19 +1,20 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/components/ui/toast';
 import { SocialAuthButtons } from '@/components/auth/social-auth-buttons';
 import { extractErrorMessage } from '@/lib/api/errors';
+import { getRoleDefaultRedirect } from '@/lib/utils/auth-redirect';
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/';
+  const rawRedirect = searchParams.get('redirect');
 
-  const { login } = useAuth();
+  const { login, user, isAuthenticated, isLoading } = useAuth();
   const { showToast } = useToast();
 
   const [email, setEmail] = useState('');
@@ -23,15 +24,25 @@ function LoginContent() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // If already authenticated, redirect to role-appropriate destination
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && user) {
+      const target = getRoleDefaultRedirect(user, rawRedirect);
+      router.replace(target);
+    }
+  }, [isLoading, isAuthenticated, user, router, rawRedirect]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
     setLoading(true);
 
     try {
-      await login(email.trim(), password);
+      const authenticatedUser = await login(email.trim(), password);
       showToast('Welcome back!', 'Successfully signed in to your account.');
-      router.push(redirect);
+
+      const target = getRoleDefaultRedirect(authenticatedUser, rawRedirect);
+      router.push(target);
     } catch (err) {
       setErrorMessage(
         extractErrorMessage(err, 'Invalid email or password. Please try again.'),
@@ -145,7 +156,7 @@ function LoginContent() {
         <div className="mt-6 text-center text-xs text-stone-500">
           Don&apos;t have an account yet?{' '}
           <Link
-            href={`/register${redirect ? `?redirect=${encodeURIComponent(redirect)}` : ''}`}
+            href={`/register${rawRedirect ? `?redirect=${encodeURIComponent(rawRedirect)}` : ''}`}
             className="font-bold text-[#C9A227] hover:underline"
           >
             Register Customer Account

@@ -138,14 +138,28 @@ export class AuthController {
     };
   }
 
+  private getCallbackUrl(req: Request, path: string): string {
+    const backendUrl = this.configService.get<string>('BACKEND_URL');
+    const apiPrefix = this.configService.get<string>('API_PREFIX', '/api/v1');
+    const normalizedPrefix = apiPrefix.replace(/^\//, '').replace(/\/$/, '');
+    const cleanPath = path.replace(/^\//, '');
+
+    if (backendUrl) {
+      return `${backendUrl.replace(/\/$/, '')}/${normalizedPrefix}/${cleanPath}`;
+    }
+
+    const host = req.get('host') || 'localhost';
+    const protoHeader = req.get('x-forwarded-proto');
+    const protocol = protoHeader ? protoHeader.split(',')[0].trim() : req.protocol || 'http';
+    return `${protocol}://${host}/${normalizedPrefix}/${cleanPath}`;
+  }
+
   @Public()
   @Get('google')
   @ApiOperation({ summary: 'Initiate Google OAuth login redirect' })
-  async googleAuth(@Res() res: Response) {
+  async googleAuth(@Req() req: Request, @Res() res: Response) {
     const clientId = this.configService.get<string>('GOOGLE_CLIENT_ID');
-    const port = this.configService.get<number>('PORT', 3000);
-    const apiPrefix = this.configService.get<string>('API_PREFIX', '/api/v1');
-    const callbackUrl = `http://localhost:${port}${apiPrefix}/auth/google/callback`;
+    const callbackUrl = this.getCallbackUrl(req, 'auth/google/callback');
 
     if (!clientId) {
       const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3001');
@@ -177,9 +191,7 @@ export class AuthController {
     try {
       const clientId = this.configService.get<string>('GOOGLE_CLIENT_ID');
       const clientSecret = this.configService.get<string>('GOOGLE_CLIENT_SECRET');
-      const port = this.configService.get<number>('PORT', 3000);
-      const apiPrefix = this.configService.get<string>('API_PREFIX', '/api/v1');
-      const callbackUrl = `http://localhost:${port}${apiPrefix}/auth/google/callback`;
+      const callbackUrl = this.getCallbackUrl(req, 'auth/google/callback');
 
       const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
         method: 'POST',
@@ -229,11 +241,9 @@ export class AuthController {
   @Public()
   @Get('facebook')
   @ApiOperation({ summary: 'Initiate Facebook OAuth login redirect' })
-  async facebookAuth(@Res() res: Response) {
+  async facebookAuth(@Req() req: Request, @Res() res: Response) {
     const clientId = this.configService.get<string>('FACEBOOK_CLIENT_ID');
-    const port = this.configService.get<number>('PORT', 3000);
-    const apiPrefix = this.configService.get<string>('API_PREFIX', '/api/v1');
-    const callbackUrl = `http://localhost:${port}${apiPrefix}/auth/facebook/callback`;
+    const callbackUrl = this.getCallbackUrl(req, 'auth/facebook/callback');
 
     if (!clientId) {
       const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3001');
@@ -265,9 +275,7 @@ export class AuthController {
     try {
       const clientId = this.configService.get<string>('FACEBOOK_CLIENT_ID');
       const clientSecret = this.configService.get<string>('FACEBOOK_CLIENT_SECRET');
-      const port = this.configService.get<number>('PORT', 3000);
-      const apiPrefix = this.configService.get<string>('API_PREFIX', '/api/v1');
-      const callbackUrl = `http://localhost:${port}${apiPrefix}/auth/facebook/callback`;
+      const callbackUrl = this.getCallbackUrl(req, 'auth/facebook/callback');
 
       const tokenRes = await fetch(
         `https://graph.facebook.com/v18.0/oauth/access_token?client_id=${clientId}&redirect_uri=${encodeURIComponent(
