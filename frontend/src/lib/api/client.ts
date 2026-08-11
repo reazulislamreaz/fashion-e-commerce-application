@@ -50,6 +50,7 @@ async function executeRequest<T>(
   const url = buildUrl(path, query);
 
   const response = await fetch(url, {
+    cache: 'no-store',
     ...rest,
     headers: {
       Accept: 'application/json',
