@@ -1,0 +1,72 @@
+name: easy-fashion-ecommerce
+
+services:
+  # 1. Local PostgreSQL Database Container
+  postgres:
+    image: postgres:17-alpine
+    container_name: easy_fashion_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-easy_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secure_db_password}
+      POSTGRES_DB: ${POSTGRES_DB:-easy_fashion_prod_db}
+    ports:
+      - "5430:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-easy_user} -d ${POSTGRES_DB:-easy_fashion_prod_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. NestJS Backend Container
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: easy_fashion_backend
+    restart: unless-stopped
+    ports:
+      - "9978:9978"
+    environment:
+      NODE_ENV: production
+      PORT: 9978
+      API_PREFIX: /api/v1
+      APP_NAME: "Easy Fashion API"
+      DATABASE_URL: postgresql://${POSTGRES_USER:-easy_user}:${POSTGRES_PASSWORD:-secure_db_password}@postgres:5432/${POSTGRES_DB:-easy_fashion_prod_db}?schema=public
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://easy.elevateapparel.com.bd}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-replace_with_secure_access_secret_min_32_chars}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-replace_with_secure_refresh_secret_min_32_chars}
+      JWT_ACCESS_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      BCRYPT_SALT_ROUNDS: 12
+      SUPER_ADMIN_EMAIL: ${SUPER_ADMIN_EMAIL:-admin@elevateapparel.com.bd}
+      SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-superadmin123}
+      SUPER_ADMIN_FULL_NAME: ${SUPER_ADMIN_FULL_NAME:-System Super Admin}
+      FRONTEND_URL: ${FRONTEND_URL:-https://easy.elevateapparel.com.bd}
+      SEED_DB_ON_STARTUP: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # 3. Next.js Frontend Container
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-https://easyapi.elevateapparel.com.bd/api/v1}
+    container_name: easy_fashion_frontend
+    restart: unless-stopped
+    ports:
+      - "9977:9977"
+    environment:
+      NODE_ENV: production
+      PORT: 9977
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-https://easyapi.elevateapparel.com.bd/api/v1}
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
