@@ -29,6 +29,13 @@ services:
     restart: unless-stopped
     ports:
       - "9978:9978"
+    # Load Cloudinary (and other secrets) from root .env and/or backend/.env.
+    # Explicit `environment` entries below always win (e.g. DATABASE_URL → postgres).
+    env_file:
+      - path: .env
+        required: false
+      - path: backend/.env
+        required: false
     environment:
       NODE_ENV: production
       PORT: 9978
@@ -46,9 +53,6 @@ services:
       SUPER_ADMIN_FULL_NAME: ${SUPER_ADMIN_FULL_NAME:-System Super Admin}
       FRONTEND_URL: ${FRONTEND_URL}
       BACKEND_URL: ${BACKEND_URL:-}
-      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
-      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
-      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
       SEED_DB_ON_STARTUP: "true"
     depends_on:
       postgres:
