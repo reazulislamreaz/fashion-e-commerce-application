@@ -36,12 +36,12 @@ export class PaginationQueryDto {
   search?: string;
 
   @ApiPropertyOptional({
-    enum: ['active', 'inactive', 'true', 'false'],
+    enum: ['active', 'inactive', 'true', 'false', 'all'],
     description: 'Filter by active status',
   })
   @IsOptional()
-  @IsIn(['active', 'inactive', 'true', 'false'])
-  status?: 'active' | 'inactive' | 'true' | 'false';
+  @IsIn(['active', 'inactive', 'true', 'false', 'all'])
+  status?: 'active' | 'inactive' | 'true' | 'false' | 'all';
 
   @ApiPropertyOptional({
     enum: ['name', 'createdAt', 'updatedAt', 'sortOrder'],
