@@ -24,6 +24,15 @@ function LoginContent() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Surface OAuth provider failures redirected back as ?error=...
+  useEffect(() => {
+    const oauthError = searchParams.get('error');
+    if (oauthError) {
+      setErrorMessage(oauthError);
+      showToast('Social login failed', oauthError, 'error');
+    }
+  }, [searchParams, showToast]);
+
   // If already authenticated, redirect to role-appropriate destination
   useEffect(() => {
     if (!isLoading && isAuthenticated && user) {

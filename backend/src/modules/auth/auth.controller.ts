@@ -177,7 +177,7 @@ export class AuthController {
 
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
       callbackUrl,
-    )}&response_type=code&scope=email%20profile`;
+    )}&response_type=code&scope=${encodeURIComponent('openid email profile')}&prompt=select_account&access_type=online`;
 
     return res.redirect(googleAuthUrl);
   }
@@ -216,7 +216,13 @@ export class AuthController {
 
       const tokenData = await tokenRes.json();
       if (!tokenData.access_token) {
-        throw new Error(tokenData.error_description || 'Failed to obtain Google access token');
+        const detail =
+          tokenData.error_description ||
+          tokenData.error ||
+          'Failed to obtain Google access token';
+        throw new Error(
+          `${detail} (redirect_uri=${callbackUrl}). Ensure this exact URI is listed under Authorized redirect URIs in Google Cloud Console.`,
+        );
       }
 
       const userRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
