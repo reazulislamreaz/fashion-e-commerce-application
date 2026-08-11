@@ -39,6 +39,8 @@ backend/prisma/*.db-journal
 # AI / Agent & Tooling Rules
 AGENTS.md
 .agents.md
+CLAUDE.md
+claude.md
 cursor.md
 .cursor
 .cursorrules
