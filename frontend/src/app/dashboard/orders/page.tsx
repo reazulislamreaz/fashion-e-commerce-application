@@ -78,7 +78,7 @@ export default function DashboardOrdersPage() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
               Order Management
             </h1>
             <p className="mt-1 text-xs text-stone-500">

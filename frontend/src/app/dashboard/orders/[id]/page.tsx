@@ -114,7 +114,7 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
               <IconArrowRight className="size-3" />
               <span className="text-stone-900 font-bold">Order Details</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
               Order #{order.id.substring(0, 8)}
             </h1>
             <p className="text-xs text-stone-500">Placed on {formattedDate}</p>
@@ -161,7 +161,7 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
 
         {/* Line Items Snapshot */}
         <div className="border border-stone-200 bg-white p-6">
-          <h2 className="text-base font-bold text-stone-950 font-display border-b border-stone-100 pb-3 mb-4">
+          <h2 className="text-base font-bold text-stone-950 border-b border-stone-100 pb-3 mb-4">
             Ordered Line Items ({order.items.length})
           </h2>
 
@@ -202,7 +202,7 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
                     </div>
                   </div>
 
-                  <p className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+                  <p className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
                     ${subtotalNum.toFixed(2)}
                   </p>
                 </div>
@@ -212,7 +212,7 @@ export default function DashboardOrderDetailPage({ params }: PageProps) {
 
           <div className="border-t border-stone-200 pt-4 mt-4 flex items-center justify-between">
             <span className="text-xs font-bold text-stone-700">Authoritative Server Total</span>
-            <span className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+            <span className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
               ${grandTotalNum.toFixed(2)}
             </span>
           </div>

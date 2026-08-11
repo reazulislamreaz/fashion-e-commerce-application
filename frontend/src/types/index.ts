@@ -141,7 +141,10 @@ export type AuthResult = {
 };
 
 export type RegisterResult = {
-  message: string;
+  user?: User;
+  accessToken?: string;
+  refreshToken?: string;
+  message?: string;
 };
 
 export type CartItem = {

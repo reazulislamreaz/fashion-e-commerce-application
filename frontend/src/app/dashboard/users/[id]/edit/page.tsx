@@ -96,7 +96,7 @@ export default function DashboardEditUserPage({ params }: PageProps) {
             <IconArrowRight className="size-3" />
             <span className="text-stone-900 font-bold">Edit User</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
             Edit User Profile
           </h1>
         </div>

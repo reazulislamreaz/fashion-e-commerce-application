@@ -118,6 +118,15 @@ export async function loginApi(credentials: { email: string; password: string })
   return apiClient.post<AuthResult>('/auth/login', credentials);
 }
 
+export async function socialAuthApi(data: {
+  provider: 'google' | 'facebook';
+  email: string;
+  fullName: string;
+  providerId?: string;
+}) {
+  return apiClient.post<AuthResult>('/auth/social', data);
+}
+
 export async function registerApi(data: {
   fullName: string;
   email: string;

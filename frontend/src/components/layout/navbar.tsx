@@ -10,13 +10,16 @@ import { IconBag, IconMenu, IconSearch, IconUser, IconX } from '../ui/icons';
 
 export function Navbar() {
   const router = useRouter();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
   const { itemCount, openCart } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [menCategoryId, setMenCategoryId] = useState<string>('');
   const [womenCategoryId, setWomenCategoryId] = useState<string>('');
+
+  const isStaff =
+    user?.role?.code && ['SUPER_ADMIN', 'ADMIN', 'MANAGER'].includes(user.role.code);
 
   useEffect(() => {
     async function loadCategories() {
@@ -141,11 +144,13 @@ export function Navbar() {
 
           {/* User Account / Auth */}
           <div className="relative">
-            {isAuthenticated && user ? (
+            {isLoading ? (
+              <div className="h-7 w-20 animate-pulse rounded-full border border-stone-800 bg-stone-900" />
+            ) : isAuthenticated && user ? (
               <div>
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 rounded-full border border-stone-800 bg-stone-900 px-3 py-1.5 text-xs font-medium text-stone-200 hover:border-[#C9A227]"
+                  className="flex items-center gap-2 rounded-full border border-stone-800 bg-stone-900 px-3 py-1.5 text-xs font-medium text-stone-200 hover:border-[#C9A227] cursor-pointer"
                 >
                   <IconUser className="size-4 text-[#C9A227]" />
                   <span className="hidden sm:inline line-clamp-1 max-w-24">
@@ -155,25 +160,38 @@ export function Navbar() {
 
                 {isUserMenuOpen && (
                   <div
-                    className="absolute right-0 mt-2 w-48 border border-stone-800 bg-stone-900 p-2 z-50 text-xs"
+                    className="absolute right-0 mt-2 w-48 border border-stone-800 bg-stone-900 p-2 z-50 text-xs shadow-xl"
                     onClick={() => setIsUserMenuOpen(false)}
                   >
                     <div className="px-3 py-2 border-b border-stone-800">
-                      <p className="font-semibold text-white">{user.fullName}</p>
+                      <p className="font-semibold text-white truncate">{user.fullName}</p>
                       <p className="text-[11px] text-stone-400 truncate">{user.email}</p>
                     </div>
-                    <Link
-                      href="/profile"
-                      className="block w-full text-left px-3 py-2 text-stone-200 hover:bg-stone-800 transition-colors"
-                    >
-                      My Profile
-                    </Link>
-                    <Link
-                      href="/orders"
-                      className="block w-full text-left px-3 py-2 text-stone-200 hover:bg-stone-800 transition-colors"
-                    >
-                      My Orders
-                    </Link>
+
+                    {isStaff ? (
+                      <Link
+                        href="/dashboard"
+                        className="block w-full text-left px-3 py-2 text-stone-200 hover:bg-stone-800 transition-colors font-medium"
+                      >
+                        Dashboard
+                      </Link>
+                    ) : (
+                      <>
+                        <Link
+                          href="/profile"
+                          className="block w-full text-left px-3 py-2 text-stone-200 hover:bg-stone-800 transition-colors"
+                        >
+                          My Profile
+                        </Link>
+                        <Link
+                          href="/orders"
+                          className="block w-full text-left px-3 py-2 text-stone-200 hover:bg-stone-800 transition-colors"
+                        >
+                          My Orders
+                        </Link>
+                      </>
+                    )}
+
                     <button
                       onClick={logout}
                       className="block w-full text-left px-3 py-2 text-rose-400 hover:bg-rose-950/50 transition-colors mt-1 cursor-pointer"
@@ -216,7 +234,7 @@ export function Navbar() {
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-stone-400 hover:text-white"
+                  className="text-stone-400 hover:text-white cursor-pointer"
                 >
                   <IconX className="size-5" />
                 </button>
@@ -255,46 +273,56 @@ export function Navbar() {
                 >
                   Shop All Products
                 </Link>
-                {isAuthenticated && (
-                  <>
+                {!isLoading && isAuthenticated && (
+                  isStaff ? (
                     <Link
-                      href="/profile"
+                      href="/dashboard"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
+                      className="px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227] font-semibold"
                     >
-                      My Profile
+                      Dashboard
                     </Link>
-                    <Link
-                      href="/orders"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
-                    >
-                      My Orders
-                    </Link>
-                  </>
+                  ) : (
+                    <>
+                      <Link
+                        href="/profile"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
+                      >
+                        My Profile
+                      </Link>
+                      <Link
+                        href="/orders"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="px-3 py-2 text-stone-200 hover:bg-stone-900 hover:text-[#C9A227]"
+                      >
+                        My Orders
+                      </Link>
+                    </>
+                  )
                 )}
               </nav>
             </div>
 
             {/* Auth Footer */}
             <div className="border-t border-stone-800 pt-4">
-              {isAuthenticated && user ? (
+              {!isLoading && isAuthenticated && user ? (
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold text-white">{user.fullName}</p>
-                    <p className="text-[10px] text-stone-400">{user.email}</p>
+                  <div className="truncate max-w-[170px]">
+                    <p className="text-xs font-semibold text-white truncate">{user.fullName}</p>
+                    <p className="text-[10px] text-stone-400 truncate">{user.email}</p>
                   </div>
                   <button
                     onClick={() => {
                       logout();
                       setIsMobileMenuOpen(false);
                     }}
-                    className="text-xs font-medium text-rose-400"
+                    className="text-xs font-medium text-rose-400 hover:underline cursor-pointer"
                   >
                     Sign Out
                   </button>
                 </div>
-              ) : (
+              ) : !isLoading ? (
                 <Link
                   href="/login"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -302,7 +330,7 @@ export function Navbar() {
                 >
                   Sign In / Register
                 </Link>
-              )}
+              ) : null}
             </div>
           </div>
         </div>

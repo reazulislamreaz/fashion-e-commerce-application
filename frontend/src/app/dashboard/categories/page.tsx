@@ -130,7 +130,7 @@ export default function DashboardCategoriesPage() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
               Category Management
             </h1>
             <p className="mt-1 text-xs text-stone-500">
@@ -239,7 +239,7 @@ export default function DashboardCategoriesPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs p-4">
             <div className="w-full max-w-md border border-stone-200 bg-white p-6">
               <div className="flex items-center justify-between border-b border-stone-100 pb-4 mb-4">
-                <h3 className="text-base font-bold text-stone-950 font-display">
+                <h3 className="text-base font-bold text-stone-950">
                   {editingCategory ? 'Edit Category' : 'Create New Category'}
                 </h3>
                 <button onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-900 cursor-pointer">
@@ -306,7 +306,7 @@ export default function DashboardCategoriesPage() {
         {deletingId && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs p-4">
             <div className="w-full max-w-sm border border-stone-200 bg-white p-6 text-center">
-              <h3 className="text-base font-bold text-stone-950 font-display">Delete Category?</h3>
+              <h3 className="text-base font-bold text-stone-950">Delete Category?</h3>
               <p className="mt-2 text-xs text-stone-500">
                 Are you sure you want to delete this category? This action cannot be undone.
               </p>

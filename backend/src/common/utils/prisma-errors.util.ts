@@ -13,10 +13,21 @@ export function isUniqueConstraintError(
 export function isForeignKeyConstraintError(
   error: unknown,
 ): error is Prisma.PrismaClientKnownRequestError {
-  return (
-    error instanceof Prisma.PrismaClientKnownRequestError &&
-    error.code === 'P2003'
-  );
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    return (
+      error.code === 'P2003' ||
+      error.code === 'P2014' ||
+      error.message?.includes('foreign key constraint') ||
+      error.message?.includes('violates RESTRICT setting')
+    );
+  }
+  if (error instanceof Error) {
+    return (
+      error.message?.includes('foreign key constraint') ||
+      error.message?.includes('violates RESTRICT setting')
+    );
+  }
+  return false;
 }
 
 export function throwConflictIfUnique(

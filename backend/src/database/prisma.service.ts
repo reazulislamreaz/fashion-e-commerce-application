@@ -19,7 +19,14 @@ export class PrismaService
 
   constructor(configService: ConfigService) {
     const connectionString = configService.getOrThrow<string>('DATABASE_URL');
-    const pool = new Pool({ connectionString });
+    const isSsl = connectionString.includes('sslmode=') || connectionString.includes('neon.tech');
+    const pool = new Pool({
+      connectionString,
+      ssl: isSsl ? { rejectUnauthorized: false } : undefined,
+      max: 10,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 30000,
+    });
     const adapter = new PrismaPg(pool);
     super({ adapter });
     this.pool = pool;

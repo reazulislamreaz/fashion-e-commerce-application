@@ -56,7 +56,7 @@ export function DashboardGuard({
           <span className="rounded-full bg-rose-100 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-rose-700">
             403 — Access Denied
           </span>
-          <h1 className="mt-3 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+          <h1 className="mt-3 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
             Restricted Dashboard
           </h1>
           <p className="mt-2 text-xs leading-relaxed text-stone-500">

@@ -35,6 +35,7 @@ type AuthContextType = {
   }) => Promise<RegisterResult>;
   logout: () => Promise<void>;
   refreshSession: () => Promise<boolean>;
+  setSession: (authResult: AuthResult) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -157,6 +158,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
   };
 
+  const setSession = useCallback((res: AuthResult) => {
+    setUser(res.user);
+    setAccessToken(res.accessToken);
+    setRefreshToken(res.refreshToken);
+    localStorage.setItem(ACCESS_TOKEN_KEY, res.accessToken);
+    localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
+  }, []);
+
   const register = async (data: {
     fullName: string;
     email: string;
@@ -164,6 +173,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string;
   }) => {
     const res = await registerApi(data);
+    if (res.user && res.accessToken && res.refreshToken) {
+      setUser(res.user);
+      setAccessToken(res.accessToken);
+      setRefreshToken(res.refreshToken);
+      localStorage.setItem(ACCESS_TOKEN_KEY, res.accessToken);
+      localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
+    }
     return res;
   };
 
@@ -190,6 +206,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         register,
         logout,
         refreshSession,
+        setSession,
       }}
     >
       {children}

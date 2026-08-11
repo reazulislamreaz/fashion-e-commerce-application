@@ -155,7 +155,7 @@ export default function DashboardNewProductPage() {
             <IconArrowRight className="size-3" />
             <span className="text-stone-900 font-bold">New Product</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
             Create Fashion Product
           </h1>
         </div>
@@ -169,7 +169,7 @@ export default function DashboardNewProductPage() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {/* Section 1: Basic Information */}
           <div className="border border-stone-200 bg-white p-6 flex flex-col gap-4">
-            <h2 className="text-base font-bold text-stone-950 font-display border-b border-stone-100 pb-3">
+            <h2 className="text-base font-bold text-stone-950 border-b border-stone-100 pb-3">
               Basic Details
             </h2>
 
@@ -260,7 +260,7 @@ export default function DashboardNewProductPage() {
 
           {/* Section 2: Available Sizes */}
           <div className="border border-stone-200 bg-white p-6 flex flex-col gap-3">
-            <h2 className="text-base font-bold text-stone-950 font-display border-b border-stone-100 pb-3">
+            <h2 className="text-base font-bold text-stone-950 border-b border-stone-100 pb-3">
               Available Sizes *
             </h2>
             <p className="text-xs text-stone-500">
@@ -290,7 +290,7 @@ export default function DashboardNewProductPage() {
 
           {/* Section 3: Product Images */}
           <div className="border border-stone-200 bg-white p-6 flex flex-col gap-4">
-            <h2 className="text-base font-bold text-stone-950 font-display border-b border-stone-100 pb-3">
+            <h2 className="text-base font-bold text-stone-950 border-b border-stone-100 pb-3">
               Product Images *
             </h2>
 

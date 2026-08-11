@@ -94,7 +94,7 @@ export default function DashboardProductsPage() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
               Product Management
             </h1>
             <p className="mt-1 text-xs text-stone-500">
@@ -276,7 +276,7 @@ export default function DashboardProductsPage() {
         {deletingId && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/60 backdrop-blur-xs p-4">
             <div className="w-full max-w-sm border border-stone-200 bg-white p-6 text-center">
-              <h3 className="text-base font-bold text-stone-950 font-display">Delete Product?</h3>
+              <h3 className="text-base font-bold text-stone-950">Delete Product?</h3>
               <p className="mt-2 text-xs text-stone-500">
                 Are you sure you want to permanently delete this product?
               </p>

@@ -10,6 +10,7 @@ import {
 } from '@/common/errors/app.errors';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { SocialAuthDto } from './dto/social-auth.dto';
 import { PasswordService } from './password.service';
 import { TokenService } from './token.service';
 import { RefreshTokenService } from './refresh-token.service';
@@ -44,7 +45,7 @@ export class AuthService {
   async register(
     dto: RegisterDto,
     reqInfo?: { ip?: string; userAgent?: string },
-  ): Promise<{ message: string }> {
+  ): Promise<AuthResult> {
     const customerRole = await this.prisma.role.findUnique({
       where: { code: RoleCode.CUSTOMER },
     });
@@ -65,8 +66,8 @@ export class AuthService {
           phone: dto.phone,
           passwordHash,
           roleId: customerRole.id,
-          status: UserStatus.PENDING_VERIFICATION,
-          isEmailVerified: false,
+          status: UserStatus.ACTIVE,
+          isEmailVerified: true,
         },
         include: { role: true },
       });
@@ -98,10 +99,7 @@ export class AuthService {
         userAgent: reqInfo?.userAgent,
       });
 
-      return {
-        message:
-          'Registration successful. Please check your email to verify your account.',
-      };
+      return this.issueAuthResult(user);
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -325,6 +323,90 @@ export class AuthService {
     });
 
     return this.issueAuthResult(user);
+  }
+
+  async socialLogin(
+    dto: SocialAuthDto,
+    reqInfo?: { ip?: string; userAgent?: string },
+  ): Promise<AuthResult> {
+    const emailLower = dto.email.toLowerCase();
+
+    let user = await this.prisma.user.findUnique({
+      where: { email: emailLower },
+      include: { role: true },
+    });
+
+    if (user) {
+      if (user.status === UserStatus.INACTIVE) {
+        await this.auditService.log({
+          userId: user.id,
+          email: user.email,
+          eventType: 'SOCIAL_LOGIN_BLOCKED',
+          status: 'FAILURE',
+          ipAddress: reqInfo?.ip,
+          userAgent: reqInfo?.userAgent,
+          metadata: { provider: dto.provider, reason: 'Account inactive' },
+        });
+        throw new AuthenticationError('Account is inactive or suspended.');
+      }
+
+      if (user.status === UserStatus.PENDING_VERIFICATION || !user.isEmailVerified) {
+        user = await this.prisma.user.update({
+          where: { id: user.id },
+          data: {
+            isEmailVerified: true,
+            status: UserStatus.ACTIVE,
+          },
+          include: { role: true },
+        });
+      }
+
+      await this.auditService.log({
+        userId: user.id,
+        email: user.email,
+        eventType: 'SOCIAL_LOGIN_SUCCESS',
+        status: 'SUCCESS',
+        ipAddress: reqInfo?.ip,
+        userAgent: reqInfo?.userAgent,
+        metadata: { provider: dto.provider },
+      });
+
+      return this.issueAuthResult(user);
+    }
+
+    const customerRole = await this.prisma.role.findUnique({
+      where: { code: RoleCode.CUSTOMER },
+    });
+
+    if (!customerRole) {
+      throw new NotFoundError(
+        'Customer role is not configured. Run database seed first.',
+      );
+    }
+
+    const newUser = await this.prisma.user.create({
+      data: {
+        fullName: dto.fullName || 'Social User',
+        email: emailLower,
+        roleId: customerRole.id,
+        status: UserStatus.ACTIVE,
+        isEmailVerified: true,
+        passwordHash: null,
+      },
+      include: { role: true },
+    });
+
+    await this.auditService.log({
+      userId: newUser.id,
+      email: newUser.email,
+      eventType: 'SOCIAL_REGISTER_SUCCESS',
+      status: 'SUCCESS',
+      ipAddress: reqInfo?.ip,
+      userAgent: reqInfo?.userAgent,
+      metadata: { provider: dto.provider },
+    });
+
+    return this.issueAuthResult(newUser);
   }
 
   private async recordFailedAttempt(

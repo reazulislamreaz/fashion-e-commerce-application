@@ -90,7 +90,7 @@ function DashboardOverviewContent() {
     <div className="flex flex-col gap-8">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
           System Overview
         </h1>
         <p className="mt-1 text-xs text-stone-500">
@@ -106,7 +106,7 @@ function DashboardOverviewContent() {
             <p className="text-xs font-bold uppercase tracking-wider text-stone-500">
               Total Users
             </p>
-            <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+            <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
               {stats.totalUsers}
             </p>
             <p className="mt-1 text-[11px] font-medium text-stone-400">
@@ -124,7 +124,7 @@ function DashboardOverviewContent() {
             <p className="text-xs font-bold uppercase tracking-wider text-stone-500">
               Categories
             </p>
-            <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+            <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
               {stats.totalCategories}
             </p>
             <p className="mt-1 text-[11px] font-medium text-stone-400">
@@ -142,7 +142,7 @@ function DashboardOverviewContent() {
             <p className="text-xs font-bold uppercase tracking-wider text-stone-500">
               Total Products
             </p>
-            <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+            <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
               {stats.totalProducts}
             </p>
             <p className="mt-1 text-[11px] font-medium text-stone-400">
@@ -160,7 +160,7 @@ function DashboardOverviewContent() {
             <p className="text-xs font-bold uppercase tracking-wider text-stone-500">
               Total Orders
             </p>
-            <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+            <p className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
               {stats.totalOrders}
             </p>
             <p className="mt-1 text-[11px] font-medium text-stone-400">
@@ -177,7 +177,7 @@ function DashboardOverviewContent() {
       <div className="border border-stone-200 bg-white p-6">
         <div className="flex items-center justify-between border-b border-stone-100 pb-4 mb-4">
           <div>
-            <h2 className="text-base font-bold text-stone-950 font-display">
+            <h2 className="text-base font-bold text-stone-950">
               Recent Orders
             </h2>
             <p className="text-xs text-stone-500">

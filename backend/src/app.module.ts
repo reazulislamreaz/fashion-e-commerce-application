@@ -75,7 +75,10 @@ import { AuditModule } from './modules/audit/audit.module';
       useFactory: (configService: ConfigService) => [
         {
           ttl: configService.get<number>('THROTTLE_TTL') || 60000,
-          limit: configService.get<number>('THROTTLE_LIMIT') || 100,
+          limit:
+            configService.get<string>('NODE_ENV') === 'test'
+              ? 10000
+              : configService.get<number>('THROTTLE_LIMIT') || 100,
         },
       ],
     }),

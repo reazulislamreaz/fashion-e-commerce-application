@@ -46,7 +46,6 @@ const CATEGORIES = [
   { name: "Men's Collection", description: 'Contemporary clothing designed for men' },
   { name: "Women's Collection", description: 'Elegant and luxury apparel for women' },
   { name: 'Casualwear', description: 'Everyday comfortable attire' },
-  { name: 'Formalwear', description: 'Tailored suits, blazers, and formal dresses' },
   { name: 'Accessories', description: 'Luxury bags, belts, and fashion accessories' },
 ];
 
@@ -318,7 +317,14 @@ function requireEnv(name: string): string {
 
 function createPrismaClient(): { prisma: PrismaClient; pool: Pool } {
   const databaseUrl = requireEnv('DATABASE_URL');
-  const pool = new Pool({ connectionString: databaseUrl });
+  const isSsl = databaseUrl.includes('sslmode=') || databaseUrl.includes('neon.tech');
+  const pool = new Pool({
+    connectionString: databaseUrl,
+    ssl: isSsl ? { rejectUnauthorized: false } : undefined,
+    max: 10,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 30000,
+  });
   const adapter = new PrismaPg(pool);
   const prisma = new PrismaClient({ adapter });
   return { prisma, pool };
@@ -460,16 +466,14 @@ async function seedCatalog(db: DbClient) {
     }
 
     if (productId) {
-      // Connect sizes
-      for (const sizeName of p.sizeNames) {
+      // Connect sizes safely
+      await db.productSize.deleteMany({ where: { productId } });
+      const uniqueSizeNames = Array.from(new Set(p.sizeNames));
+      for (const sizeName of uniqueSizeNames) {
         const sizeId = sizeMap.get(sizeName);
         if (sizeId) {
-          await db.productSize.upsert({
-            where: {
-              productId_sizeId: { productId, sizeId },
-            },
-            update: {},
-            create: { productId, sizeId },
+          await db.productSize.create({
+            data: { productId, sizeId },
           });
         }
       }
@@ -494,11 +498,9 @@ async function main() {
   const { prisma, pool } = createPrismaClient();
 
   try {
-    await prisma.$transaction(async (tx) => {
-      const roleIds = await seedRoles(tx);
-      await seedSuperAdmin(tx, roleIds);
-      await seedCatalog(tx);
-    });
+    const roleIds = await seedRoles(prisma);
+    await seedSuperAdmin(prisma, roleIds);
+    await seedCatalog(prisma);
 
     // eslint-disable-next-line no-console
     console.log(

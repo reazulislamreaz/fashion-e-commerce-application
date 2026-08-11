@@ -88,7 +88,7 @@ export function DashboardSidebar({ onNavClick }: DashboardSidebarProps) {
             EF
           </span>
           <div className="flex flex-col">
-            <span className="font-bold text-white text-sm tracking-wider uppercase font-display">
+            <span className="font-bold text-white text-sm tracking-wider uppercase">
               Management
             </span>
             <span className="text-[9px] font-semibold text-[#C9A227] tracking-[0.2em] uppercase -mt-0.5">

@@ -212,7 +212,7 @@ export default function DashboardEditProductPage({ params }: PageProps) {
             <IconArrowRight className="size-3" />
             <span className="text-stone-900 font-bold">Edit Product</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 font-display uppercase">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 uppercase">
             Edit Product #{id.substring(0, 8)}
           </h1>
         </div>
@@ -227,7 +227,7 @@ export default function DashboardEditProductPage({ params }: PageProps) {
           {/* Section 1: Basic Information */}
           <div className="border border-stone-200 bg-white p-6 flex flex-col gap-4">
             <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-              <h2 className="text-base font-bold text-stone-950 font-display">
+              <h2 className="text-base font-bold text-stone-950">
                 Basic Details
               </h2>
               <label className="flex items-center gap-2 cursor-pointer">
@@ -328,7 +328,7 @@ export default function DashboardEditProductPage({ params }: PageProps) {
 
           {/* Section 2: Available Sizes */}
           <div className="border border-stone-200 bg-white p-6 flex flex-col gap-3">
-            <h2 className="text-base font-bold text-stone-950 font-display border-b border-stone-100 pb-3">
+            <h2 className="text-base font-bold text-stone-950 border-b border-stone-100 pb-3">
               Available Sizes *
             </h2>
 
@@ -355,7 +355,7 @@ export default function DashboardEditProductPage({ params }: PageProps) {
 
           {/* Section 3: Product Images */}
           <div className="border border-stone-200 bg-white p-6 flex flex-col gap-4">
-            <h2 className="text-base font-bold text-stone-950 font-display border-b border-stone-100 pb-3">
+            <h2 className="text-base font-bold text-stone-950 border-b border-stone-100 pb-3">
               Product Images *
             </h2>
 

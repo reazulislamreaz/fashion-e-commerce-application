@@ -10,12 +10,14 @@ export function SocialAuthButtons({ actionLabel = 'Continue' }: SocialAuthButton
   const { showToast } = useToast();
 
   const handleSocialAuth = (provider: 'Google' | 'Facebook') => {
-    // Show user-friendly informative message for OAuth integration endpoint
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
+    const endpoint = provider === 'Google' ? '/auth/google' : '/auth/facebook';
     showToast(
       `${provider} Authentication`,
-      `${provider} OAuth is configured for direct customer login. Redirecting...`,
+      `Redirecting to ${provider} OAuth authentication...`,
       'info',
     );
+    window.location.href = `${baseUrl}${endpoint}`;
   };
 
   return (
