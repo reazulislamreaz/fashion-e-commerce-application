@@ -47,11 +47,11 @@ async function bootstrap() {
   app.use(urlencoded({ extended: true, limit: bodyLimit }));
 
   app.enableCors({
-    origin: true,
+    origin: parseCorsOrigins(corsOrigin),
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: '*',
-    exposedHeaders: '*',
+    allowedHeaders: 'Content-Type,Accept,Authorization,X-Requested-With',
+    exposedHeaders: 'Content-Disposition,X-Total-Count',
   });
 
   app.setGlobalPrefix(apiPrefix.replace(/^\//, ''));
