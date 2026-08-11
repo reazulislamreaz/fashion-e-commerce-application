@@ -8,12 +8,21 @@ import { AppModule } from './app.module';
 import { setupSwagger } from './config/swagger.config';
 import { createValidationPipe } from './common/pipes/validation.pipe';
 
-function parseCorsOrigins(raw: string): string[] | boolean {
+function parseCorsOrigins(raw: string) {
   const value = raw.trim();
-  if (!value) {
-    return false;
+  if (!value || value === '*') {
+    return (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+      callback(null, true);
+    };
   }
-  return value.split(',').map((origin) => origin.trim()).filter(Boolean);
+  const allowed = value.split(',').map((o) => o.trim()).filter(Boolean);
+  return (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin || allowed.includes(origin) || allowed.includes('*')) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  };
 }
 
 async function bootstrap() {
@@ -40,7 +49,7 @@ async function bootstrap() {
     origin: parseCorsOrigins(corsOrigin),
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With'],
   });
 
   app.setGlobalPrefix(apiPrefix.replace(/^\//, ''));
