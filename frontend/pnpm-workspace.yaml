@@ -1,5 +1,8 @@
-# Single-package pnpm settings (not a multi-package workspace).
-# Allows required native/postinstall build scripts.
+packages:
+  - '.'
+
+# Single-package pnpm settings.
 allowBuilds:
   sharp: true
   unrs-resolver: true
+

@@ -1,3 +1,4 @@
+import { env } from '@/lib/config/env';
 import { apiClient } from './client';
 import {
   AuthResult,
@@ -399,7 +400,7 @@ export async function uploadImageApi(file: File, token: string) {
   const formData = new FormData();
   formData.append('file', file);
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1'}/upload`, {
+  const response = await fetch(`${env.apiBaseUrl}/upload`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,

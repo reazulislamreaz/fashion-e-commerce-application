@@ -53,4 +53,5 @@ export const envValidationSchema = Joi.object({
   THROTTLE_LIMIT: Joi.number().default(100),
 
   BODY_LIMIT: Joi.string().default('1mb'),
+  SWAGGER_ENABLED: Joi.boolean().default(true),
 });

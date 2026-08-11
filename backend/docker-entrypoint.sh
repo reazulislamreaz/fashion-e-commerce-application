@@ -9,5 +9,5 @@ if [ "$SEED_DB_ON_STARTUP" = "true" ]; then
   pnpm prisma:seed || echo "Database seeding completed or skipped."
 fi
 
-echo "==> Starting NestJS Backend Application on Port ${PORT:-9978}..."
+echo "==> Starting NestJS Backend Application on Port ${PORT:-3000}..."
 exec "$@"

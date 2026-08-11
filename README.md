@@ -9,19 +9,19 @@ An enterprise-grade, high-performance full-stack fashion e-commerce application 
 ```text
                                ┌───────────────────────────┐
                                │   Next.js 15 Frontend     │
-                               │   (Port 3001 / Docker 9977)│
+                               │        (Port 3001)        │
                                └─────────────┬─────────────┘
                                              │ HTTP REST / JWT
                                              ▼
                                ┌───────────────────────────┐
                                │     NestJS API Backend    │
-                               │   (Port 3000 / Docker 9978)│
+                               │        (Port 3000)        │
                                └─────────────┬─────────────┘
                                              │ Prisma ORM / SQL
                                              ▼
                                ┌───────────────────────────┐
                                │    PostgreSQL Database    │
-                               │   (Port 5432 / Docker 5430)│
+                               │        (Port 5432)        │
                                └───────────────────────────┘
 ```
 
@@ -87,10 +87,10 @@ This single command will:
 
 Once the containers are up and running:
 
-* **Storefront & Admin Portal (Frontend)**: [http://localhost:9977](http://localhost:9977)
-* **Backend REST API**: [http://localhost:9978/api/v1](http://localhost:9978/api/v1)
-* **Interactive API Documentation (Swagger)**: [http://localhost:9978/docs](http://localhost:9978/docs)
-* **Database (PostgreSQL)**: `localhost:5430` (`easy_user` / `secure_db_password`)
+* **Storefront & Admin Portal (Frontend)**: [http://localhost:3001](http://localhost:3001)
+* **Backend REST API**: [http://localhost:3000/api/v1](http://localhost:3000/api/v1)
+* **Interactive API Documentation (Swagger)**: [http://localhost:3000/docs](http://localhost:3000/docs)
+* **Database (PostgreSQL)**: `localhost:5432` (`easy_user` / `secure_db_password`)
 
 ---
 
@@ -178,7 +178,7 @@ cd ..
 
 ### Step 5: Start Development Servers
 
-Run backend and frontend servers in separate terminal windows:
+Run backend and frontend servers in separate terminal windows (or use root script `pnpm dev`):
 
 **Terminal 1 (Backend API)**:
 ```bash
@@ -213,10 +213,10 @@ When the database is seeded (either via Docker startup or `pnpm prisma:seed`), a
 | Variable | Description | Default / Example |
 | --- | --- | --- |
 | `NODE_ENV` | Environment mode (`development`, `production`, `test`) | `development` |
-| `PORT` | Backend HTTP port | `3000` (Local) / `9978` (Docker) |
+| `PORT` | Backend HTTP port | `3000` |
 | `API_PREFIX` | API routing version prefix | `/api/v1` |
 | `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@host:port/dbname` |
-| `CORS_ORIGIN` | Allowed origin URLs for CORS (comma-separated) | `http://localhost:3001,http://localhost:9977` |
+| `CORS_ORIGIN` | Allowed origin URLs for CORS (comma-separated) | `http://localhost:3001` |
 | `JWT_ACCESS_SECRET` | Secret key for signing Access JWTs (min 16 chars) | `replace_with_secure_access_secret_min_32_chars` |
 | `JWT_REFRESH_SECRET` | Secret key for signing Refresh JWTs (min 16 chars) | `replace_with_secure_refresh_secret_min_32_chars` |
 | `JWT_ACCESS_EXPIRES_IN` | Access Token lifetime | `15m` |
@@ -234,7 +234,7 @@ When the database is seeded (either via Docker startup or `pnpm prisma:seed`), a
 
 | Variable | Description | Default / Example |
 | --- | --- | --- |
-| `NEXT_PUBLIC_API_BASE_URL` | Public API base URL including prefix | `http://localhost:3000/api/v1` (Local) / `http://localhost:9978/api/v1` (Docker) |
+| `NEXT_PUBLIC_API_BASE_URL` | Public API base URL including prefix | `http://localhost:3000/api/v1` |
 
 ---
 
@@ -281,8 +281,8 @@ fashion-e-commerce-application/
   ```
   Check database connection string in `backend/.env` or root `.env`.
 
-### 2. Port Already in Use (`EADDRINUSE 3000` / `9978`)
-* **Cause**: Another application or orphaned container is using port 3000, 3001, 9978, or 9977.
+### 2. Port Already in Use (`EADDRINUSE 3000` / `3001`)
+* **Cause**: Another application or orphaned container is using port 3000 or 3001.
 * **Fix**: Stop existing containers or process on that port:
   ```bash
   docker compose down
@@ -305,7 +305,7 @@ fashion-e-commerce-application/
 
 ### 4. CORS Errors on Frontend
 * **Cause**: `CORS_ORIGIN` in `backend/.env` does not match the URL of your frontend.
-* **Fix**: Update `CORS_ORIGIN` in `backend/.env` to match your frontend origin (e.g. `http://localhost:3001,http://localhost:9977`).
+* **Fix**: Update `CORS_ORIGIN` in `backend/.env` to match your frontend origin (`http://localhost:3001`).
 
 ---
 

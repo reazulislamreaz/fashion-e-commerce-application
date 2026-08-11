@@ -39,6 +39,7 @@ async function bootstrap() {
   const corsOrigin = configService.getOrThrow<string>('CORS_ORIGIN');
   const bodyLimit = configService.get<string>('BODY_LIMIT') ?? '1mb';
   const nodeEnv = configService.get<string>('NODE_ENV') ?? 'development';
+  const swaggerEnabled = configService.get<boolean>('SWAGGER_ENABLED') ?? true;
 
   app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
   app.use(compression());
@@ -56,7 +57,7 @@ async function bootstrap() {
   app.setGlobalPrefix(apiPrefix.replace(/^\//, ''));
   app.useGlobalPipes(createValidationPipe());
 
-  if (nodeEnv !== 'production') {
+  if (swaggerEnabled) {
     setupSwagger(app);
   }
 
@@ -70,7 +71,7 @@ async function bootstrap() {
   logger.log(
     `Health check: http://localhost:${port}/${normalizedPrefix}/health`,
   );
-  if (nodeEnv !== 'production') {
+  if (swaggerEnabled) {
     logger.log(`OpenAPI docs: http://localhost:${port}/docs`);
   }
 }
