@@ -379,6 +379,7 @@ async function seedSuperAdmin(
       passwordHash,
       roleId: superAdminRoleId,
       status: UserStatus.ACTIVE,
+      isEmailVerified: true,
     },
     create: {
       fullName,
@@ -386,6 +387,7 @@ async function seedSuperAdmin(
       passwordHash,
       roleId: superAdminRoleId,
       status: UserStatus.ACTIVE,
+      isEmailVerified: true,
     },
   });
 }
