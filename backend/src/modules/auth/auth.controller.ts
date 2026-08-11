@@ -138,6 +138,10 @@ export class AuthController {
     };
   }
 
+  private getFrontendUrl(): string {
+    return this.configService.getOrThrow<string>('FRONTEND_URL').replace(/\/$/, '');
+  }
+
   private getCallbackUrl(req: Request, path: string): string {
     const backendUrl = this.configService.get<string>('BACKEND_URL');
     const apiPrefix = this.configService.get<string>('API_PREFIX', '/api/v1');
@@ -148,7 +152,12 @@ export class AuthController {
       return `${backendUrl.replace(/\/$/, '')}/${normalizedPrefix}/${cleanPath}`;
     }
 
-    const host = req.get('host') || 'localhost';
+    const host = req.get('host');
+    if (!host) {
+      throw new Error(
+        'Unable to build OAuth callback URL: set BACKEND_URL in .env or ensure the Host header is present.',
+      );
+    }
     const protoHeader = req.get('x-forwarded-proto');
     const protocol = protoHeader ? protoHeader.split(',')[0].trim() : req.protocol || 'http';
     return `${protocol}://${host}/${normalizedPrefix}/${cleanPath}`;
@@ -162,7 +171,7 @@ export class AuthController {
     const callbackUrl = this.getCallbackUrl(req, 'auth/google/callback');
 
     if (!clientId) {
-      const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3001');
+      const frontendUrl = this.getFrontendUrl();
       return res.redirect(`${frontendUrl}/login?error=${encodeURIComponent('Google OAuth CLIENT_ID is not configured')}`);
     }
 
@@ -182,7 +191,7 @@ export class AuthController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3001');
+    const frontendUrl = this.getFrontendUrl();
 
     if (error || !code) {
       return res.redirect(`${frontendUrl}/login?error=${encodeURIComponent(error || 'Google authorization cancelled')}`);
@@ -246,7 +255,7 @@ export class AuthController {
     const callbackUrl = this.getCallbackUrl(req, 'auth/facebook/callback');
 
     if (!clientId) {
-      const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3001');
+      const frontendUrl = this.getFrontendUrl();
       return res.redirect(`${frontendUrl}/login?error=${encodeURIComponent('Facebook OAuth CLIENT_ID is not configured')}`);
     }
 
@@ -266,7 +275,7 @@ export class AuthController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3001');
+    const frontendUrl = this.getFrontendUrl();
 
     if (error || !code) {
       return res.redirect(`${frontendUrl}/login?error=${encodeURIComponent(error || 'Facebook authorization cancelled')}`);

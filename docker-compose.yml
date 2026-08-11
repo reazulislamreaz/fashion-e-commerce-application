@@ -35,7 +35,7 @@ services:
       API_PREFIX: /api/v1
       APP_NAME: "Easy Fashion API"
       DATABASE_URL: postgresql://${POSTGRES_USER:-easy_user}:${POSTGRES_PASSWORD:-secure_db_password}@postgres:5432/${POSTGRES_DB:-easy_fashion_prod_db}?schema=public
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:9977,http://localhost:3001}
+      CORS_ORIGIN: ${CORS_ORIGIN}
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-replace_with_secure_access_secret_min_32_chars}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-replace_with_secure_refresh_secret_min_32_chars}
       JWT_ACCESS_EXPIRES_IN: 15m
@@ -44,7 +44,8 @@ services:
       SUPER_ADMIN_EMAIL: ${SUPER_ADMIN_EMAIL:-admin@elevateapparel.com.bd}
       SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-superadmin123}
       SUPER_ADMIN_FULL_NAME: ${SUPER_ADMIN_FULL_NAME:-System Super Admin}
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:9977}
+      FRONTEND_URL: ${FRONTEND_URL}
+      BACKEND_URL: ${BACKEND_URL:-}
       SEED_DB_ON_STARTUP: "true"
     depends_on:
       postgres:
@@ -57,7 +58,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-https://easyapi.elevateapparel.com.bd/api/v1}
+        # Baked into the Next.js client bundle at build time — must rebuild after changing
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:?Set NEXT_PUBLIC_API_BASE_URL in .env}
     container_name: easy_fashion_frontend
     restart: unless-stopped
     ports:
@@ -65,7 +67,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-https://easyapi.elevateapparel.com.bd/api/v1}
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:?Set NEXT_PUBLIC_API_BASE_URL in .env}
     depends_on:
       - backend
 

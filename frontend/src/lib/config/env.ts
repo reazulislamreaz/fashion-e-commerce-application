@@ -1,16 +1,11 @@
-function requirePublicEnv(name: string, fallback?: string): string {
-  const value = process.env[name] ?? fallback;
-  if (!value) {
-    throw new Error(
-      `Missing environment variable ${name}. Copy .env.example to .env.local.`,
-    );
-  }
-  return value.replace(/\/$/, '');
+const apiBaseUrlRaw = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+if (!apiBaseUrlRaw) {
+  throw new Error(
+    'Missing environment variable NEXT_PUBLIC_API_BASE_URL. Set it in .env.local (see .env.example).',
+  );
 }
 
 export const env = {
-  apiBaseUrl: requirePublicEnv(
-    'NEXT_PUBLIC_API_BASE_URL',
-    'https://easyapi.elevateapparel.com.bd/api/v1',
-  ),
+  apiBaseUrl: apiBaseUrlRaw.replace(/\/$/, ''),
 } as const;

@@ -65,14 +65,19 @@ async function bootstrap() {
 
   const logger = app.get(Logger);
   const normalizedPrefix = apiPrefix.replace(/^\//, '');
-  logger.log(
-    `Application listening on http://localhost:${port}/${normalizedPrefix}`,
-  );
-  logger.log(
-    `Health check: http://localhost:${port}/${normalizedPrefix}/health`,
-  );
-  if (swaggerEnabled) {
-    logger.log(`OpenAPI docs: http://localhost:${port}/docs`);
+  const backendUrl = configService.get<string>('BACKEND_URL')?.replace(/\/$/, '');
+  if (backendUrl) {
+    logger.log(`Application listening on ${backendUrl}/${normalizedPrefix}`);
+    logger.log(`Health check: ${backendUrl}/${normalizedPrefix}/health`);
+    if (swaggerEnabled) {
+      logger.log(`OpenAPI docs: ${backendUrl}/docs`);
+    }
+  } else {
+    logger.log(`Application listening on port ${port}/${normalizedPrefix}`);
+    logger.log(`Health check available at /${normalizedPrefix}/health`);
+    if (swaggerEnabled) {
+      logger.log('OpenAPI docs available at /docs');
+    }
   }
 }
 

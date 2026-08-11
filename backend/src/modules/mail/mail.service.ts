@@ -9,10 +9,7 @@ export class MailService {
   private readonly frontendUrl: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.frontendUrl =
-      this.configService.get<string>('FRONTEND_URL') ||
-      this.configService.get<string>('CORS_ORIGIN') ||
-      'http://localhost:3001';
+    this.frontendUrl = this.configService.getOrThrow<string>('FRONTEND_URL');
 
     const gmailUser =
       this.configService.get<string>('GMAIL_USER') ||

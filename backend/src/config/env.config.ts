@@ -20,7 +20,7 @@ export const envValidationSchema = Joi.object({
         'DATABASE_URL must be a valid PostgreSQL connection string',
     }),
 
-  CORS_ORIGIN: Joi.string().default('http://localhost:3001'),
+  CORS_ORIGIN: Joi.string().required(),
 
   JWT_ACCESS_SECRET: Joi.string().min(16).required(),
   JWT_REFRESH_SECRET: Joi.string().min(16).required(),
@@ -46,8 +46,8 @@ export const envValidationSchema = Joi.object({
   GMAIL_APP_PASSWORD: Joi.string().optional().allow(''),
   APP_USER_EMAIL: Joi.string().optional().allow(''),
   APP_PASSWORD: Joi.string().optional().allow(''),
-  FRONTEND_URL: Joi.string().default('http://localhost:3001'),
-  BACKEND_URL: Joi.string().optional().allow(''),
+  FRONTEND_URL: Joi.string().uri().required(),
+  BACKEND_URL: Joi.string().uri().optional().allow(''),
 
   THROTTLE_TTL: Joi.number().default(60000),
   THROTTLE_LIMIT: Joi.number().default(100),

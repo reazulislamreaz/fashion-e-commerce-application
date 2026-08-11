@@ -19,8 +19,9 @@ RUN npm install -g pnpm@9.15.4
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build-time public API URL argument (defaults to production API)
-ARG NEXT_PUBLIC_API_BASE_URL=https://easyapi.elevateapparel.com.bd/api/v1
+# Build-time public API URL — required from docker compose / .env (NEXT_PUBLIC_* is inlined at build time)
+ARG NEXT_PUBLIC_API_BASE_URL
+RUN test -n "$NEXT_PUBLIC_API_BASE_URL" || (echo "ERROR: NEXT_PUBLIC_API_BASE_URL build arg is required" && exit 1)
 ENV NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
 ENV NEXT_TELEMETRY_DISABLED=1
 
