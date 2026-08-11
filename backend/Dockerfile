@@ -11,6 +11,9 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
+# prisma generate loads prisma.config.ts, which requires DATABASE_URL.
+# No live DB is needed at build time — runtime URL comes from compose.
+ENV DATABASE_URL="postgresql://build:build@localhost:5432/build?schema=public"
 RUN pnpm prisma:generate
 RUN pnpm build
 
