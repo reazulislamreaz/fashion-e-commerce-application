@@ -36,6 +36,15 @@ pino-*.log
 backend/prisma/*.db
 backend/prisma/*.db-journal
 
+# AI / Agent & Tooling Rules
+AGENTS.md
+.agents.md
+cursor.md
+.cursor
+.cursorrules
+.mcp-cache
+mcp.json
+
 # Misc
 .turbo/
 .vercel/
