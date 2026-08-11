@@ -82,7 +82,7 @@ cd /var/www/easy-fashion
 Copy the Docker environment template to `.env`:
 
 ```bash
-cp .env.docker.example .env
+cp .env.example .env
 nano .env
 ```
 
