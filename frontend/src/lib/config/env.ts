@@ -11,6 +11,6 @@ function requirePublicEnv(name: string, fallback?: string): string {
 export const env = {
   apiBaseUrl: requirePublicEnv(
     'NEXT_PUBLIC_API_BASE_URL',
-    'http://localhost:3000/api/v1',
+    'https://easyapi.elevateapparel.com.bd/api/v1',
   ),
 } as const;

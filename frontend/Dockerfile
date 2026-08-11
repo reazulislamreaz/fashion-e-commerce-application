@@ -19,8 +19,8 @@ RUN npm install -g pnpm@9.15.4
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build-time public API URL argument (defaults to local Docker compose backend port)
-ARG NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api/v1
+# Build-time public API URL argument (defaults to production API)
+ARG NEXT_PUBLIC_API_BASE_URL=https://easyapi.elevateapparel.com.bd/api/v1
 ENV NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
 ENV NEXT_TELEMETRY_DISABLED=1
 
