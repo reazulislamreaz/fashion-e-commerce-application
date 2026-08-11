@@ -17,8 +17,7 @@ module.exports = {
     {
       name: 'easy-fashion-frontend',
       cwd: './frontend',
-      script: 'npm',
-      args: 'start',
+      script: '.next/standalone/server.js',
       instances: 1,
       exec_mode: 'fork',
       autorestart: true,
@@ -27,6 +26,7 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 9977,
+        HOSTNAME: '0.0.0.0',
       },
     },
   ],
