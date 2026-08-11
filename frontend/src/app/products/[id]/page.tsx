@@ -25,18 +25,26 @@ export default function ProductDetailPage({
   const [selectedSizeId, setSelectedSizeId] = useState<string | undefined>(undefined);
   const [quantity, setQuantity] = useState(1);
 
+  const productId = decodeURIComponent(params?.id || '').trim();
+
   useEffect(() => {
     async function loadProduct() {
+      if (!productId) {
+        setError(true);
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       setError(false);
       try {
-        const data = await getProductById(params.id);
+        const data = await getProductById(productId);
         setProduct(data);
         const sizes = data.productSizes?.map((ps) => ps.size) || [];
         if (sizes.length > 0) {
           setSelectedSizeId(sizes[0].id);
         }
-      } catch {
+      } catch (err) {
+        console.error('Failed to load product details:', err);
         setError(true);
       } finally {
         setLoading(false);
@@ -44,7 +52,7 @@ export default function ProductDetailPage({
     }
 
     loadProduct();
-  }, [params.id]);
+  }, [productId]);
 
   if (loading) {
     return (

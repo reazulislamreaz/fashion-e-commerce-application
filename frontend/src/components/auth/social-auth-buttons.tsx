@@ -10,7 +10,10 @@ export function SocialAuthButtons({ actionLabel = 'Continue' }: SocialAuthButton
   const { showToast } = useToast();
 
   const handleSocialAuth = (provider: 'Google' | 'Facebook') => {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
+    const baseUrl =
+      process.env.NEXT_PUBLIC_API_URL ||
+      process.env.NEXT_PUBLIC_API_BASE_URL ||
+      'http://localhost:3000/api/v1';
     const endpoint = provider === 'Google' ? '/auth/google' : '/auth/facebook';
     showToast(
       `${provider} Authentication`,

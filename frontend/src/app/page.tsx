@@ -7,6 +7,9 @@ import { getCategories, getProducts } from '@/lib/api/services';
 import { Product } from '@/types';
 import { IconArrowRight } from '@/components/ui/icons';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function HomePage() {
   let featuredProducts: Product[] = [];
   let menId = '';

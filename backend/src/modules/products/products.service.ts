@@ -130,8 +130,9 @@ export class ProductsService {
   }
 
   async findOne(id: string): Promise<ProductWithRelations> {
+    const cleanId = id?.trim();
     const product = await this.prisma.product.findUnique({
-      where: { id },
+      where: { id: cleanId },
       include: PRODUCT_INCLUDE,
     });
 
